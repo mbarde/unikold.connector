@@ -20,28 +20,6 @@ class ViewsIntegrationTest(unittest.TestCase):
         api.content.create(self.portal, 'Folder', 'other-folder')
         api.content.create(self.portal, 'Collection', 'my-collection')
 
-    def test_update_all_view_is_registered(self):
-        view = getMultiAdapter(
-            (self.portal['other-folder'], self.portal.REQUEST),
-            name='update-all-view'
-        )
-        self.assertTrue(view(), 'update-all-view is not found')
-        self.assertTrue(
-            'Sample View' in view(),
-            'Sample View is not found in update-all-view'
-        )
-        self.assertTrue(
-            'Sample View' in view(),
-            'A small message is not found in update-all-view'
-        )
-
-    def test_update_all_view_in_my_collection(self):
-        with self.assertRaises(ComponentLookupError):
-            getMultiAdapter(
-                (self.portal['my-collection'], self.portal.REQUEST),
-                name='update-all-view'
-            )
-
 
 class ViewsFunctionalTest(unittest.TestCase):
 

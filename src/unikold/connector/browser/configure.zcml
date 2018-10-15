@@ -18,4 +18,11 @@
       directory="static"
       />
 
+  <browser:page
+       name="unikold-connector-controlpanel"
+       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+       class=".controlpanel.UniKoLdConnectorControlPanelView"
+       permission="cmf.ManagePortal"
+       />
+
 </configure>
