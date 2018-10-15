@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="unikold.connector"
+      metal:use-macro="context/main_template/macros/master">
+<body>
+    <metal:block fill-slot="content-core">
+      <div class="heading">
+        <li i18n:translate="">
+          Sample View
+        </li>
+
+      <h2>Success:</h2>
+      <ul>
+        <li tal:repeat="obj view/updateSuccess">
+            <a tal:content="obj/absolute_url"
+               tal:attributes="href obj/absolute_url"/>
+        </li>
+      </ul>
+
+      <h2>Error:</h2>
+      <ul>
+        <li tal:repeat="obj view/updateError">
+            <a tal:content="obj/absolute_url"
+               tal:attributes="href obj/absolute_url"/>
+        </li>
+      </ul>
+      </div>
+    </metal:block>
+
+<body>
+</html>

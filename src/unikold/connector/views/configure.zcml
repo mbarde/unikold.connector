@@ -1,0 +1,18 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="unikold.connector">
+
+  -*- extra stuff goes here -*-
+
+  <browser:page
+     name="update-all-view"
+     for="Products.CMFCore.interfaces.IFolderish"
+     class=".update_all_view.UpdateAllView"
+     template="update_all_view.pt"
+     permission="zope2.View"
+     />
+        
+
+</configure>

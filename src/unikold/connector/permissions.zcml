@@ -6,6 +6,12 @@
   <configure zcml:condition="installed AccessControl.security">
   <!-- -*- extra stuff goes here -*- -->
 
+    <permission
+        id="unikold.connector.AddTestType"
+        title="unikold.connector: Add TestType"
+    />
+
+        
 
   </configure>
 
