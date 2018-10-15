@@ -54,9 +54,6 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
                 mapping={u'successCount': len(brains)}),
             'info')
 
-    '''
-        Uncomment to enable Save/Cancel functionality of RegistryEditForm
-
     @button.buttonAndHandler(_(u'Save'), name='save')
     def handleSave(self, action):
         super(UniKoLdConnectorControlPanelForm, self).handleSave(action)
@@ -64,7 +61,6 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
         super(UniKoLdConnectorControlPanelForm, self).handleCancel(action)
-    '''
 
 
 UniKoLdConnectorControlPanelView = layout.wrap_form(
