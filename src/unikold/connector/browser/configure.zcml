@@ -19,6 +19,15 @@
       />
 
   <browser:page
+      name="test_soap"
+      for="*"
+      layer="unikold.connector.interfaces.IUnikoldConnectorLayer"
+      class=".views.SOAPTestView"
+      template="templates/soap_test_view.pt"
+      permission="zope2.View"
+      />
+
+  <browser:page
        name="unikold-connector-controlpanel"
        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
        class=".controlpanel.UniKoLdConnectorControlPanelView"

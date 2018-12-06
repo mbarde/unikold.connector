@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="unikold.connector">
+<body>
+
+<metal:main fill-slot="main">
+  <tal:main-macro metal:define-macro="main">
+
+    <h1>Test SOAP</h1>
+    <form id="formImport" method="POST"
+          tal:attributes="action view/request/URL">
+
+      <label for="wsdlUrl">WSDL Url</label>
+      <input type="text" name="wsdlUrl" id="wsdlUrl"
+             tal:attributes="value python: view.request.form.get('wsdlUrl', 'https://klips.uni-koblenz.de/qisserver/services/dbinterface?WSDL')"/>
+
+      <label for="method">Methode</label>
+      <input type="text" name="method" id="method" placeholder="alleSemester"
+             tal:attributes="value python: view.request.form.get('method', '')"/>
+
+      <label for="parameters">Parameter</label><br/>
+      <span>Pro Zeile ein Parameter in dem Format: <pre>name:wert</pre></span>
+      <textarea name="parameters" id="parameters" rows="10"
+                tal:content="python: view.request.form.get('parameters', '')"></textarea>
+
+      <label for="soapRequest">SOAP Request</label><br/>
+      <span>Wird hier der SOAP Request per Hand eingetragen, werden die Eingaben für Methode und Parameter ignoriert.</span>
+      <textarea name="soapRequest" id="soapRequest" rows="10"
+                tal:content="python: view.request.form.get('soapRequest', '')"></textarea>
+      <br/>
+
+      <input type="submit" id="btn-submit" class="btn btn-primary" value="Abschicken">
+      <span id="submit-loading" style="display:none">Lade ...</span>
+    </form>
+
+    <div id="soap-result" tal:condition="view/soapRequestAsString">
+      <h3>Ergebnis</h3>
+
+      <label>SOAP-Request</label>
+      <pre tal:content="view/soapRequestAsString"></pre>
+
+      <tal:soap-error condition="view/soapError">
+      <label>Fehler</label>
+      <pre tal:content="view/soapError"></pre>
+      </tal:soap-error>
+
+      <tal:soap-result condition="view/soapResult">
+      <label>Antwort</label>
+      <pre tal:content="view/soapResult"></pre>
+      </tal:soap-result>
+    </div>
+
+    <script>
+      $(document).ready(function() {
+        $('#btn-submit').click(function() {
+          $('#btn-submit').hide();
+          $('#submit-loading').show();
+        });
+      })
+    </script>
+
+  </tal:main-macro>
+</metal:main>
+
+</body>
+</html>
