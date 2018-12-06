@@ -17,11 +17,12 @@ class SOAPTestView(BrowserView):
         self.soapResult = False
 
         wsdlUrl = self.request.form.get('wsdlUrl', False)
+        wsdlMethod = self.request.form.get('wsdlMethod', False)
         method = self.request.form.get('method', False)
         parametersAsText = self.request.form.get('parameters', '')
         soapRequest = self.request.form.get('soapRequest', False)
 
-        if wsdlUrl and (soapRequest or method):
+        if wsdlUrl and wsdlMethod and (soapRequest or method):
             if soapRequest:
                 soapStr = soapRequest
             else:
@@ -29,7 +30,7 @@ class SOAPTestView(BrowserView):
                 soapStr = self.buildSOAPRequest(method, parameters)
 
             self.soapRequestAsString = soapStr
-            (data, err) = self.getXMLData(wsdlUrl, soapStr)
+            (data, err) = self.getXMLData(wsdlUrl, wsdlMethod, soapStr)
             if err:
                 self.soapError = err
             else:
@@ -53,14 +54,15 @@ class SOAPTestView(BrowserView):
 
         return etree.tostring(root)
 
-    def getXMLData(self, wsdlUrl, xmlStr):
+    def getXMLData(self, wsdlUrl, wsdlMethod, xmlStr):
         data = False
         error = False
 
         try:
-            client = Client(wsdlUrl)  # NOQA
-            res = client.service.getDataXML(xmlStr)
-            val = res['_value_1']
+            client = Client(wsdlUrl)
+            # dynamically call wsdl method like 'getXMLData'
+            res = getattr(client.service, wsdlMethod)(xmlStr)
+            val = res['_value_1'].encode('utf-8')
             if 'error' in val:
                 error = val
             else:

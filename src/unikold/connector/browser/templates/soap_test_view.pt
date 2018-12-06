@@ -11,12 +11,16 @@
   <tal:main-macro metal:define-macro="main">
 
     <h1>Test SOAP</h1>
-    <form id="formImport" method="POST"
+    <form id="formImport" method="GET"
           tal:attributes="action view/request/URL">
 
       <label for="wsdlUrl">WSDL Url</label>
       <input type="text" name="wsdlUrl" id="wsdlUrl"
              tal:attributes="value python: view.request.form.get('wsdlUrl', 'https://klips.uni-koblenz.de/qisserver/services/dbinterface?WSDL')"/>
+
+         <label for="wsdlMethod">WSDL Methode</label>
+         <input type="text" name="wsdlMethod" id="wsdlMethod"
+                tal:attributes="value python: view.request.form.get('wsdlMethod', 'getDataXML')"/>
 
       <label for="method">Methode</label>
       <input type="text" name="method" id="method" placeholder="alleSemester"
