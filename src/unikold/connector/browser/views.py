@@ -2,7 +2,6 @@
 from Products.Five.browser import BrowserView
 from zeep import Client
 from lxml import etree
-import logging
 # keep in mind: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb  # NOQA: E501
 
 
@@ -20,17 +19,21 @@ class SOAPTestView(BrowserView):
         wsdlUrl = self.request.form.get('wsdlUrl', False)
         method = self.request.form.get('method', False)
         parametersAsText = self.request.form.get('parameters', '')
+        soapRequest = self.request.form.get('soapRequest', False)
 
-        if wsdlUrl:
-            if method:
+        if wsdlUrl and (soapRequest or method):
+            if soapRequest:
+                soapStr = soapRequest
+            else:
                 parameters = self.inputParametersToList(parametersAsText)
                 soapStr = self.buildSOAPRequest(method, parameters)
-                self.soapRequestAsString = soapStr
-                (data, err) = self.getXMLData(wsdlUrl, soapStr)
-                if err:
-                    self.soapError = err
-                else:
-                    self.soapResult = etree.tostring(data)
+
+            self.soapRequestAsString = soapStr
+            (data, err) = self.getXMLData(wsdlUrl, soapStr)
+            if err:
+                self.soapError = err
+            else:
+                self.soapResult = etree.tostring(data)
 
         return self.index()
 

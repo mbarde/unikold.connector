@@ -60,6 +60,12 @@
           $('#btn-submit').hide();
           $('#submit-loading').show();
         });
+
+        var divResult = $('#soap-result');
+        if (divResult) {
+          var pos = divResult.offset().top;
+          $('html, body').animate({ scrollTop: pos }, 1000);
+        }
       })
     </script>
 
