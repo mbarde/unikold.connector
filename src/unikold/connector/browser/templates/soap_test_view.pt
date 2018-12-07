@@ -26,6 +26,10 @@
       <input type="text" name="method" id="method" placeholder="alleSemester"
              tal:attributes="value python: view.request.form.get('method', '')"/>
 
+      <input type="checkbox" name="useAuthentication" id="useAuthentication"
+             tal:attributes="checked python: view.request.form.get('useAuthentication', False)"/>
+      <label for="useAuthentication">Mit Authentifizierung</label>
+      <br/>
       <label for="parameters">Parameter</label><br/>
       <span>Pro Zeile ein Parameter in dem Format: <pre>name:wert</pre></span>
       <textarea name="parameters" id="parameters" rows="10"

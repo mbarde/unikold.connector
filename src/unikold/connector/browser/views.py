@@ -20,6 +20,7 @@ class SOAPTestView(BrowserView):
         wsdlMethod = self.request.form.get('wsdlMethod', False)
         method = self.request.form.get('method', False)
         parametersAsText = self.request.form.get('parameters', '')
+        withAuth = self.request.form.get('useAuthentication', False)
         soapRequest = self.request.form.get('soapRequest', False)
 
         if wsdlUrl and wsdlMethod and (soapRequest or method):
@@ -27,7 +28,7 @@ class SOAPTestView(BrowserView):
                 soapStr = soapRequest
             else:
                 parameters = self.inputParametersToList(parametersAsText)
-                soapStr = self.buildSOAPRequest(method, parameters)
+                soapStr = self.buildSOAPRequest(method, parameters, withAuth)
 
             self.soapRequestAsString = soapStr
             (data, err) = self.getXMLData(wsdlUrl, wsdlMethod, soapStr)
@@ -38,7 +39,7 @@ class SOAPTestView(BrowserView):
 
         return self.index()
 
-    def buildSOAPRequest(self, methodName, params=[]):
+    def buildSOAPRequest(self, methodName, params=[], auth=False):
         root = etree.Element('SOAPDataService')
         general = etree.SubElement(root, 'general')
         object = etree.SubElement(general, 'object')
@@ -52,7 +53,16 @@ class SOAPTestView(BrowserView):
                 el = etree.SubElement(condition, key)
                 el.text = value
 
-        return etree.tostring(root)
+        if auth:
+            username = ''
+            password = ''
+            userAuth = etree.SubElement(root, 'user-auth')
+            elUser = etree.SubElement(userAuth, 'username')
+            elUser.text = username
+            elPW = etree.SubElement(userAuth, 'password')
+            elPW.text = password
+
+        return etree.tostring(root, pretty_print=True)
 
     def getXMLData(self, wsdlUrl, wsdlMethod, xmlStr):
         data = False
@@ -63,12 +73,13 @@ class SOAPTestView(BrowserView):
             # dynamically call wsdl method like 'getXMLData'
             res = getattr(client.service, wsdlMethod)(xmlStr)
             val = res['_value_1'].encode('utf-8')
+
             if 'error' in val:
                 error = val
             else:
                 data = etree.fromstring(val)
         except Exception as exc:
-            error = exc
+            error = str(exc) + '\n\nRaw answer:\n' + val
         finally:
             return (data, error)
 
