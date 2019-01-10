@@ -1,30 +1,30 @@
 <?xml version="1.0"?>
 <object xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    name="TestType"
+    name="SOAPConnectedObject"
     meta_type="Dexterity FTI"
     i18n:domain="unikold.connector">
 
   <!-- Basic properties -->
   <property
       i18n:translate=""
-      name="title">TestType</property>
+      name="title">SOAPConnectedObject</property>
   <property
       i18n:translate=""
-      name="description">A type to test ConnectedObject inheritance</property>
+      name="description"></property>
 
   <property name="allow_discussion">False</property>
-  <property name="factory">TestType</property>
+  <property name="factory">SOAPConnectedObject</property>
   <property name="icon_expr"></property>
   <property name="link_target"></property>
 
   <!-- Hierarchy control -->
   <property name="global_allow">True</property>
   <!-- Schema, class and security -->
-  <property name="add_permission">unikold.connector.AddTestType</property>
-  <property name="klass">unikold.connector.content.test_type.TestType</property>
+  <property name="add_permission">unikold.connector.AddSOAPConnectedObject</property>
+  <property name="klass">unikold.connector.content.soap_connected_object.SOAPConnectedObject</property>
   <property name="model_file"></property>
   <property name="model_source"></property>
-  <property name="schema">unikold.connector.content.test_type.ITestType</property>
+  <property name="schema">unikold.connector.content.soap_connected_object.ISOAPConnectedObject</property>
 
   <!-- Enabled behaviors -->
   <property name="behaviors" purge="false">
@@ -46,7 +46,7 @@
   </property>
 
   <!-- View information -->
-  <property name="add_view_expr">string:${folder_url}/++add++TestType</property>
+  <property name="add_view_expr">string:${folder_url}/++add++SOAPConnectedObject</property>
   <property name="default_view">view</property>
   <property name="default_view_fallback">False</property>
   <property name="immediate_view">view</property>
