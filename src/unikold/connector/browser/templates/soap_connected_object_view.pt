@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="unikold.connector">
+<body>
+
+<metal:main fill-slot="main">
+    <tal:main-macro metal:define-macro="main">
+        <div tal:replace="structure provider:plone.abovecontenttitle" />
+        <div tal:replace="structure provider:plone.belowcontenttitle" />
+        <p class="documentDescription" tal:content="context/description" />
+        <div tal:replace="structure provider:plone.abovecontentbody" />
+
+        <h1 class="documentFirstHeading" tal:content="context/Title"/>
+
+        <div tal:repeat="widgetName view/widgets">
+          <tal:widget define="widget python: view.w.get(widgetName)">
+            <label tal:content="widget/label"/>
+            <div tal:content="structure widget/render" />
+          </tal:widget>
+        </div>
+
+        <a class="standalone" href="?updateSOAP=True"
+           tal:attributes="href python: context.absolute_url() + '?updateSOAP=True'">
+           <span><i class="fa fa-refresh"></i></span>
+           <span i18n:translate="">Update</span>
+        </a>
+
+    </tal:main-macro>
+</metal:main>
+</body>
+</html>

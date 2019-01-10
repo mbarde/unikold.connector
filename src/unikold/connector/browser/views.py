@@ -2,6 +2,7 @@
 from Products.Five.browser import BrowserView
 from zeep import Client
 from lxml import etree
+from plone.dexterity.browser.view import DefaultView
 # keep in mind: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb  # NOQA: E501
 
 
@@ -91,3 +92,16 @@ class SOAPTestView(BrowserView):
             if len(splitted) == 2:
                 result.append((splitted[0], splitted[1]))
         return result
+
+
+class SOAPConnectedObjectView(DefaultView):
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        updateSoap = self.request.form.get('updateSOAP', False)
+        if updateSoap:
+            self.context.updateData()
+        return super(SOAPConnectedObjectView, self).__call__()

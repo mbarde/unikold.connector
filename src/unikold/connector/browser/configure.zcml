@@ -18,12 +18,22 @@
       directory="static"
       />
 
+  <!-- SOAP test view -->
   <browser:page
       name="test_soap"
       for="*"
       layer="unikold.connector.interfaces.IUnikoldConnectorLayer"
       class=".views.SOAPTestView"
       template="templates/soap_test_view.pt"
+      permission="zope2.View"
+      />
+
+  <!-- SOAP object view -->
+  <browser:page
+      name="view"
+      for="unikold.connector.content.soap_connected_object.ISOAPConnectedObject"
+      class=".views.SOAPConnectedObjectView"
+      template="templates/soap_connected_object_view.pt"
       permission="zope2.View"
       />
 

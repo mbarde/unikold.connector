@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-from plone.dexterity.content import Item
+# from plone.dexterity.content import Item
 from plone.supermodel import model
 from zope import schema
 from zope.interface import implementer
-from soap_connected_object import SOAPConnectedObject, ISOAPConnectedObject
+from unikold.connector.content.soap_connected_object import SOAPConnectedObject
+from unikold.connector.content.soap_connected_object import ISOAPConnectedObject
 from unikold.connector import _
 
 
@@ -30,9 +31,9 @@ class ISOAPSearchObject(model.Schema, ISOAPConnectedObject):
 
 
 @implementer(ISOAPSearchObject)
-class SOAPSearchObject(Item, SOAPConnectedObject):
+class SOAPSearchObject(SOAPConnectedObject):
 
     def updateData(self):
-        data = super(SOAPConnectedObject, self).updateData()
-        if data:
+        data = super(SOAPSearchObject, self).updateData()
+        if data is not False:
             print(data)
