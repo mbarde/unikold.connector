@@ -3,6 +3,7 @@ from Products.Five.browser import BrowserView
 from zeep import Client
 from lxml import etree
 from plone.dexterity.browser.view import DefaultView
+from zope.security import checkPermission
 # keep in mind: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb  # NOQA: E501
 
 
@@ -105,3 +106,6 @@ class SOAPConnectedObjectView(DefaultView):
         if updateSoap:
             self.context.updateData()
         return super(SOAPConnectedObjectView, self).__call__()
+
+    def canModify(self):
+        return checkPermission('cmf.ModifyPortalContent', self.context)

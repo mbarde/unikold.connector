@@ -6,6 +6,8 @@ from zope import schema
 from zope.interface import implementer
 from zeep import Client
 from lxml import etree
+from AccessControl import Unauthorized
+from zope.security import checkPermission
 from unikold.connector import _
 
 
@@ -36,6 +38,9 @@ class ISOAPConnectedObject(model.Schema):
 class SOAPConnectedObject(Item):
 
     def updateData(self):
+        if not checkPermission('cmf.ModifyPortalContent', self):
+            raise Unauthorized('You need ModifyPortalContent permission to execute this method')
+
         (data, err) = self.getXMLData(self.wsdl_url, self.wsdl_method, self.soap_request)
         if err is False:
             self.soap_response = etree.tostring(data)

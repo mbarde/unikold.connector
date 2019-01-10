@@ -4,6 +4,8 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       lang="en"
       metal:use-macro="context/main_template/macros/master"
+      tal:define="authenticator context/@@authenticator;
+                  authToken authenticator/token;"
       i18n:domain="unikold.connector">
 <body>
 
@@ -16,7 +18,8 @@
 
         <h1 class="documentFirstHeading" tal:content="context/Title"/>
 
-        <div tal:repeat="widgetName view/widgets">
+        <div tal:repeat="widgetName view/widgets"
+             tal:condition="view/canModify">
           <tal:widget define="widget python: view.w.get(widgetName)"
                       tal:condition="python: widgetName != 'soap_response'">
             <label tal:content="widget/label"/>
@@ -26,7 +29,7 @@
         <br/>
 
         <label>Search results as python list</label>
-        <tal:search-results condition="context/search_results">
+        <tal:search-results condition="python: hasattr(context, 'search_results')">
           <pre style="max-height: 300px">
             <tal:result repeat="result context/search_results">
               <span tal:replace="result"/>
@@ -38,11 +41,25 @@
         <label tal:content="view/w/soap_response/label"/>
         <pre style="max-height: 300px" tal:content="context/soap_response"/>
 
-        <a class="standalone" href="?updateSOAP=True"
-           tal:attributes="href python: context.absolute_url() + '?updateSOAP=True'">
+        <a class="standalone" href="?updateSOAP=True" id="btn-refresh-soap"
+           tal:condition="view/canModify"
+           tal:attributes="href python: context.absolute_url() + '?updateSOAP=True&_authenticator=' + authToken">
            <span><i class="fa fa-refresh"></i></span>
            <span i18n:translate="">Update</span>
         </a>
+
+        <span id="soap-loading" style="display:none">
+          <span i18n:translate="">Loading</span> ...
+        </span>
+
+        <script>
+          $(document).ready(function() {
+            $('#btn-refresh-soap').click(function() {
+              $('#btn-refresh-soap').addClass('disabled');
+              $('#btn-refresh-soap i.fa-refresh').addClass('fa-spin');
+            });
+          })
+        </script>
 
     </tal:main-macro>
 </metal:main>
