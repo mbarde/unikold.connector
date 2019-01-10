@@ -10,8 +10,6 @@ from unikold.connector import _
 
 
 class ISOAPConnectedObject(model.Schema):
-    """ Marker interface and Dexterity Python Schema for SOAPConnectedObject
-    """
 
     wsdl_url = schema.TextLine(
         title=_(u'WSDL URL'),
@@ -36,13 +34,13 @@ class ISOAPConnectedObject(model.Schema):
 
 @implementer(ISOAPConnectedObject)
 class SOAPConnectedObject(Item):
-    """
-    """
 
     def updateData(self):
         (data, err) = self.getXMLData(self.wsdl_url, self.wsdl_method, self.soap_request)
         if err is False:
             self.soap_response = etree.tostring(data)
+            return data
+        return False
 
     def getXMLData(self, wsdlUrl, wsdlMethod, xmlStr):
         data = False
