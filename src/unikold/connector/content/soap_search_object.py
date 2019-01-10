@@ -45,3 +45,5 @@ class SOAPSearchObject(SOAPConnectedObject):
                     result[name] = value
                 searchResults.append(result)
             self.search_results = searchResults
+            return data
+        return False
