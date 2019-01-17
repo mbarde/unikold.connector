@@ -1,38 +1,53 @@
-.. This README is meant for consumption by humans and pypi. Pypi can render rst files so please do not use Sphinx features.
-   If you want to learn more about writing documentation, please check out: http://docs.plone.org/about/documentation_styleguide.html
-   This text does not appear on pypi or github. It is a comment.
-
 =================
 unikold.connector
 =================
 
-Tell me what your product does
+Plone-Addon for making SOAP-Requests.
+Requests are automatically stored as `SOAPQuery` objects which allows caching of the responses.
+
+You could see this addon as extensible wrapper for [zeep](https://pypi.org/project/zeep/).
+
 
 Features
 --------
 
-- Can be bullet points
+- SOAP-Requests are cached (lifetime can be specified)
+- Live-View to test your SOAP-Requests: `soap_test`
 
 
 Examples
 --------
 
-This add-on can be seen in action at the following sites:
-- Is there a page on the internet where everybody can see the features?
+After installing this addon you can make SOAP-Requests like this:
 
+```
+soapConnector = SOAPConnector(
+    'http://webservices.daehosting.com/services/isbnservice.wso?WSDL',  # URL to WSDL file
+    'IsValidISBN13',                                                    # name of the method
+    '9783492700764',                                                    # method parameter
+    24                                                                  # lifetime of this request in hours
+)
+response = soapConnector.get()
+```
 
-Documentation
--------------
+If the request already exists and its lifetime did not expire `soapConnector` simply returns the stored response.
+If the request exists but is outdated it will be updated before returning the response.
+If the request does not yet exist a new object will be created.
 
-Full documentation for end users can be found in the "docs" folder, and is also available online at http://docs.plone.org/foo/bar
+To get the corresponding query object:
 
+```
+queryObject = soapConnector.getQuery()
+```
 
-Translations
-------------
+Above example without this addon would look like this (remember no caching):
 
-This product has been translated into
-
-- Klingon (thanks, K'Plai)
+```
+from zeep import Client
+url = 'http://webservices.daehosting.com/services/isbnservice.wso?WSDL'
+client = Client(url)
+print client.service.IsValidISBN13('9783492700764')
+```
 
 
 Installation
@@ -50,20 +65,6 @@ Install unikold.connector by adding it to your buildout::
 
 and then running ``bin/buildout``
 
-
-Contribute
-----------
-
-- Issue Tracker: https://github.com/collective/unikold.connector/issues
-- Source Code: https://github.com/collective/unikold.connector
-- Documentation: https://docs.plone.org/foo/bar
-
-
-Support
--------
-
-If you are having issues, please let us know.
-We have a mailing list located at: project@example.com
 
 
 License
