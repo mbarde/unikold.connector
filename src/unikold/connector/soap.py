@@ -63,7 +63,7 @@ class SOAPConnector():
             data = {
                 'wsdl_url': self.wsdlUrl,
                 'wsdl_method': self.wsdlMethod,
-                'soap_request': self.soapRequest,
+                'wsdl_method_parameter': self.soapRequest,
                 'lifetime': self.queryLifetime
             }
             query = api.content.create(
@@ -87,3 +87,7 @@ class SOAPConnector():
             searchResults.append(result)
         self.search_results = searchResults
         return data
+
+
+class LSFConnector(SOAPConnector):
+    query_portal_type = 'LSFQuery'

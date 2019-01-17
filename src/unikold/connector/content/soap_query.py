@@ -22,8 +22,8 @@ class ISOAPQuery(model.Schema):
         required=True
     )
 
-    soap_request = schema.Text(
-        title=_(u'SOAP Request'),
+    wsdl_method_parameter = schema.Text(
+        title=_(u'Parameter for WSDL Method'),
         required=True
     )
 
@@ -56,21 +56,22 @@ class SOAPQuery(Item):
         return self.soap_response
 
     def updateData(self):
-        (data, err) = self.getXMLData(self.wsdl_url, self.wsdl_method, self.soap_request)
+        (data, err) = self.getSOAPResponse(
+            self.wsdl_url, self.wsdl_method, self.wsdl_method_parameter
+        )
         if err is False:
             self.soap_response = str(data)
             self.setModificationDate(DateTime())
             return data
         return False
 
-    def getXMLData(self, wsdlUrl, wsdlMethod, xmlStr):
+    def getSOAPResponse(self, wsdlUrl, wsdlMethod, wsdlMethodParameter):
         data = False
         error = False
 
         try:
             client = Client(wsdlUrl)
-            # dynamically call wsdl method like 'getXMLData'
-            data = getattr(client.service, wsdlMethod)(xmlStr)
+            data = getattr(client.service, wsdlMethod)(wsdlMethodParameter)
         except Exception as exc:
             error = str(exc) + '\n\nRaw answer:\n' + data
         finally:
