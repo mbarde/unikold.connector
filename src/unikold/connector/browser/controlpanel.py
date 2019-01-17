@@ -3,6 +3,7 @@ from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.z3cform import layout
 from z3c.form import button
+from zope import schema
 from zope.interface import Interface
 from unikold.connector.content.soap_query import ISOAPQuery
 from Products.statusmessages.interfaces import IStatusMessage
@@ -11,15 +12,20 @@ from unikold.connector import _
 
 
 class IUniKoLdConnectorControlPanelView(Interface):
-    ''' Schema definition here '''
+
+    soap_queries_folder = schema.TextLine(
+        title=_(u'SOAP-Queries folder'),
+        description=_(u'Folder where SOAP queries are stored and cached'),
+        required=False,
+    )
 
 
 class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     schema = IUniKoLdConnectorControlPanelView
     schema_prefix = 'unikoldconnector'
-    label = u'Uni Ko Ld Connector Einstellungen'
+    label = u'Uni Ko Ld Connector Settings'
 
-    @button.buttonAndHandler(_(u'Update all connected objects'))
+    @button.buttonAndHandler(_(u'Update all queries'))
     def handleUpdateAll(self, action):
         catalog = api.portal.get_tool('portal_catalog')
         brains = catalog(object_provides=ISOAPQuery.__identifier__)
@@ -38,21 +44,21 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
 
         if len(updateSuccess) > 0:
             IStatusMessage(self.request).addStatusMessage(
-                _(u'Successfully updated ${successCount} objects',
+                _(u'Successfully updated ${successCount} queries',
                     mapping={u'successCount': len(updateSuccess)}),
                 'info')
         if len(updateError) > 0:
             IStatusMessage(self.request).addStatusMessage(
-                _(u'Error updating ${errorCount} objects (see logs for more information)',  # NOQA
+                _(u'Error updating ${errorCount} queries (see logs for more information)',  # NOQA
                     mapping={u'errorCount': len(updateError)}),
                 'error')
 
-    @button.buttonAndHandler(_(u'Count connected objects'))
+    @button.buttonAndHandler(_(u'Count queries'))
     def handleCount(self, action):
         catalog = api.portal.get_tool('portal_catalog')
         brains = catalog(object_provides=ISOAPQuery.__identifier__)
         IStatusMessage(self.request).addStatusMessage(
-            _(u'There are ${successCount} connected objects',
+            _(u'There are ${successCount} queries',
                 mapping={u'successCount': len(brains)}),
             'info')
 
