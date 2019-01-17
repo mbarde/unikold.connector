@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # from plone.autoform import directives
+from DateTime import DateTime
+from datetime import timedelta
 from plone.dexterity.content import Item
 from plone.supermodel import model
+from unikold.connector import _
+from zeep import Client
 from zope import schema
 from zope.interface import implementer
-from zeep import Client
-from lxml import etree
-from datetime import timedelta
-from DateTime import DateTime
-from unikold.connector import _
 
 
 class ISOAPQuery(model.Schema):
@@ -57,11 +56,9 @@ class SOAPQuery(Item):
         return self.soap_response
 
     def updateData(self):
-        print(str(self) + ' updating ...')
-
         (data, err) = self.getXMLData(self.wsdl_url, self.wsdl_method, self.soap_request)
         if err is False:
-            self.soap_response = etree.tostring(data)
+            self.soap_response = str(data)
             self.setModificationDate(DateTime())
             return data
         return False
@@ -73,14 +70,8 @@ class SOAPQuery(Item):
         try:
             client = Client(wsdlUrl)
             # dynamically call wsdl method like 'getXMLData'
-            res = getattr(client.service, wsdlMethod)(xmlStr)
-            val = res['_value_1'].encode('utf-8')
-
-            if 'error' in val:
-                error = val
-            else:
-                data = etree.fromstring(val)
+            data = getattr(client.service, wsdlMethod)(xmlStr)
         except Exception as exc:
-            error = str(exc) + '\n\nRaw answer:\n' + val
+            error = str(exc) + '\n\nRaw answer:\n' + data
         finally:
             return (data, error)

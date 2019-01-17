@@ -28,15 +28,6 @@
       permission="zope2.View"
       />
 
-  <browser:page
-      name="test_soap_query"
-      for="*"
-      layer="unikold.connector.interfaces.IUnikoldConnectorLayer"
-      class=".views.SOAPTestView"
-      attribute="testSOAPQuery"
-      permission="zope2.View"
-      />
-
   <!-- SOAP object view -->
   <browser:page
       name="view"

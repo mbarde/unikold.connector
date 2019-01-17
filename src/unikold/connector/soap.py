@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from plone.i18n.normalizer import idnormalizer
-from plone import api
 from datetime import timedelta
+from plone import api
+from plone.i18n.normalizer import idnormalizer
 
 
 class SOAPConnector():
+    query_portal_type = 'SOAPQuery'
 
     def __init__(self, wsdlUrl, wsdlMethod, soapRequest, queryLifetimeInHours):
         self.wsdlUrl = wsdlUrl
@@ -26,7 +27,19 @@ class SOAPConnector():
         # SOAPConnector if we cant get the folder where queries are stored and cached
         soapQueriesPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
         portal = api.portal.get()
-        self.soapQueriesFolder = portal.restrictedTraverse(str(soapQueriesPath))
+        if soapQueriesPath is None or len(soapQueriesPath) == 0:
+            # if no path is specified simply create folder on nav root
+            portalRoot = api.portal.get_navigation_root(portal)
+            self.soapQueriesFolder = api.content.create(
+                type='Folder',
+                title='SOAP Queries',
+                container=portalRoot)
+            api.portal.set_registry_record(
+                'unikold_connector.soap_queries_folder',
+                u'/'.join(self.soapQueriesFolder.getPhysicalPath())
+            )
+        else:
+            self.soapQueriesFolder = portal.restrictedTraverse(str(soapQueriesPath))
 
     def getQuery(self):
         urlFolder = getattr(self.soapQueriesFolder, self.wsdlUrlNormalized, None)
@@ -46,7 +59,7 @@ class SOAPConnector():
                 container=urlFolder)
 
         query = getattr(methodFolder, self.soapRequestNormalized, None)
-        if query is None:
+        if query is None or query.portal_type != self.query_portal_type:
             data = {
                 'wsdl_url': self.wsdlUrl,
                 'wsdl_method': self.wsdlMethod,
@@ -54,7 +67,7 @@ class SOAPConnector():
                 'lifetime': self.queryLifetime
             }
             query = api.content.create(
-                type='SOAPQuery',
+                type=self.query_portal_type,
                 title=self.soapRequestNormalized,
                 id=self.soapRequestNormalized,
                 container=methodFolder,

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
+from plone import api
+from plone.dexterity.browser.view import DefaultView
 from Products.Five.browser import BrowserView
 from zeep import Client
-from lxml import etree
-from plone.dexterity.browser.view import DefaultView
-from zope.security import checkPermission
-from unikold.connector.soap import SOAPConnector
-from plone import api
+
+
 # keep in mind: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb  # NOQA: E501
 
 
@@ -39,7 +39,7 @@ class SOAPTestView(BrowserView):
             if err:
                 self.soapError = err
             else:
-                self.soapResult = etree.tostring(data)
+                self.soapResult = data
 
         return self.index()
 
@@ -75,15 +75,9 @@ class SOAPTestView(BrowserView):
         try:
             client = Client(wsdlUrl)
             # dynamically call wsdl method like 'getXMLData'
-            res = getattr(client.service, wsdlMethod)(xmlStr)
-            val = res['_value_1'].encode('utf-8')
-
-            if 'error' in val:
-                error = val
-            else:
-                data = etree.fromstring(val)
+            data = getattr(client.service, wsdlMethod)(xmlStr)
         except Exception as exc:
-            error = str(exc) + '\n\nRaw answer:\n' + val
+            error = str(exc) + '\n\nRaw answer:\n' + data
         finally:
             return (data, error)
 
@@ -95,16 +89,6 @@ class SOAPTestView(BrowserView):
             if len(splitted) == 2:
                 result.append((splitted[0], splitted[1]))
         return result
-
-    def testSOAPQuery(self):
-        soapConnector = SOAPConnector(
-            'https://klips.uni-koblenz.de/qisserver/services/soapsearch?WSDL',
-            'search',
-            '<search><object>einrichtung</object><expression></expression></search>',
-            24
-        )
-        data = soapConnector.get()
-        import pdb; pdb.set_trace()
 
 
 class SOAPQueryView(DefaultView):
@@ -120,7 +104,8 @@ class SOAPQueryView(DefaultView):
         return super(SOAPQueryView, self).__call__()
 
     def canModify(self):
-        return checkPermission('cmf.ModifyPortalContent', self.context)
+        return api.user.get_permissions(obj=self.context) \
+               .get('Modify portal content', False)
 
     def getModifiedLocalized(self):
         return api.portal.get_localized_time(self.context.modified(), long_format=True)
