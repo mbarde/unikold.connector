@@ -1,10 +1,9 @@
 unikold.connector
 =================
 
-Plone-Addon for making persistent SOAP-Requests using a fast and modern Python SOAP client: https://pypi.org/project/zeep/
-Requests are automatically stored as `SOAPQuery` objects which allows caching of the responses.
+Plone-Addon for making persistent SOAP-Requests using a fast and modern Python SOAP client: [zeep](https://pypi.org/project/zeep/).
 
-You could see this addon as extensible wrapper for [zeep](https://pypi.org/project/zeep/).
+Requests are automatically stored as `SOAPQuery` objects which allows caching with variable lifetime of the responses.
 
 
 Features
