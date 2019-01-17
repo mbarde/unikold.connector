@@ -48,10 +48,6 @@ client = Client(url)
 response = client.service.IsValidISBN13('9783492700764')
 ```
 
-TypeError: string indices must be integers
-------------
-
-Make sure this fix has been applied to zeep: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb
 
 Installation
 ------------
@@ -68,6 +64,18 @@ Install unikold.connector by adding it to your buildout::
 
 and then running ``bin/buildout``
 
+
+Testing
+------------
+
+* `bin/test`
+* `bin/code-analysis`
+
+
+TypeError: string indices must be integers
+------------
+
+Make sure this fix has been applied to zeep: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb
 
 
 License
