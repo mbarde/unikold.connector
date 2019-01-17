@@ -8,6 +8,7 @@ from zope.interface import Interface
 from unikold.connector.content.soap_query import ISOAPQuery
 from Products.statusmessages.interfaces import IStatusMessage
 from plone import api
+from zope.component.hooks import getSite
 from unikold.connector import _
 
 
@@ -22,8 +23,20 @@ class IUniKoLdConnectorControlPanelView(Interface):
 
 class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     schema = IUniKoLdConnectorControlPanelView
-    schema_prefix = 'unikoldconnector'
+    schema_prefix = 'unikold_connector'
     label = u'Uni Ko Ld Connector Settings'
+
+    @button.buttonAndHandler(_(u"Save"), name='save')
+    def handleSave(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+        self.applyChanges(data)
+        IStatusMessage(self.request).addStatusMessage(
+            _(u"Changes saved."),
+            "info")
+        self.request.response.redirect(self.request.getURL())
 
     @button.buttonAndHandler(_(u'Update all queries'))
     def handleUpdateAll(self, action):
@@ -62,13 +75,15 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
                 mapping={u'successCount': len(brains)}),
             'info')
 
-    @button.buttonAndHandler(_(u'Save'), name='save')
-    def handleSave(self, action):
-        super(UniKoLdConnectorControlPanelForm, self).handleSave(action)
-
-    @button.buttonAndHandler(_(u'Cancel'), name='cancel')
+    @button.buttonAndHandler(_(u"Cancel"), name='cancel')
     def handleCancel(self, action):
-        super(UniKoLdConnectorControlPanelForm, self).handleCancel(action)
+        IStatusMessage(self.request).addStatusMessage(
+            _(u"Changes canceled."),
+            "info")
+        self.request.response.redirect(u"{0}/{1}".format(
+            getSite().absolute_url(),
+            self.control_panel_view
+        ))
 
 
 UniKoLdConnectorControlPanelView = layout.wrap_form(

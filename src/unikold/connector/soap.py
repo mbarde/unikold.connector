@@ -22,8 +22,9 @@ class SOAPConnector():
         return query.getData()
 
     def initSOAPQueriesFolder(self):
-        soapQueriesPath = '/Service/lsf-data'
-
+        # intentionally no try and except blocks here since we can not use the
+        # SOAPConnector if we cant get the folder where queries are stored and cached
+        soapQueriesPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
         portal = api.portal.get()
         self.soapQueriesFolder = portal.restrictedTraverse(str(soapQueriesPath))
 
@@ -69,6 +70,7 @@ class SOAPConnector():
                 name = attr.get('name')
                 value = attr.get('value')
                 result[name] = value
+
             searchResults.append(result)
         self.search_results = searchResults
         return data
