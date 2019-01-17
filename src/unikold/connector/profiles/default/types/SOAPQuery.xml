@@ -21,10 +21,10 @@
   <property name="global_allow">True</property>
   <!-- Schema, class and security -->
   <property name="add_permission">unikold.connector.AddSOAPQuery</property>
-  <property name="klass">unikold.connector.content.s_o_a_p_query.SOAPQuery</property>
+  <property name="klass">unikold.connector.content.soap_query.SOAPQuery</property>
   <property name="model_file"></property>
   <property name="model_source"></property>
-  <property name="schema">unikold.connector.content.s_o_a_p_query.ISOAPQuery</property>
+  <property name="schema">unikold.connector.content.soap_query.ISOAPQuery</property>
 
   <!-- Enabled behaviors -->
   <property name="behaviors" purge="false">

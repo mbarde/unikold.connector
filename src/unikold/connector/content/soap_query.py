@@ -6,12 +6,12 @@ from zope import schema
 from zope.interface import implementer
 from zeep import Client
 from lxml import etree
-from AccessControl import Unauthorized
-from zope.security import checkPermission
+from datetime import timedelta
+from DateTime import DateTime
 from unikold.connector import _
 
 
-class ISOAPConnectedObject(model.Schema):
+class ISOAPQuery(model.Schema):
 
     wsdl_url = schema.TextLine(
         title=_(u'WSDL URL'),
@@ -33,17 +33,36 @@ class ISOAPConnectedObject(model.Schema):
         required=False
     )
 
+    lifetime = schema.Timedelta(
+        title=_(u'Lifetime'),
+        required=True,
+        default=timedelta(hours=48)
+    )
 
-@implementer(ISOAPConnectedObject)
-class SOAPConnectedObject(Item):
+
+@implementer(ISOAPQuery)
+class SOAPQuery(Item):
+
+    def getData(self):
+        # update data if there has not been a response yet ...
+        if self.soap_response is None:
+            self.updateData()
+        else:
+            # ... or if lifetime of last update expired
+            now = DateTime().asdatetime()
+            modified = self.modified().asdatetime()
+            if now > modified + self.lifetime:
+                self.updateData()
+
+        return self.soap_response
 
     def updateData(self):
-        if not checkPermission('cmf.ModifyPortalContent', self):
-            raise Unauthorized('You need ModifyPortalContent permission to execute this method')
+        print(str(self) + ' updating ...')
 
         (data, err) = self.getXMLData(self.wsdl_url, self.wsdl_method, self.soap_request)
         if err is False:
             self.soap_response = etree.tostring(data)
+            self.setModificationDate(DateTime())
             return data
         return False
 

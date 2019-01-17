@@ -48,6 +48,9 @@
            <span i18n:translate="">Update</span>
         </a>
 
+        <span>Last update: <span tal:replace="context/modified"></span></span>
+        <span>Created: <span tal:replace="context/created"></span></span>
+
         <span id="soap-loading" style="display:none">
           <span i18n:translate="">Loading</span> ...
         </span>

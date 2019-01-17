@@ -4,6 +4,7 @@ from zeep import Client
 from lxml import etree
 from plone.dexterity.browser.view import DefaultView
 from zope.security import checkPermission
+from unikold.connector.soap import SOAPConnector
 # keep in mind: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb  # NOQA: E501
 
 
@@ -94,8 +95,18 @@ class SOAPTestView(BrowserView):
                 result.append((splitted[0], splitted[1]))
         return result
 
+    def testSOAPQuery(self):
+        soapConnector = SOAPConnector(
+            'https://klips.uni-koblenz.de/qisserver/services/soapsearch?WSDL',
+            'search',
+            '<search><object>einrichtung</object><expression></expression></search>',
+            24
+        )
+        data = soapConnector.get()
+        import pdb; pdb.set_trace()
 
-class SOAPConnectedObjectView(DefaultView):
+
+class SOAPQueryView(DefaultView):
 
     def __init__(self, context, request):
         self.context = context
@@ -105,7 +116,7 @@ class SOAPConnectedObjectView(DefaultView):
         updateSoap = self.request.form.get('updateSOAP', False)
         if updateSoap:
             self.context.updateData()
-        return super(SOAPConnectedObjectView, self).__call__()
+        return super(SOAPQueryView, self).__call__()
 
     def canModify(self):
         return checkPermission('cmf.ModifyPortalContent', self.context)

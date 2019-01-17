@@ -4,7 +4,7 @@ from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.z3cform import layout
 from z3c.form import button
 from zope.interface import Interface
-from unikold.connector.content.soap_connected_object import ISOAPConnectedObject
+from unikold.connector.content.soap_query import ISOAPQuery
 from Products.statusmessages.interfaces import IStatusMessage
 from plone import api
 from unikold.connector import _
@@ -22,7 +22,7 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     @button.buttonAndHandler(_(u'Update all connected objects'))
     def handleUpdateAll(self, action):
         catalog = api.portal.get_tool('portal_catalog')
-        brains = catalog(object_provides=ISOAPConnectedObject.__identifier__)
+        brains = catalog(object_provides=ISOAPQuery.__identifier__)
 
         updateSuccess = []
         updateError = []
@@ -50,7 +50,7 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     @button.buttonAndHandler(_(u'Count connected objects'))
     def handleCount(self, action):
         catalog = api.portal.get_tool('portal_catalog')
-        brains = catalog(object_provides=ISOAPConnectedObject.__identifier__)
+        brains = catalog(object_provides=ISOAPQuery.__identifier__)
         IStatusMessage(self.request).addStatusMessage(
             _(u'There are ${successCount} connected objects',
                 mapping={u'successCount': len(brains)}),

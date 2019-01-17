@@ -1,27 +1,25 @@
 # -*- coding: utf-8 -*-
 from plone.i18n.normalizer import idnormalizer
 from plone import api
+from datetime import timedelta
 
 
 class SOAPConnector():
 
-    def __init__(self, wsdlUrl, wsdlMethod, soapRequest):
+    def __init__(self, wsdlUrl, wsdlMethod, soapRequest, queryLifetimeInHours):
         self.wsdlUrl = wsdlUrl
         self.wsdlUrlNormalized = idnormalizer.normalize(wsdlUrl)
         self.wsdlMethod = wsdlMethod
         self.wsdlMethodNormalized = idnormalizer.normalize(wsdlMethod)
         self.soapRequest = soapRequest
         self.soapRequestNormalized = idnormalizer.normalize(soapRequest)
+        self.queryLifetime = timedelta(hours=queryLifetimeInHours)
 
         self.initSOAPQueriesFolder()
 
     def get(self):
         query = self.getQuery()
-        if query is None:
-            # create query
-            pass
-        else:
-            return query.getData()
+        return query.getData()
 
     def initSOAPQueriesFolder(self):
         soapQueriesPath = '/Service/lsf-data'
@@ -39,23 +37,38 @@ class SOAPConnector():
                 container=self.soapQueriesFolder)
 
         methodFolder = getattr(urlFolder, self.wsdlMethodNormalized, None)
-        if methodFolder is not None:
-            urlFolder = api.content.create(
+        if methodFolder is None:
+            methodFolder = api.content.create(
                 type='Folder',
                 title=self.wsdlMethodNormalized,
                 id=self.wsdlMethodNormalized,
                 container=urlFolder)
 
         query = getattr(methodFolder, self.soapRequestNormalized, None)
-        if query is not None:
+        if query is None:
             data = {
                 'wsdl_url': self.wsdlUrl,
                 'wsdl_method': self.wsdlMethod,
-                'soap_request': self.soapRequest
+                'soap_request': self.soapRequest,
+                'lifetime': self.queryLifetime
             }
-            urlFolder = api.content.create(
+            query = api.content.create(
                 type='SOAPQuery',
                 title=self.soapRequestNormalized,
                 id=self.soapRequestNormalized,
                 container=methodFolder,
                 **data)
+
+        return query
+
+    def getSearchResults(self, data):
+        searchResults = []
+        for obj in data.iter('object'):
+            result = {}
+            for attr in obj.iter('attribute'):
+                name = attr.get('name')
+                value = attr.get('value')
+                result[name] = value
+            searchResults.append(result)
+        self.search_results = searchResults
+        return data
