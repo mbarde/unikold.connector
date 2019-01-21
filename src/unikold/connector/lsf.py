@@ -7,7 +7,7 @@ class LSFConnector(SOAPConnector):
     query_portal_type = 'LSFQuery'
 
     def __init__(self, soapRequest, queryLifetimeInHours):
-        wsdlUrl = api.portal.get_registry_record('unikold_connector.lsf_wsdl_url')
+        wsdlUrl = api.portal.get_registry_record('unikold_connector_lsf.lsf_wsdl_url')
         wsdlMethod = 'getDataXML'
         SOAPConnector.__init__(self, wsdlUrl, wsdlMethod,
                                soapRequest, queryLifetimeInHours)
@@ -17,7 +17,7 @@ class LSFSearchConnector(SOAPConnector):
     query_portal_type = 'LSFSearchQuery'
 
     def __init__(self, soapRequest, queryLifetimeInHours):
-        wsdlUrl = api.portal.get_registry_record('unikold_connector.lsf_wsdl_search_url')
+        wsdlUrl = api.portal.get_registry_record('unikold_connector_lsf.lsf_wsdl_search_url')
         wsdlMethod = 'search'
         SOAPConnector.__init__(self, wsdlUrl, wsdlMethod,
                                soapRequest, queryLifetimeInHours)

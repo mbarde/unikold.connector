@@ -37,11 +37,20 @@
       permission="zope2.View"
       />
 
+  <!-- Controlpanel for connector settings -->
   <browser:page
-       name="unikold-connector-controlpanel"
-       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
-       class=".controlpanel.UniKoLdConnectorControlPanelView"
-       permission="cmf.ManagePortal"
-       />
+      name="unikold-connector-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.UniKoLdConnectorControlPanelView"
+      permission="cmf.ManagePortal"
+      />
+
+  <!-- Controlpanel for LSF settings -->
+  <browser:page
+      name="unikold-connector-lsf-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel_lsf.UniKoLdConnectorLSFControlPanelView"
+      permission="cmf.ManagePortal"
+      />
 
 </configure>
