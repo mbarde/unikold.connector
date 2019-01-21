@@ -48,6 +48,10 @@
            <span i18n:translate="">Update</span>
         </a>
 
+        <span>Last update:
+          <span tal:content="view/getModifiedLocalized"></span>
+        </span>
+
         <span id="soap-loading" style="display:none">
           <span i18n:translate="">Loading</span> ...
         </span>

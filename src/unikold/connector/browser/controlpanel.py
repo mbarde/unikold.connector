@@ -1,28 +1,47 @@
 # -*- coding: utf-8 -*-
+from plone import api
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.z3cform import layout
-from z3c.form import button
-from zope.interface import Interface
-from unikold.connector.content.soap_connected_object import ISOAPConnectedObject
-from Products.statusmessages.interfaces import IStatusMessage
-from plone import api
 from unikold.connector import _
+from unikold.connector.content.soap_query import ISOAPQuery
+from z3c.form import button
+from zope import schema
+from zope.interface import Interface
+
+import logging
 
 
 class IUniKoLdConnectorControlPanelView(Interface):
-    ''' Schema definition here '''
+
+    soap_queries_folder = schema.TextLine(
+        title=_(u'SOAP-Queries folder'),
+        description=_(u'Folder where SOAP queries are stored and cached'),
+        required=False,
+    )
 
 
 class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     schema = IUniKoLdConnectorControlPanelView
-    schema_prefix = 'unikoldconnector'
-    label = u'Uni Ko Ld Connector Einstellungen'
+    schema_prefix = 'unikold_connector'
+    label = u'Uni Ko Ld Connector Settings'
 
-    @button.buttonAndHandler(_(u'Update all connected objects'))
+    @button.buttonAndHandler(_(u'Save'), name='save')
+    def handleSave(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+        self.applyChanges(data)
+        api.portal.show_message(
+            message=_(u'Changes saved.'),
+            request=self.request, type='info')
+        self.request.response.redirect(self.request.getURL())
+
+    @button.buttonAndHandler(_(u'Update all queries'))
     def handleUpdateAll(self, action):
         catalog = api.portal.get_tool('portal_catalog')
-        brains = catalog(object_provides=ISOAPConnectedObject.__identifier__)
+        brains = catalog(object_provides=ISOAPQuery.__identifier__)
 
         updateSuccess = []
         updateError = []
@@ -31,38 +50,40 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
             if obj.updateData() is not False:
                 updateSuccess.append(obj)
             else:
-                print(
-                    '[Connector] Could not update: {} ({})'.format(obj.id, str(obj))
+                logging.error(
+                    '[Connector] Could not update: {0} ({1})'.format(obj.id, str(obj))
                 )
                 updateError.append(obj)
 
         if len(updateSuccess) > 0:
-            IStatusMessage(self.request).addStatusMessage(
-                _(u'Successfully updated ${successCount} objects',
-                    mapping={u'successCount': len(updateSuccess)}),
-                'info')
+            api.portal.show_message(
+                message=_(u'Successfully updated ${successCount} queries',
+                          mapping={u'successCount': len(updateSuccess)}),
+                request=self.request, type='info')
         if len(updateError) > 0:
-            IStatusMessage(self.request).addStatusMessage(
-                _(u'Error updating ${errorCount} objects (see logs for more information)',  # NOQA
-                    mapping={u'errorCount': len(updateError)}),
-                'error')
+            api.portal.show_message(
+                message=_(u'Error updating ${errorCount} queries (see logs for more information)',
+                          mapping={u'errorCount': len(updateError)}),
+                request=self.request, type='error')
 
-    @button.buttonAndHandler(_(u'Count connected objects'))
+    @button.buttonAndHandler(_(u'Count queries'))
     def handleCount(self, action):
         catalog = api.portal.get_tool('portal_catalog')
-        brains = catalog(object_provides=ISOAPConnectedObject.__identifier__)
-        IStatusMessage(self.request).addStatusMessage(
-            _(u'There are ${successCount} connected objects',
-                mapping={u'successCount': len(brains)}),
-            'info')
-
-    @button.buttonAndHandler(_(u'Save'), name='save')
-    def handleSave(self, action):
-        super(UniKoLdConnectorControlPanelForm, self).handleSave(action)
+        brains = catalog(object_provides=ISOAPQuery.__identifier__)
+        api.portal.show_message(
+            message=_(u'There are ${successCount} queries',
+                      mapping={u'successCount': len(brains)}),
+            request=self.request, type='info')
 
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
-        super(UniKoLdConnectorControlPanelForm, self).handleCancel(action)
+        api.portal.show_message(
+            message=_(u'Changes canceled.'),
+            request=self.request, type='info')
+        self.request.response.redirect(u'{0}/{1}'.format(
+            api.portal.get().absolute_url(),
+            self.control_panel_view
+        ))
 
 
 UniKoLdConnectorControlPanelView = layout.wrap_form(

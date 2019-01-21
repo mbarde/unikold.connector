@@ -1,23 +1,13 @@
 <?xml version="1.0"?>
 <rolemap>
   <permissions>
-  <!-- -*- extra stuff goes here -*- -->
 
-    <permission name="unikold.connector: Add SOAPSearchObject" acquire="True">
+    <permission name="unikold.connector: Add SOAPQuery" acquire="True">
       <role name="Manager"/>
       <role name="Site Administrator"/>
       <role name="Owner"/>
       <role name="Contributor"/>
     </permission>
-
-
-    <permission name="unikold.connector: Add SOAPConnectedObject" acquire="True">
-      <role name="Manager"/>
-      <role name="Site Administrator"/>
-      <role name="Owner"/>
-      <role name="Contributor"/>
-    </permission>
-
 
   </permissions>
 </rolemap>

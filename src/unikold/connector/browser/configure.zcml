@@ -31,9 +31,9 @@
   <!-- SOAP object view -->
   <browser:page
       name="view"
-      for="unikold.connector.content.soap_connected_object.ISOAPConnectedObject"
-      class=".views.SOAPConnectedObjectView"
-      template="templates/soap_connected_object_view.pt"
+      for="unikold.connector.content.soap_query.ISOAPQuery"
+      class=".views.SOAPQueryView"
+      template="templates/soap_query_view.pt"
       permission="zope2.View"
       />
 

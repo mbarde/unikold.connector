@@ -42,8 +42,3 @@ code-analysis:
 norobot:
   script:
     - bin/test -t '!robot'
-
-robot:
-  script:
-    - DISPLAY=:99 bin/test -t 'robot'
-

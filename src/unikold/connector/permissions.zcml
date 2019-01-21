@@ -6,13 +6,8 @@
   <configure zcml:condition="installed AccessControl.security">
 
     <permission
-        id="unikold.connector.AddSOAPConnectedObject"
-        title="unikold.connector: Add SOAPConnectedObject"
-    />
-
-    <permission
-        id="unikold.connector.AddSOAPSearchObject"
-        title="unikold.connector: Add SOAPSearchObject"
+        id="unikold.connector.AddSOAPQuery"
+        title="unikold.connector: Add SOAPQuery"
     />
 
   </configure>
