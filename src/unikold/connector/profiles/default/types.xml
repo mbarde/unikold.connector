@@ -3,4 +3,5 @@
   <property name="title">Controls the available contenttypes in your portal</property>
   <object meta_type="Dexterity FTI" name="SOAPQuery"/>
   <object meta_type="Dexterity FTI" name="LSFQuery"/>
+  <object meta_type="Dexterity FTI" name="LSFSearchQuery"/>
 </object>

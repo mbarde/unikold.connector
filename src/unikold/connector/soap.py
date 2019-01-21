@@ -74,20 +74,3 @@ class SOAPConnector():
                 **data)
 
         return query
-
-    def getSearchResults(self, data):
-        searchResults = []
-        for obj in data.iter('object'):
-            result = {}
-            for attr in obj.iter('attribute'):
-                name = attr.get('name')
-                value = attr.get('value')
-                result[name] = value
-
-            searchResults.append(result)
-        self.search_results = searchResults
-        return data
-
-
-class LSFConnector(SOAPConnector):
-    query_portal_type = 'LSFQuery'

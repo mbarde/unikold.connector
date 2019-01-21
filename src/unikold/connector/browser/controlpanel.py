@@ -20,6 +20,20 @@ class IUniKoLdConnectorControlPanelView(Interface):
         required=False,
     )
 
+    lsf_wsdl_url = schema.TextLine(
+        title=_(u'LSF WSDL URL'),
+        description=_(u'URL of the WSDL file of the LSF endpoint'),
+        default=u'https://klips.uni-koblenz.de/qisserver/services/dbinterface?WSDL',
+        required=False,
+    )
+
+    lsf_wsdl_search_url = schema.TextLine(
+        title=_(u'LSF-search WSDL URL'),
+        description=_(u'URL of the WSDL file of the LSF search endpoint'),
+        default=u'https://klips.uni-koblenz.de/qisserver/services/soapsearch?WSDL',
+        required=False,
+    )
+
 
 class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     schema = IUniKoLdConnectorControlPanelView

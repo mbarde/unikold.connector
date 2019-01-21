@@ -5,7 +5,7 @@ from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.dexterity.interfaces import IDexterityFTI
 from unikold.connector.content.lsf_query import ILSFQuery
-from unikold.connector.soap import LSFConnector
+from unikold.connector.lsf import LSFConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING
 from zope.component import createObject
 from zope.component import queryUtility
@@ -52,8 +52,6 @@ class LSFQueryIntegrationTest(unittest.TestCase):
 
     def test_lsf_query_connector(self):
         lsfConnector = LSFConnector(
-            'https://klips.uni-koblenz.de/qisserver/services/dbinterface?WSDL',
-            'getDataXML',
             '<SOAPDataService><general><object>alleSemester</object></general><condition><id>110903</id><_Bezugssemester>20182</_Bezugssemester></condition></SOAPDataService>',  # noqa: E501
             24
         )
@@ -69,6 +67,10 @@ class LSFQueryIntegrationTest(unittest.TestCase):
         self.assertTrue(type(query.soap_response_xml) is etree._Element)
 
         self.assertTrue(query.modified() > query.created())
+
+        modifiedBefore = query.modified()
+        lsfConnector.get()
+        self.assertEqual(modifiedBefore, query.modified())
 
     def test_lsf_query_adding(self):
         setRoles(self.portal, TEST_USER_ID, ['Contributor'])

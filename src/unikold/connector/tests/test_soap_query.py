@@ -66,6 +66,10 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         self.assertEqual(query.soap_response, 'True')
         self.assertTrue(query.modified() > query.created())
 
+        modifiedBefore = query.modified()
+        soapConnector.get()
+        self.assertEqual(modifiedBefore, query.modified())
+
     def test_soap_query_adding(self):
         setRoles(self.portal, TEST_USER_ID, ['Contributor'])
         obj = api.content.create(
