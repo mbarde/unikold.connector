@@ -20,6 +20,7 @@ class SOAPTestView(BrowserView):
         self.soapError = False
         self.soapResult = False
 
+        isLSFRequest = self.request.form.get('isLSFRequest', False)
         wsdlUrl = self.request.form.get('wsdlUrl', False)
         wsdlMethod = self.request.form.get('wsdlMethod', False)
         method = self.request.form.get('method', False)
@@ -39,6 +40,13 @@ class SOAPTestView(BrowserView):
             if err:
                 self.soapError = err
             else:
+                if isLSFRequest:
+                    val = data['_value_1'].encode('utf-8')
+                    if 'error' in val:
+                        self.soapError = val
+                    else:
+                        data = etree.fromstring(val)
+                        data = etree.tostring(data)
                 self.soapResult = data
 
         return self.index()
