@@ -35,6 +35,7 @@
       <input type="checkbox" name="useAuthentication" id="useAuthentication"
              tal:attributes="checked python: view.request.form.get('useAuthentication', False)"/>
       <label for="useAuthentication">Mit Authentifizierung</label>
+      <span>Nutzername und Passwort müssen im LSF-Controlpanel gesetzt werden</span>
       <br/>
       <label for="parameters">Parameter</label><br/>
       <span>Pro Zeile ein Parameter in dem Format: <pre>name:wert</pre></span>

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
+from unikold.connector.content.lsf_query import ILSFQuery
 from unikold.connector.content.lsf_query import LSFQuery
-from unikold.connector.content.soap_query import ISOAPQuery
 from zope.interface import implementer
 
 
-class ILSFSearchQuery(ISOAPQuery):
+class ILSFSearchQuery(ILSFQuery):
     pass
 
 

@@ -12,14 +12,26 @@ class IUniKoLdConnectorLSFControlPanelView(Interface):
     lsf_wsdl_url = schema.TextLine(
         title=_(u'LSF WSDL URL'),
         description=_(u'URL of the WSDL file of the LSF endpoint'),
-        default=u'https://klips.uni-koblenz.de/qisserver/services/dbinterface?WSDL',
+        default=u'http://lsftomcat05:8080/qisserver/services/dbinterface?WSDL',
         required=False,
     )
 
     lsf_wsdl_search_url = schema.TextLine(
         title=_(u'LSF-search WSDL URL'),
         description=_(u'URL of the WSDL file of the LSF search endpoint'),
-        default=u'https://klips.uni-koblenz.de/qisserver/services/soapsearch?WSDL',
+        default=u'http://lsftomcat05:8080/qisserver/services/soapsearch?WSDL',
+        required=False,
+    )
+
+    lsf_auth_username = schema.TextLine(
+        title=_(u'Username for LSF authentication'),
+        description=_(u'Has to be specified in order to be able to use the authentication feature'),
+        required=False,
+    )
+
+    lsf_auth_password = schema.Password(
+        title=_(u'Password for LSF authentication'),
+        description=_(u'Has to be specified in order to be able to use the authentication feature'),
         required=False,
     )
 

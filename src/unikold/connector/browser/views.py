@@ -66,8 +66,9 @@ class SOAPTestView(BrowserView):
                 el.text = value
 
         if auth:
-            username = ''
-            password = ''
+            username = api.portal.get_registry_record('unikold_connector_lsf.lsf_auth_username')
+            password = api.portal.get_registry_record('unikold_connector_lsf.lsf_auth_password')
+
             userAuth = etree.SubElement(root, 'user-auth')
             elUser = etree.SubElement(userAuth, 'username')
             elUser.text = username

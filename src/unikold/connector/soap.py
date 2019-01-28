@@ -41,7 +41,7 @@ class SOAPConnector():
         else:
             self.soapQueriesFolder = portal.restrictedTraverse(str(soapQueriesPath))
 
-    def getQuery(self):
+    def getQuery(self, additionalQueryData=False):
         urlFolder = getattr(self.soapQueriesFolder, self.wsdlUrlNormalized, None)
         if urlFolder is None:
             urlFolder = api.content.create(
@@ -66,6 +66,8 @@ class SOAPConnector():
                 'wsdl_method_parameter': self.soapRequest,
                 'lifetime': self.queryLifetime
             }
+            if additionalQueryData:
+                data.update(additionalQueryData)
             query = api.content.create(
                 type=self.query_portal_type,
                 title=self.soapRequestNormalized,
