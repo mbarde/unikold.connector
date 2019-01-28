@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-lsf_search_test_method_parameter
 from lxml import etree
 from plone import api
 from plone.app.testing import setRoles
@@ -9,6 +9,7 @@ from unikold.connector.lsf import LSFSearchConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING  # noqa
 from unikold.connector.tests.config import lsf_auth_password
 from unikold.connector.tests.config import lsf_auth_username
+from unikold.connector.tests.config import lsf_search_test_method_parameter
 from unikold.connector.tests.config import lsf_wsdl_search_url
 from zope.component import createObject
 from zope.component import queryUtility
@@ -76,9 +77,7 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
 
     def test_lsf_search_query_connector(self):
         lsfSearchConnector = LSFSearchConnector(
-            '<search><object>einrichtung</object><expression></expression></search>',  # noqa: E501
-            24
-        )
+            lsf_search_test_method_parameter, 24)
 
         query = lsfSearchConnector.getQuery()
         self.assertEqual(query.soap_response, None)
