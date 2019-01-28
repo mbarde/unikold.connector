@@ -12,14 +12,12 @@ class IUniKoLdConnectorLSFControlPanelView(Interface):
     lsf_wsdl_url = schema.TextLine(
         title=_(u'LSF WSDL URL'),
         description=_(u'URL of the WSDL file of the LSF endpoint'),
-        default=u'http://lsftomcat05:8080/qisserver/services/dbinterface?WSDL',
         required=False,
     )
 
     lsf_wsdl_search_url = schema.TextLine(
         title=_(u'LSF-search WSDL URL'),
         description=_(u'URL of the WSDL file of the LSF search endpoint'),
-        default=u'http://lsftomcat05:8080/qisserver/services/soapsearch?WSDL',
         required=False,
     )
 

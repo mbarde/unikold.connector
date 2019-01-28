@@ -6,6 +6,9 @@ from plone.dexterity.interfaces import IDexterityFTI
 from unikold.connector.content.soap_query import ISOAPQuery
 from unikold.connector.soap import SOAPConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING
+from unikold.connector.tests.config import soap_test_method
+from unikold.connector.tests.config import soap_test_method_parameter
+from unikold.connector.tests.config import soap_test_url
 from zope.component import createObject
 from zope.component import queryUtility
 
@@ -51,9 +54,9 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
 
     def test_soap_query_connector(self):
         soapConnector = SOAPConnector(
-            'http://webservices.daehosting.com/services/isbnservice.wso?WSDL',
-            'IsValidISBN13',
-            '9783492700764',
+            soap_test_url,
+            soap_test_method,
+            soap_test_method_parameter,
             24
         )
 

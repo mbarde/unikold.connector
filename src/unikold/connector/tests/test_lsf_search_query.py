@@ -7,6 +7,9 @@ from plone.dexterity.interfaces import IDexterityFTI
 from unikold.connector.content.lsf_search_query import ILSFSearchQuery  # NOQA E501
 from unikold.connector.lsf import LSFSearchConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING  # noqa
+from unikold.connector.tests.config import lsf_auth_password
+from unikold.connector.tests.config import lsf_auth_username
+from unikold.connector.tests.config import lsf_wsdl_search_url
 from zope.component import createObject
 from zope.component import queryUtility
 
@@ -28,6 +31,12 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         """Custom shared utility setup for tests."""
         self.portal = self.layer['portal']
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
+
+        # set registry values user has to set via controlpanel
+        registry = self.portal.portal_registry
+        registry.records['unikold_connector_lsf.lsf_wsdl_search_url']._set_value(lsf_wsdl_search_url)  # noqa: E501
+        registry.records['unikold_connector_lsf.lsf_auth_username']._set_value(lsf_auth_username)
+        registry.records['unikold_connector_lsf.lsf_auth_password']._set_value(lsf_auth_password)
 
     def test_lsf_search_query_schema(self):
         fti = queryUtility(IDexterityFTI, name='LSFSearchQuery')
@@ -65,7 +74,7 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
             ),
         )
 
-    def test_lsf_query_connector(self):
+    def test_lsf_search_query_connector(self):
         lsfSearchConnector = LSFSearchConnector(
             '<search><object>einrichtung</object><expression></expression></search>',  # noqa: E501
             24
