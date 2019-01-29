@@ -41,7 +41,7 @@ class SOAPConnector():
         else:
             self.soapQueriesFolder = portal.restrictedTraverse(str(soapQueriesPath))
 
-    def getQuery(self, additionalQueryData=False):
+    def getUrlFolder(self):
         urlFolder = getattr(self.soapQueriesFolder, self.wsdlUrlNormalized, None)
         if urlFolder is None:
             urlFolder = api.content.create(
@@ -49,7 +49,10 @@ class SOAPConnector():
                 title=self.wsdlUrlNormalized,
                 id=self.wsdlUrlNormalized,
                 container=self.soapQueriesFolder)
+        return urlFolder
 
+    def getMethodFolder(self):
+        urlFolder = self.getUrlFolder()
         methodFolder = getattr(urlFolder, self.wsdlMethodNormalized, None)
         if methodFolder is None:
             methodFolder = api.content.create(
@@ -57,22 +60,29 @@ class SOAPConnector():
                 title=self.wsdlMethodNormalized,
                 id=self.wsdlMethodNormalized,
                 container=urlFolder)
+        return methodFolder
 
+    def getQuery(self, additionalQueryData=False):
+        methodFolder = self.getMethodFolder()
         query = getattr(methodFolder, self.soapRequestNormalized, None)
         if query is None or query.portal_type != self.query_portal_type:
-            data = {
-                'wsdl_url': self.wsdlUrl,
-                'wsdl_method': self.wsdlMethod,
-                'wsdl_method_parameter': self.soapRequest,
-                'lifetime': self.queryLifetime
-            }
-            if additionalQueryData:
-                data.update(additionalQueryData)
-            query = api.content.create(
-                type=self.query_portal_type,
-                title=self.soapRequestNormalized,
-                id=self.soapRequestNormalized,
-                container=methodFolder,
-                **data)
+            query = self.createQuery(self.soapRequestNormalized, self.soapRequestNormalized,
+                                     methodFolder, additionalQueryData)
+        return query
 
+    def createQuery(self, id, title, container, additionalQueryData=False):
+        data = {
+            'wsdl_url': self.wsdlUrl,
+            'wsdl_method': self.wsdlMethod,
+            'wsdl_method_parameter': self.soapRequest,
+            'lifetime': self.queryLifetime
+        }
+        if additionalQueryData:
+            data.update(additionalQueryData)
+        query = api.content.create(
+            type=self.query_portal_type,
+            title=title,
+            id=id,
+            container=container,
+            **data)
         return query

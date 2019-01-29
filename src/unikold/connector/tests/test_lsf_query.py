@@ -9,7 +9,8 @@ from unikold.connector.lsf import LSFConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING
 from unikold.connector.tests.config import lsf_auth_password
 from unikold.connector.tests.config import lsf_auth_username
-from unikold.connector.tests.config import lsf_test_method_parameter
+from unikold.connector.tests.config import lsf_test_conditions
+from unikold.connector.tests.config import lsf_test_object_type
 from unikold.connector.tests.config import lsf_wsdl_url
 from zope.component import createObject
 from zope.component import queryUtility
@@ -62,7 +63,7 @@ class LSFQueryIntegrationTest(unittest.TestCase):
 
     def test_lsf_query_connector(self):
         lsfConnector = LSFConnector(
-            lsf_test_method_parameter, 24, False)
+            lsf_test_object_type, lsf_test_conditions, 24, False)
 
         query = lsfConnector.getQuery()
         self.assertEqual(query.soap_response, None)

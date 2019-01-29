@@ -1,21 +1,89 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
 from plone import api
+from plone.i18n.normalizer import idnormalizer
 from unikold.connector.soap import SOAPConnector
 
 
 class LSFConnector(SOAPConnector):
+    '''
+        A LSF `getDataXML` request always consists of an object and conditions,
+        for example:
+
+        getDataXML("
+            <SOAPDataService>
+              <general>
+                <object>StudentMinimalType</object>
+              </general>
+              <condition>
+                <id>211100718</id>
+              </condition>
+            </SOAPDataService>
+        ")
+
+        Here user just needs to specify those values and LSFConnector will create
+        correct XML structure.
+    '''
     query_portal_type = 'LSFQuery'
 
-    def __init__(self, soapRequest, queryLifetimeInHours, useAuthentication=True):
+    def __init__(self, objectType, conditions, queryLifetimeInHours, useAuthentication=True):
         self.useAuthentication = useAuthentication
+        self.objectType = objectType
+        self.objectTypeNormalized = idnormalizer.normalize(objectType)
+        self.conditions = conditions
+        self.conditionsNormalized = self.normalizeConditions(conditions)
+
         wsdlUrl = api.portal.get_registry_record('unikold_connector_lsf.lsf_wsdl_url')
         wsdlMethod = 'getDataXML'
+        soapRequest = self.buildLSFSOAPRequest(objectType, conditions)
         SOAPConnector.__init__(self, wsdlUrl, wsdlMethod,
                                soapRequest, queryLifetimeInHours)
+
+    def getObjectTypeFolder(self):
+        methodFolder = self.getMethodFolder()
+        objectTypeFolder = getattr(methodFolder, self.objectTypeNormalized, None)
+        if objectTypeFolder is None:
+            objectTypeFolder = api.content.create(
+                type='Folder',
+                title=self.objectTypeNormalized,
+                id=self.objectTypeNormalized,
+                container=methodFolder)
+        return objectTypeFolder
+
+    def getQuery(self, additionalQueryData=False):
+        objectTypeFolder = self.getObjectTypeFolder()
+        query = getattr(objectTypeFolder, self.conditionsNormalized, None)
+        if query is None or query.portal_type != self.query_portal_type:
+            query = self.createQuery(self.conditionsNormalized, self.conditionsNormalized,
+                                     objectTypeFolder, additionalQueryData)
+        return query
 
     def get(self):
         query = self.getQuery({'use_authentication': self.useAuthentication})
         return query.getData()
+
+    def buildLSFSOAPRequest(self, objectType, conditions=[]):
+        root = etree.Element('SOAPDataService')
+        general = etree.SubElement(root, 'general')
+        object = etree.SubElement(general, 'object')
+        object.text = objectType
+
+        if len(conditions) > 0:
+            condition = etree.SubElement(root, 'condition')
+            for param in conditions:
+                key = param[0]
+                value = param[1]
+                el = etree.SubElement(condition, key)
+                el.text = value
+
+        return etree.tostring(root, pretty_print=True)
+
+    def normalizeConditions(self, conditions):
+        res = []
+        for c in conditions:
+            res.append(c[0] + '-' + c[1])
+        result = '-'.join(res)
+        return idnormalizer.normalize(result)
 
 
 class LSFSearchConnector(SOAPConnector):
