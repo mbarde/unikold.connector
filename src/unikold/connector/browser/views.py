@@ -107,14 +107,14 @@ class SOAPQueryView(DefaultView):
         self.request = request
 
     def __call__(self):
-        updateSoap = self.request.form.get('updateSOAP', False)
-        if updateSoap:
+        updateSoap = self.request.form.get('update-request', False)
+        if updateSoap and self.canUpdateFromView():
             self.context.updateData()
         return super(SOAPQueryView, self).__call__()
 
-    def canModify(self):
+    def canUpdateFromView(self):
         return api.user.get_permissions(obj=self.context) \
-               .get('Modify portal content', False)
+               .get('Manage portal', False)
 
     def getModifiedLocalized(self):
         return api.portal.get_localized_time(self.context.modified(), long_format=True)

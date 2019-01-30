@@ -42,6 +42,11 @@ class LSFQuery(SOAPQuery):
             wsdlUrl, wsdlMethod, wsdlMethodParameter
         )
         if error is False:
+            valueyKey = '_value_1'
+            if not hasattr(data, valueyKey):
+                error = 'Invalid LSF SOAP response: ' + str(data)
+                return (data, error)
+
             val = data['_value_1'].encode('utf-8')
 
             if 'error' in val:

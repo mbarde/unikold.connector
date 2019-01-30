@@ -28,8 +28,8 @@
         </div>
         <br/>
 
-        <label>Search results as python list</label>
         <tal:search-results condition="python: hasattr(context, 'search_results')">
+          <label>Search results as python list</label>
           <pre style="max-height: 300px">
             <tal:result repeat="result context/search_results">
               <span tal:replace="result"/>
@@ -38,15 +38,26 @@
           <br/>
         </tal:search-results>
 
-        <label tal:content="view/w/soap_response/label"/>
-        <pre style="max-height: 300px" tal:content="context/soap_response"/>
+        <tal:soap-response condition="context/soap_response">
+          <label tal:content="view/w/soap_response/label"/>
+          <pre style="max-height: 300px" tal:content="context/soap_response"/>
+        </tal:soap-response>
 
-        <a class="standalone" href="?updateSOAP=True" id="btn-refresh-soap"
-           tal:condition="view/canModify"
-           tal:attributes="href python: context.absolute_url() + '?updateSOAP=True&_authenticator=' + authToken">
-           <span><i class="fa fa-refresh"></i></span>
-           <span i18n:translate="">Update</span>
-        </a>
+        <tal:soap-error condition="context/soap_error">
+          <label tal:content="view/w/soap_error/label"/>
+          <pre style="max-height: 300px" tal:content="context/soap_error"/>
+        </tal:soap-error>
+
+        <form tal:condition="view/canUpdateFromView"
+              tal:attributes="action python: context.absolute_url() + '?_authenticator=' + authToken"
+              method="POST">
+          <input type="hidden" id="update-request" name="update-request" value="1"/>
+          <button id="btn-update-request"
+                  type="submit" class="standalone">
+             <i class="fa fa-refresh"></i>
+             <span i18n:translate="">Update</span>
+          </button>
+        </form>
 
         <span>Last update:
           <span tal:content="view/getModifiedLocalized"></span>
@@ -58,9 +69,9 @@
 
         <script>
           $(document).ready(function() {
-            $('#btn-refresh-soap').click(function() {
-              $('#btn-refresh-soap').addClass('disabled');
-              $('#btn-refresh-soap i.fa-refresh').addClass('fa-spin');
+            $('#btn-update-request').click(function() {
+              $('#btn-update-request').addClass('disabled');
+              $('#btn-update-request i.fa-refresh').addClass('fa-spin');
             });
           })
         </script>

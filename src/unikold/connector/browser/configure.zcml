@@ -34,7 +34,7 @@
       for="unikold.connector.content.soap_query.ISOAPQuery"
       class=".views.SOAPQueryView"
       template="templates/soap_query_view.pt"
-      permission="zope2.View"
+      permission="cmf.ManagePortal"
       />
 
   <!-- Controlpanel for connector settings -->

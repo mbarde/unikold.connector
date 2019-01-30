@@ -32,6 +32,11 @@ class ISOAPQuery(model.Schema):
         required=False
     )
 
+    soap_error = schema.Text(
+        title=_(u'SOAP Error'),
+        required=False
+    )
+
     lifetime = schema.Timedelta(
         title=_(u'Lifetime'),
         required=True,
@@ -61,8 +66,11 @@ class SOAPQuery(Item):
         )
         if err is False:
             self.soap_response = str(data)
+            self.soap_error = False
             self.setModificationDate(DateTime())
             return data
+        else:
+            self.soap_error = str(err)
         return False
 
     def getSOAPResponse(self, wsdlUrl, wsdlMethod, wsdlMethodParameter):
