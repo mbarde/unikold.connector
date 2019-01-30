@@ -53,4 +53,13 @@
       permission="cmf.ManagePortal"
       />
 
+  <!-- Custom edit form since only admins should be allowed to edit queries
+       via forms. -->
+  <browser:page
+      name="edit"
+      for="unikold.connector.content.soap_query.ISOAPQuery"
+      class=".forms.DummyEditForm"
+      permission="cmf.ManagePortal"
+      />
+
 </configure>

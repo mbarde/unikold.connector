@@ -19,7 +19,7 @@
         <h1 class="documentFirstHeading" tal:content="context/Title"/>
 
         <div tal:repeat="widgetName view/widgets"
-             tal:condition="view/canModify">
+             tal:condition="view/canUpdateFromView">
           <tal:widget define="widget python: view.w.get(widgetName)"
                       tal:condition="python: widgetName != 'soap_response'">
             <label tal:content="widget/label"/>

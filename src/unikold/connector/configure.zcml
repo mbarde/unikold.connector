@@ -42,6 +42,47 @@
       name="unikold.connector-hiddenprofiles"
       />
 
-  <!-- -*- extra stuff goes here -*- -->
+  <!-- Following adapters make sure add forms for the different types of queries
+       can only be used by admins.
+       We want authenticated users to have the permission to create new
+       queries, but not via add forms. -->
+
+  <!-- for SOAPQuery -->
+  <adapter
+      for="Products.CMFCore.interfaces.IFolderish
+        zope.publisher.interfaces.browser.IDefaultBrowserLayer
+        plone.dexterity.interfaces.IDexterityFTI"
+      provides="zope.publisher.interfaces.browser.IBrowserPage"
+      factory=".browser.views.DummyAddView"
+      name="SOAPQuery"
+      />
+
+  <!-- for LSFQuery -->
+  <adapter
+   for="Products.CMFCore.interfaces.IFolderish
+     zope.publisher.interfaces.browser.IDefaultBrowserLayer
+     plone.dexterity.interfaces.IDexterityFTI"
+   provides="zope.publisher.interfaces.browser.IBrowserPage"
+   factory=".browser.views.DummyAddView"
+   name="LSFQuery"
+   />
+
+  <!-- for LSFSearchQuery -->
+  <adapter
+   for="Products.CMFCore.interfaces.IFolderish
+     zope.publisher.interfaces.browser.IDefaultBrowserLayer
+     plone.dexterity.interfaces.IDexterityFTI"
+   provides="zope.publisher.interfaces.browser.IBrowserPage"
+   factory=".browser.views.DummyAddView"
+   name="LSFSearchQuery"
+   />
+
+  <class class=".browser.views.DummyAddView">
+  <require
+     permission="cmf.ManagePortal"
+     interface="zope.publisher.interfaces.browser.IBrowserPage"
+     />
+  </class>
+
 
 </configure>

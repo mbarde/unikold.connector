@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from lxml import etree
 from plone import api
+from plone.dexterity.browser import add
 from plone.dexterity.browser.view import DefaultView
 from Products.Five.browser import BrowserView
 from zeep import Client
@@ -118,3 +119,7 @@ class SOAPQueryView(DefaultView):
 
     def getModifiedLocalized(self):
         return api.portal.get_localized_time(self.context.modified(), long_format=True)
+
+
+class DummyAddView(add.DefaultAddView):
+    pass
