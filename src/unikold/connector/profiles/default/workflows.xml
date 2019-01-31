@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<object name="portal_workflow" meta_type="Plone Workflow Tool">
+  <object name="soap_queries_folder_workflow" meta_type="Workflow"/>
+  <bindings>
+    <type type_id="SOAPQueriesFolder">
+      <bound-workflow workflow_id="soap_queries_folder_workflow" />
+    </type>
+  </bindings>
+</object>
