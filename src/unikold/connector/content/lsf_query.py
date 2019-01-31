@@ -65,7 +65,7 @@ class LSFQuery(SOAPQuery):
         if hasattr(self, 'lsf_response'):
             try:
                 tree = etree.fromstring(self.lsf_response)
-            except etree.XMLSyntaxError:
+            except (etree.XMLSyntaxError, ValueError):
                 tree = etree.Element('xml-syntax-error')
             return tree
         return etree.Element('empty')

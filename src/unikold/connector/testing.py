@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
+from plone import api
 from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
 from plone.app.robotframework.testing import REMOTE_LIBRARY_BUNDLE_FIXTURE
 from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
+from plone.dexterity.interfaces import IDexterityFTI
 from plone.testing import z2
+from unikold.connector.tests.config import lsf_auth_password
+from unikold.connector.tests.config import lsf_auth_username
+from unikold.connector.tests.config import lsf_wsdl_search_url
+from unikold.connector.tests.config import lsf_wsdl_url
+from zope.component import queryUtility
 
 import unikold.connector
 
@@ -22,6 +29,35 @@ class UnikoldConnectorLayer(PloneSandboxLayer):
 
     def setUpPloneSite(self, portal):
         applyProfile(portal, 'unikold.connector:default')
+
+        self.setUpDataFolder(portal)
+        self.setUpLSFControlpanel(portal)
+
+    def setUpDataFolder(self, portal):
+        dataFolderName = 'soap-data'
+        root = api.portal.get_navigation_root(portal)
+
+        # temporary allow adding of SOAPQueriesFolder at root
+        fti = queryUtility(IDexterityFTI, name='SOAPQueriesFolder')
+        fti.global_allow = True
+
+        folder = api.content.create(
+            type='SOAPQueriesFolder',
+            title=dataFolderName,
+            id=dataFolderName,
+            container=root)
+
+        fti.global_allow = False
+
+        path = '/'.join(folder.getPhysicalPath())
+        api.portal.set_registry_record('unikold_connector.soap_queries_folder', unicode(path))
+
+    def setUpLSFControlpanel(self, portal):
+        registry = portal.portal_registry
+        registry.records['unikold_connector_lsf.lsf_wsdl_url']._set_value(lsf_wsdl_url)
+        registry.records['unikold_connector_lsf.lsf_wsdl_search_url']._set_value(lsf_wsdl_search_url)  # noqa: E501
+        registry.records['unikold_connector_lsf.lsf_auth_username']._set_value(lsf_auth_username)
+        registry.records['unikold_connector_lsf.lsf_auth_password']._set_value(lsf_auth_password)
 
 
 UNIKOLD_CONNECTOR_FIXTURE = UnikoldConnectorLayer()

@@ -68,9 +68,27 @@ and then running ``bin/buildout``
 Testing
 ------------
 
+Before you can run the tests you need to create a file called `config.py` in the `tests` folder,
+containing following constants:
+
+```python
+# -*- coding: utf-8 -*-
+soap_test_url = u'http://webservices.daehosting.com/services/isbnservice.wso?WSDL'
+soap_test_method = u'IsValidISBN13'
+soap_test_method_parameter = u'9783492700764'
+
+# config data needed for LSF tests
+lsf_wsdl_url = u''  # URL to LSF WSDL file containing getDataXML method
+lsf_test_object_type = u''  # LSF object type
+lsf_test_conditions = []  # a list of tuples, i.e. [('prename', 'Peter')]
+lsf_wsdl_search_url = u''  #  URL to LSF search WSDL
+lsf_search_test_method_parameter = u''  # XML-formatted parameter for the search method
+lsf_auth_username = u''
+lsf_auth_password = u''
+```
+
 * `bin/test`
 * `bin/code-analysis`
-
 
 TypeError: string indices must be integers
 ------------
