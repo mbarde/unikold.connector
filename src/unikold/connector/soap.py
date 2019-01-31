@@ -31,7 +31,7 @@ class SOAPConnector():
             # if no path is specified simply create folder on nav root
             portalRoot = api.portal.get_navigation_root(portal)
             self.soapQueriesFolder = api.content.create(
-                type='Folder',
+                type='SOAPQueriesFolder',
                 title='SOAP Queries',
                 container=portalRoot)
             api.portal.set_registry_record(

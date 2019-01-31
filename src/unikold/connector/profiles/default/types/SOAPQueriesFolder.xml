@@ -1,30 +1,36 @@
 <?xml version="1.0"?>
 <object xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    name="LSFQuery"
+    name="SOAPQueriesFolder"
     meta_type="Dexterity FTI"
     i18n:domain="unikold.connector">
 
   <!-- Basic properties -->
   <property
       i18n:translate=""
-      name="title">LSFQuery</property>
+      name="title">SOAPQueriesFolder</property>
   <property
       i18n:translate=""
-      name="description"></property>
+      name="description">Folder containing SOAP queries</property>
 
   <property name="allow_discussion">False</property>
-  <property name="factory">LSFQuery</property>
+  <property name="factory">SOAPQueriesFolder</property>
   <property name="icon_expr"></property>
   <property name="link_target"></property>
 
   <!-- Hierarchy control -->
-  <property name="global_allow">False</property>
+  <property name="global_allow">True</property>
+  <property name="filter_content_types">True</property>
+  <property name="allowed_content_types">
+    <element value="SOAPQuery" />
+    <element value="LSFQuery" />
+    <element value="LSFSearchQuery" />
+  </property>
   <!-- Schema, class and security -->
-  <property name="add_permission">unikold.connector.AddSOAPQuery</property>
-  <property name="klass">unikold.connector.content.lsf_query.LSFQuery</property>
-  <property name="model_file"></property>
+  <property name="add_permission">unikold.connector.AddSOAPQueriesFolder</property>
+  <property name="klass">plone.dexterity.content.Container</property>
+  <property name="model_file">unikold.connector.content:soap_queries_folder.xml</property>
   <property name="model_source"></property>
-  <property name="schema">unikold.connector.content.lsf_query.ILSFQuery</property>
+  <property name="schema"></property>
 
   <!-- Enabled behaviors -->
   <property name="behaviors" purge="false">
@@ -43,10 +49,11 @@
     <!--<element value="plone.app.versioningbehavior.behaviors.IVersionable" />-->
     <!--<element value="plone.app.contenttypes.behaviors.tableofcontents.ITableOfContents"/>-->
     <!--<element value="plone.app.contenttypes.behaviors.richtext.IRichText"/>-->
+    <element value="unikold.connector.content.soap_queries_folder.ISOAPQueriesFolder"/>
   </property>
 
   <!-- View information -->
-  <property name="add_view_expr">string:${folder_url}/++add++LSFQuery</property>
+  <property name="add_view_expr">string:${folder_url}/++add++SOAPQueriesFolder</property>
   <property name="default_view">view</property>
   <property name="default_view_fallback">False</property>
   <property name="immediate_view">view</property>
