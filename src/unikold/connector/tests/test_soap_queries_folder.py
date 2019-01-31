@@ -43,9 +43,12 @@ class SOAPQueriesFolderIntegrationTest(unittest.TestCase):
         createObject(factory)
 
     def test_soap_queries_folder_adding(self):
-        setRoles(self.portal, TEST_USER_ID, ['Contributor'])
+        folderPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
+        folder = self.portal.restrictedTraverse(str(folderPath))
+        setRoles(self.portal, TEST_USER_ID, ['Authenticated'])
+
         api.content.create(
-            container=self.portal,
+            container=folder,
             type='SOAPQueriesFolder',
             id='soap_queries_folder',
         )
@@ -53,9 +56,9 @@ class SOAPQueriesFolderIntegrationTest(unittest.TestCase):
     def test_soap_queries_folder_globally_addable(self):
         setRoles(self.portal, TEST_USER_ID, ['Contributor'])
         fti = queryUtility(IDexterityFTI, name='SOAPQueriesFolder')
-        self.assertTrue(
+        self.assertFalse(
             fti.global_allow,
-            u'{0} is not globally addable!'.format(fti.id)
+            u'{0} is globally addable!'.format(fti.id)
         )
 
     def test_soap_queries_folder_filter_content_type_true(self):
@@ -75,3 +78,7 @@ class SOAPQueriesFolderIntegrationTest(unittest.TestCase):
                 type='Document',
                 title='My Content',
             )
+
+    def test_excluded_from_search(self):
+        types_not_searched = api.portal.get_registry_record('plone.types_not_searched')
+        self.assertTrue('SOAPQueriesFolder' in types_not_searched)

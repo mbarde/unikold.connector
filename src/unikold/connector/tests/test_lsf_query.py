@@ -7,11 +7,8 @@ from plone.dexterity.interfaces import IDexterityFTI
 from unikold.connector.content.lsf_query import ILSFQuery
 from unikold.connector.lsf import LSFConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING
-from unikold.connector.tests.config import lsf_auth_password
-from unikold.connector.tests.config import lsf_auth_username
 from unikold.connector.tests.config import lsf_test_conditions
 from unikold.connector.tests.config import lsf_test_object_type
-from unikold.connector.tests.config import lsf_wsdl_url
 from zope.component import createObject
 from zope.component import queryUtility
 
@@ -34,12 +31,6 @@ class LSFQueryIntegrationTest(unittest.TestCase):
         self.portal = self.layer['portal']
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
 
-        # set registry values user has to set via controlpanel
-        registry = self.portal.portal_registry
-        registry.records['unikold_connector_lsf.lsf_wsdl_url']._set_value(lsf_wsdl_url)
-        registry.records['unikold_connector_lsf.lsf_auth_username']._set_value(lsf_auth_username)
-        registry.records['unikold_connector_lsf.lsf_auth_password']._set_value(lsf_auth_password)
-
     def test_lsf_query_schema(self):
         fti = queryUtility(IDexterityFTI, name='LSFQuery')
         schema = fti.lookupSchema()
@@ -61,31 +52,13 @@ class LSFQueryIntegrationTest(unittest.TestCase):
             ),
         )
 
-    def test_lsf_query_connector(self):
-        lsfConnector = LSFConnector(
-            lsf_test_object_type, lsf_test_conditions, 24, False)
-
-        query = lsfConnector.getQuery()
-        self.assertEqual(query.soap_response, None)
-        self.assertFalse(hasattr(query, 'soap_response_xml'))
-        self.assertTrue(query, 'use_authentication')
-
-        data = lsfConnector.get()
-        self.assertTrue(len(data) > 0)
-
-        self.assertTrue(hasattr(query, 'soap_response_xml'))
-        self.assertTrue(type(query.soap_response_xml) is etree._Element)
-
-        self.assertTrue(query.modified() > query.created())
-
-        modifiedBefore = query.modified()
-        lsfConnector.get()
-        self.assertEqual(modifiedBefore, query.modified())
-
     def test_lsf_query_adding(self):
-        setRoles(self.portal, TEST_USER_ID, ['Contributor'])
+        folderPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
+        folder = self.portal.restrictedTraverse(str(folderPath))
+        setRoles(self.portal, TEST_USER_ID, ['Authenticated'])
+
         obj = api.content.create(
-            container=self.portal,
+            container=folder,
             type='LSFQuery',
             id='lsf_query',
         )
@@ -100,7 +73,36 @@ class LSFQueryIntegrationTest(unittest.TestCase):
     def test_lsf_query_globally_addable(self):
         setRoles(self.portal, TEST_USER_ID, ['Contributor'])
         fti = queryUtility(IDexterityFTI, name='LSFQuery')
-        self.assertTrue(
+        self.assertFalse(
             fti.global_allow,
-            u'{0} is not globally addable!'.format(fti.id)
+            u'{0} is globally addable!'.format(fti.id)
         )
+
+    def test_excluded_from_search(self):
+        types_not_searched = api.portal.get_registry_record('plone.types_not_searched')
+        self.assertTrue('LSFQuery' in types_not_searched)
+
+    def test_lsf_query_connector(self):
+        lsfConnector = LSFConnector(
+            lsf_test_object_type, lsf_test_conditions, 24, False)
+
+        query = lsfConnector.getQuery()
+        self.assertEqual(query.soap_response, None)
+        self.assertTrue(query, 'use_authentication')
+
+        lsfResponse = query.getLSFResponse()
+        self.assertTrue(type(lsfResponse) is etree._Element)
+        self.assertTrue(len(lsfResponse) == 0)
+
+        data = lsfConnector.get()
+        self.assertTrue(len(data) > 0)
+
+        lsfResponse = query.getLSFResponse()
+        self.assertTrue(type(lsfResponse) is etree._Element)
+        self.assertTrue(len(lsfResponse) > 0)
+
+        self.assertTrue(query.modified() > query.created())
+
+        modifiedBefore = query.modified()
+        lsfConnector.get()
+        self.assertEqual(modifiedBefore, query.modified())

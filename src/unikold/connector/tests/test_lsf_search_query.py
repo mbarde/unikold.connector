@@ -7,10 +7,7 @@ from plone.dexterity.interfaces import IDexterityFTI
 from unikold.connector.content.lsf_search_query import ILSFSearchQuery  # NOQA E501
 from unikold.connector.lsf import LSFSearchConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING  # noqa
-from unikold.connector.tests.config import lsf_auth_password
-from unikold.connector.tests.config import lsf_auth_username
 from unikold.connector.tests.config import lsf_search_test_method_parameter
-from unikold.connector.tests.config import lsf_wsdl_search_url
 from zope.component import createObject
 from zope.component import queryUtility
 
@@ -32,12 +29,6 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         """Custom shared utility setup for tests."""
         self.portal = self.layer['portal']
         setRoles(self.portal, TEST_USER_ID, ['Manager'])
-
-        # set registry values user has to set via controlpanel
-        registry = self.portal.portal_registry
-        registry.records['unikold_connector_lsf.lsf_wsdl_search_url']._set_value(lsf_wsdl_search_url)  # noqa: E501
-        registry.records['unikold_connector_lsf.lsf_auth_username']._set_value(lsf_auth_username)
-        registry.records['unikold_connector_lsf.lsf_auth_password']._set_value(lsf_auth_password)
 
     def test_lsf_search_query_schema(self):
         fti = queryUtility(IDexterityFTI, name='LSFSearchQuery')
@@ -61,9 +52,12 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         )
 
     def test_lsf_search_query_adding(self):
-        setRoles(self.portal, TEST_USER_ID, ['Contributor'])
+        folderPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
+        folder = self.portal.restrictedTraverse(str(folderPath))
+        setRoles(self.portal, TEST_USER_ID, ['Authenticated'])
+
         obj = api.content.create(
-            container=self.portal,
+            container=folder,
             type='LSFSearchQuery',
             id='lsf_search_query',
         )
@@ -75,21 +69,37 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
             ),
         )
 
+    def test_lsf_search_query_globally_addable(self):
+        setRoles(self.portal, TEST_USER_ID, ['Contributor'])
+        fti = queryUtility(IDexterityFTI, name='LSFSearchQuery')
+        self.assertFalse(
+            fti.global_allow,
+            u'{0} is globally addable!'.format(fti.id)
+        )
+
+    def test_excluded_from_search(self):
+        types_not_searched = api.portal.get_registry_record('plone.types_not_searched')
+        self.assertTrue('LSFSearchQuery' in types_not_searched)
+
     def test_lsf_search_query_connector(self):
         lsfSearchConnector = LSFSearchConnector(
             lsf_search_test_method_parameter, 24)
 
         query = lsfSearchConnector.getQuery()
         self.assertEqual(query.soap_response, None)
-        self.assertFalse(hasattr(query, 'soap_response_xml'))
         self.assertFalse(hasattr(query, 'search_results'))
+
+        lsfResponse = query.getLSFResponse()
+        self.assertTrue(type(lsfResponse) is etree._Element)
+        self.assertTrue(len(lsfResponse) == 0)
 
         data = lsfSearchConnector.get()
         self.assertTrue(len(data) > 0)
         self.assertTrue(type(data[0]) is dict)
 
-        self.assertTrue(hasattr(query, 'soap_response_xml'))
-        self.assertTrue(type(query.soap_response_xml) is etree._Element)
+        lsfResponse = query.getLSFResponse()
+        self.assertTrue(type(lsfResponse) is etree._Element)
+        self.assertTrue(len(lsfResponse) > 0)
 
         self.assertTrue(hasattr(query, 'search_results'))
         self.assertTrue(type(query.search_results) is list)
@@ -99,11 +109,3 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         modifiedBefore = query.modified()
         lsfSearchConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
-
-    def test_lsf_search_query_globally_addable(self):
-        setRoles(self.portal, TEST_USER_ID, ['Contributor'])
-        fti = queryUtility(IDexterityFTI, name='LSFSearchQuery')
-        self.assertTrue(
-            fti.global_allow,
-            u'{0} is not globally addable!'.format(fti.id)
-        )

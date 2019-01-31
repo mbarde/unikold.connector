@@ -52,6 +52,36 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
             ),
         )
 
+    def test_soap_query_adding(self):
+        folderPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
+        folder = self.portal.restrictedTraverse(str(folderPath))
+        setRoles(self.portal, TEST_USER_ID, ['Authenticated'])
+
+        obj = api.content.create(
+            container=folder,
+            type='SOAPQuery',
+            id='soap_query',
+        )
+
+        self.assertTrue(
+            ISOAPQuery.providedBy(obj),
+            u'ISOAPQuery not provided by {0}!'.format(
+                obj.id,
+            ),
+        )
+
+    def test_soap_query_globally_addable(self):
+        setRoles(self.portal, TEST_USER_ID, ['Contributor'])
+        fti = queryUtility(IDexterityFTI, name='SOAPQuery')
+        self.assertFalse(
+            fti.global_allow,
+            u'{0} is globally addable!'.format(fti.id)
+        )
+
+    def test_excluded_from_search(self):
+        types_not_searched = api.portal.get_registry_record('plone.types_not_searched')
+        self.assertTrue('SOAPQuery' in types_not_searched)
+
     def test_soap_query_connector(self):
         soapConnector = SOAPConnector(
             soap_test_url,
@@ -72,26 +102,3 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         modifiedBefore = query.modified()
         soapConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
-
-    def test_soap_query_adding(self):
-        setRoles(self.portal, TEST_USER_ID, ['Contributor'])
-        obj = api.content.create(
-            container=self.portal,
-            type='SOAPQuery',
-            id='soap_query',
-        )
-
-        self.assertTrue(
-            ISOAPQuery.providedBy(obj),
-            u'ISOAPQuery not provided by {0}!'.format(
-                obj.id,
-            ),
-        )
-
-    def test_soap_query_globally_addable(self):
-        setRoles(self.portal, TEST_USER_ID, ['Contributor'])
-        fti = queryUtility(IDexterityFTI, name='SOAPQuery')
-        self.assertTrue(
-            fti.global_allow,
-            u'{0} is not globally addable!'.format(fti.id)
-        )
