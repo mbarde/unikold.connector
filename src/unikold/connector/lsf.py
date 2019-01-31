@@ -44,13 +44,16 @@ class LSFConnector(SOAPConnector):
         objectTypeFolder = getattr(methodFolder, self.objectTypeNormalized, None)
         if objectTypeFolder is None:
             objectTypeFolder = api.content.create(
-                type='Folder',
+                type='SOAPQueriesFolder',
                 title=self.objectTypeNormalized,
                 id=self.objectTypeNormalized,
                 container=methodFolder)
         return objectTypeFolder
 
     def getQuery(self, additionalQueryData=False):
+        if self.soapQueriesFolder is None:
+            return None
+
         objectTypeFolder = self.getObjectTypeFolder()
         query = getattr(objectTypeFolder, self.conditionsNormalized, None)
         if query is None or query.portal_type != self.query_portal_type:
@@ -58,9 +61,14 @@ class LSFConnector(SOAPConnector):
                                      objectTypeFolder, additionalQueryData)
         return query
 
+    # return LSF result as lxml.etree object
     def get(self):
+        if self.soapQueriesFolder is None:
+            return None
+
         query = self.getQuery({'use_authentication': self.useAuthentication})
-        return query.getData()
+        query.getData()  # make sure response is updated if neccessary
+        return query.getLSFResponse()
 
     def buildLSFSOAPRequest(self, objectType, conditions=[]):
         root = etree.Element('SOAPDataService')
@@ -99,6 +107,9 @@ class LSFSearchConnector(SOAPConnector):
     # search query connector should return pre-parsed python list
     # of search results instead of plain SOAP response
     def get(self):
+        if self.soapQueriesFolder is None:
+            return []
+
         query = self.getQuery({'use_authentication': self.useAuthentication})
-        query.getData()
+        query.getData()  # make sure response is updated if neccessary
         return query.getSearchResults()

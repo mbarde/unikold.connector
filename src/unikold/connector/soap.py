@@ -19,33 +19,32 @@ class SOAPConnector():
         self.initSOAPQueriesFolder()
 
     def get(self):
+        if self.soapQueriesFolder is None:
+            return None
+
         query = self.getQuery()
         return query.getData()
 
     def initSOAPQueriesFolder(self):
+        self.soapQueriesFolder = None
+
         # intentionally no try and except blocks here since we can not use the
         # SOAPConnector if we cant get the folder where queries are stored and cached
         soapQueriesPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
-        portal = api.portal.get()
-        if soapQueriesPath is None or len(soapQueriesPath) == 0:
-            # if no path is specified simply create folder on nav root
-            portalRoot = api.portal.get_navigation_root(portal)
-            self.soapQueriesFolder = api.content.create(
-                type='SOAPQueriesFolder',
-                title='SOAP Queries',
-                container=portalRoot)
-            api.portal.set_registry_record(
-                'unikold_connector.soap_queries_folder',
-                u'/'.join(self.soapQueriesFolder.getPhysicalPath())
-            )
-        else:
-            self.soapQueriesFolder = portal.restrictedTraverse(str(soapQueriesPath))
+        if soapQueriesPath is not None and len(soapQueriesPath) > 0:
+            portal = api.portal.get()
+            try:
+                obj = portal.restrictedTraverse(str(soapQueriesPath))
+                if obj.portal_type == 'SOAPQueriesFolder':
+                    self.soapQueriesFolder = obj
+            except KeyError:
+                pass
 
     def getUrlFolder(self):
         urlFolder = getattr(self.soapQueriesFolder, self.wsdlUrlNormalized, None)
         if urlFolder is None:
             urlFolder = api.content.create(
-                type='Folder',
+                type='SOAPQueriesFolder',
                 title=self.wsdlUrlNormalized,
                 id=self.wsdlUrlNormalized,
                 container=self.soapQueriesFolder)
@@ -56,13 +55,16 @@ class SOAPConnector():
         methodFolder = getattr(urlFolder, self.wsdlMethodNormalized, None)
         if methodFolder is None:
             methodFolder = api.content.create(
-                type='Folder',
+                type='SOAPQueriesFolder',
                 title=self.wsdlMethodNormalized,
                 id=self.wsdlMethodNormalized,
                 container=urlFolder)
         return methodFolder
 
     def getQuery(self, additionalQueryData=False):
+        if self.soapQueriesFolder is None:
+            return None
+
         methodFolder = self.getMethodFolder()
         query = getattr(methodFolder, self.soapRequestNormalized, None)
         if query is None or query.portal_type != self.query_portal_type:

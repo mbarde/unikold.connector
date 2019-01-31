@@ -16,9 +16,10 @@ class LSFSearchQuery(LSFQuery):
         (data, error) = super(LSFSearchQuery, self).getSOAPResponse(
             wsdlUrl, wsdlMethod, wsdlMethodParameter
         )
-        if error is False and hasattr(self, 'soap_response_xml'):
+        if error is False:
             searchResults = []
-            for obj in self.soap_response_xml.iter('object'):
+            lsfResponse = self.getLSFResponse()
+            for obj in lsfResponse.iter('object'):
                 result = {}
                 for attr in obj.iter('attribute'):
                     name = attr.get('name')

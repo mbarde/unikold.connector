@@ -16,6 +16,12 @@ class ILSFQuery(ISOAPQuery):
         required=True
     )
 
+    lsf_response = schema.Text(
+        title=_(u'LSF response'),
+        description=_(u'LSF response extracted from the SOAP response'),
+        required=True
+    )
+
 
 @implementer(ILSFQuery)
 class LSFQuery(SOAPQuery):
@@ -36,8 +42,7 @@ class LSFQuery(SOAPQuery):
                 wsdlMethodParameter = etree.tostring(root)
 
         # responses from LSF have a certain structure
-        # here we remove useless stuff and store response additionally
-        # as XML etree
+        # here we remove useless stuff and store LSF response additionally
         (data, error) = super(LSFQuery, self).getSOAPResponse(
             wsdlUrl, wsdlMethod, wsdlMethodParameter
         )
@@ -47,13 +52,20 @@ class LSFQuery(SOAPQuery):
                 error = 'Invalid LSF SOAP response: ' + str(data)
                 return (data, error)
 
-            val = data['_value_1'].encode('utf-8')
+            data = data['_value_1'].encode('utf-8')
 
-            if 'error' in val:
-                error = val
+            if 'error' in data:
+                error = data
             else:
-                data = etree.fromstring(val)
-                self.soap_response_xml = data
-                data = etree.tostring(data)
+                self.lsf_response = data
 
         return (data, error)
+
+    def getLSFResponse(self):
+        if hasattr(self, 'lsf_response'):
+            try:
+                tree = etree.fromstring(self.lsf_response)
+            except etree.XMLSyntaxError:
+                tree = etree.Element('xml-syntax-error')
+            return tree
+        return etree.Element('empty')

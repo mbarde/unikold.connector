@@ -10,6 +10,11 @@
         title="unikold.connector: Add SOAPQuery"
     />
 
+      <permission
+          id="unikold.connector.AddSOAPQueriesFolder"
+          title="unikold.connector: Add SOAPQueriesFolder"
+      />
+
   </configure>
 
 </configure>

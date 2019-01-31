@@ -3,10 +3,15 @@
   <permissions>
 
     <permission name="unikold.connector: Add SOAPQuery" acquire="True">
-      <role name="Manager"/>
       <role name="Site Administrator"/>
-      <role name="Owner"/>
-      <role name="Contributor"/>
+      <role name="Manager"/>
+      <role name="Authenticated"/>
+    </permission>
+
+    <permission name="unikold.connector: Add SOAPQueriesFolder" acquire="True">
+      <role name="Site Administrator"/>
+      <role name="Manager"/>
+      <role name="Authenticated"/>
     </permission>
 
   </permissions>
