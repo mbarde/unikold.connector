@@ -16,8 +16,8 @@ class IUniKoLdConnectorControlPanelView(Interface):
 
     soap_queries_folder = schema.TextLine(
         title=_(u'SOAP-Queries folder'),
-        description=_(u'Folder where SOAP queries are stored and cached'),
-        required=False,
+        description=_(u'Folder where SOAP queries are stored and cached. Must be the path to an existing SOAPQueriesFolder.'),  # noqa: E501
+        required=True,
     )
 
 
@@ -28,10 +28,26 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
 
     @button.buttonAndHandler(_(u'Save'), name='save')
     def handleSave(self, action):
+        errorMsg = False
         data, errors = self.extractData()
-        if errors:
+
+        if 'soap_queries_folder' in data:
+            soapQueriesPath = data['soap_queries_folder']
+            portal = api.portal.get()
+            try:
+                folder = portal.restrictedTraverse(str(soapQueriesPath))
+                if folder.portal_type != 'SOAPQueriesFolder':
+                    errorMsg = _(u'Item at this location is not a SOAPQueriesFolder!')
+            except KeyError:
+                errorMsg = _(u'SOAPQueriesFolder does not exist at this location!')
+
+            if errorMsg:
+                api.portal.show_message(errorMsg, request=self.request, type='error')
+
+        if errors or errorMsg:
             self.status = self.formErrorsMessage
             return
+
         self.applyChanges(data)
         api.portal.show_message(
             message=_(u'Changes saved.'),
