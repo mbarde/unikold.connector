@@ -18,12 +18,12 @@ class SOAPConnector():
 
         self.initSOAPQueriesFolder()
 
-    def get(self):
+    def get(self, forceUpdate=False):
         if self.soapQueriesFolder is None:
             return None
 
         query = self.getQuery()
-        return query.getData()
+        return query.getData(forceUpdate)
 
     def initSOAPQueriesFolder(self):
         self.soapQueriesFolder = None

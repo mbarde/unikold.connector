@@ -47,9 +47,9 @@ class ISOAPQuery(model.Schema):
 @implementer(ISOAPQuery)
 class SOAPQuery(Item):
 
-    def getData(self):
+    def getData(self, forceUpdate=False):
         # update data if there has not been a response yet ...
-        if self.soap_response is None:
+        if forceUpdate or self.soap_response is None:
             self.updateData()
         else:
             # ... or if lifetime of last update expired

@@ -62,12 +62,12 @@ class LSFConnector(SOAPConnector):
         return query
 
     # return LSF result as lxml.etree object
-    def get(self):
+    def get(self, forceUpdate=False):
         if self.soapQueriesFolder is None:
             return None
 
         query = self.getQuery({'use_authentication': self.useAuthentication})
-        query.getData()  # make sure response is updated if neccessary
+        query.getData(forceUpdate)  # make sure response is updated if neccessary
         return query.getLSFResponse()
 
     def buildLSFSOAPRequest(self, objectType, conditions=[]):
@@ -106,10 +106,10 @@ class LSFSearchConnector(SOAPConnector):
 
     # search query connector should return pre-parsed python list
     # of search results instead of plain SOAP response
-    def get(self):
+    def get(self, forceUpdate=False):
         if self.soapQueriesFolder is None:
             return []
 
         query = self.getQuery({'use_authentication': self.useAuthentication})
-        query.getData()  # make sure response is updated if neccessary
+        query.getData(forceUpdate)  # make sure response is updated if neccessary
         return query.getSearchResults()
