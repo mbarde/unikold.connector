@@ -83,8 +83,13 @@ lsf_test_object_type = u''  # LSF object type
 lsf_test_conditions = []  # a list of tuples, i.e. [('prename', 'Peter')]
 lsf_wsdl_search_url = u''  #  URL to LSF search WSDL
 lsf_search_test_method_parameter = u''  # XML-formatted parameter for the search method
+
+# for testing LSF methods with authentication
 lsf_auth_username = u''
 lsf_auth_password = u''
+lsf_auth_test_object_type = u''  # LSF object type
+lsf_auth_test_conditions_0 = []  # a list of tuples, i.e. [('prename', 'Peter')]
+lsf_auth_test_conditions_1 = []  # a list of tuples, i.e. [('prename', 'Peter')]
 ```
 
 * `bin/test`
