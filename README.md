@@ -17,7 +17,10 @@ Installation
 --------
 1. Add `unikold.connector` to your buildout
 2. Install via `prefs_install_products_form`
-3. Create `SOAPQueriesFolder` (at this folder all queries will be stored, maybe you also want to exclude it from navigation)
+3. Create `SOAPQueriesFolder`
+* For security reasons `SOAPQueriesFolder` are not globally addable by default - to be able to add it you need to allow adding this content type at the desired location temporarily
+* At this folder all queries will be stored
+* Maybe you also want to exclude it from navigation
 4. Set path to this folder in `@@unikold-connector-controlpanel`
 5. If you want to make use of LSF-Queries you also have to define settings in `@@unikold-connector-lsf-controlpanel`
 
