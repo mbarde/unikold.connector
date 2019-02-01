@@ -13,6 +13,15 @@ Features
 - Live-View to test your SOAP-Requests: `soap_test`
 
 
+Installation
+--------
+1. Add `unikold.connector` to your buildout
+2. Install via `prefs_install_products_form`
+3. Create `SOAPQueriesFolder` (at this folder all queries will be stored, maybe you also want to exclude it from navigation)
+4. Set path to this folder in `@@unikold-connector-controlpanel`
+5. If you want to make use of LSF-Queries you also have to define settings in `@@unikold-connector-lsf-controlpanel`
+
+
 Examples
 --------
 
@@ -47,22 +56,6 @@ url = 'http://webservices.daehosting.com/services/isbnservice.wso?WSDL'
 client = Client(url)
 response = client.service.IsValidISBN13('9783492700764')
 ```
-
-
-Installation
-------------
-
-Install unikold.connector by adding it to your buildout::
-
-    [buildout]
-
-    ...
-
-    eggs =
-        unikold.connector
-
-
-and then running ``bin/buildout``
 
 
 Testing
