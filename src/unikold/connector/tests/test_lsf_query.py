@@ -7,6 +7,9 @@ from plone.dexterity.interfaces import IDexterityFTI
 from unikold.connector.content.lsf_query import ILSFQuery
 from unikold.connector.lsf import LSFConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING
+from unikold.connector.tests.config import lsf_auth_test_conditions_0
+from unikold.connector.tests.config import lsf_auth_test_conditions_1
+from unikold.connector.tests.config import lsf_auth_test_object_type
 from unikold.connector.tests.config import lsf_test_conditions
 from unikold.connector.tests.config import lsf_test_object_type
 from zope.component import createObject
@@ -106,3 +109,17 @@ class LSFQueryIntegrationTest(unittest.TestCase):
         modifiedBefore = query.modified()
         lsfConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
+
+        lsfConnector.get(True)  # force update
+        self.assertTrue(modifiedBefore < query.modified())
+
+    def test_lsf_query_connector_with_auth(self):
+        lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions_0, 0, False)
+        data = lsfConnector.get()
+        self.assertTrue('no user rights' in etree.tostring(data))
+        self.assertTrue(len(data) == 0)
+
+        lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions_1, 0, True)
+        data = lsfConnector.get()
+        self.assertTrue('no user rights' not in etree.tostring(data))
+        self.assertTrue(len(data) > 0)
