@@ -42,12 +42,16 @@ class SOAPTestView(BrowserView):
                 self.soapError = err
             else:
                 if isLSFRequest:
-                    val = data['_value_1'].encode('utf-8')
-                    if 'error' in val:
-                        self.soapError = val
+                    val = getattr(data, '_value_1', False)
+                    if val is False:
+                        self.soapError = str(data)
                     else:
-                        data = etree.fromstring(val)
-                        data = etree.tostring(data)
+                        val = val.encode('utf-8')
+                        if 'error' in val:
+                            self.soapError = val
+                        else:
+                            data = etree.fromstring(val)
+                            data = etree.tostring(data)
                 self.soapResult = data
 
         return self.index()
