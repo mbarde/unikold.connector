@@ -4,10 +4,7 @@ from plone import api
 from plone.dexterity.browser import add
 from plone.dexterity.browser.view import DefaultView
 from Products.Five.browser import BrowserView
-from zeep import Client
-
-
-# keep in mind: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb  # NOQA: E501
+from unikold.connector.utils import getSOAPResponse
 
 
 class SOAPTestView(BrowserView):
@@ -37,7 +34,7 @@ class SOAPTestView(BrowserView):
                 soapStr = self.buildSOAPRequest(method, parameters, withAuth)
 
             self.soapRequestAsString = soapStr
-            (data, err) = self.getXMLData(wsdlUrl, wsdlMethod, soapStr)
+            (data, err) = getSOAPResponse(wsdlUrl, wsdlMethod, soapStr)
             if err:
                 self.soapError = err
             else:
@@ -81,19 +78,6 @@ class SOAPTestView(BrowserView):
             elPW.text = password
 
         return etree.tostring(root, pretty_print=True)
-
-    def getXMLData(self, wsdlUrl, wsdlMethod, xmlStr):
-        data = False
-        error = False
-
-        try:
-            client = Client(wsdlUrl)
-            # dynamically call wsdl method like 'getXMLData'
-            data = getattr(client.service, wsdlMethod)(xmlStr)
-        except Exception as exc:
-            error = str(exc) + '\n\nRaw answer:\n' + data
-        finally:
-            return (data, error)
 
     def inputParametersToList(self, text):
         result = []

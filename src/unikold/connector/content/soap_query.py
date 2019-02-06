@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-# from plone.autoform import directives
 from DateTime import DateTime
 from datetime import timedelta
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from unikold.connector import _
-from zeep import Client
+from unikold.connector.utils import getSOAPResponse
 from zope import schema
 from zope.interface import implementer
 
@@ -74,13 +73,4 @@ class SOAPQuery(Item):
         return False
 
     def getSOAPResponse(self, wsdlUrl, wsdlMethod, wsdlMethodParameter):
-        data = False
-        error = False
-
-        try:
-            client = Client(wsdlUrl)
-            data = getattr(client.service, wsdlMethod)(wsdlMethodParameter)
-        except Exception as exc:
-            error = str(exc) + '\n\nRaw answer:\n' + data
-        finally:
-            return (data, error)
+        return getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter)
