@@ -102,3 +102,13 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         modifiedBefore = query.modified()
         soapConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
+
+    def test_soap_query_connector_fail(self):
+        soapConnector = SOAPConnector(
+            '127.0.0.1',
+            soap_test_method,
+            soap_test_method_parameter,
+            24
+        )
+        data = soapConnector.get()
+        self.assertEqual(data, 'False')
