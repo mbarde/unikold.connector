@@ -26,7 +26,9 @@ class ILSFQuery(ISOAPQuery):
 @implementer(ILSFQuery)
 class LSFQuery(SOAPQuery):
 
-    def getSOAPResponse(self, wsdlUrl, wsdlMethod, wsdlMethodParameter):
+    def getSOAPResponse(self):
+        wsdlMethodParameter = self.wsdl_method_parameter
+
         if self.use_authentication:
             username = api.portal.get_registry_record('unikold_connector_lsf.lsf_auth_username')
             password = api.portal.get_registry_record('unikold_connector_lsf.lsf_auth_password')
@@ -44,7 +46,7 @@ class LSFQuery(SOAPQuery):
         # responses from LSF have a certain structure
         # here we remove useless stuff and store LSF response additionally
         (data, error) = super(LSFQuery, self).getSOAPResponse(
-            wsdlUrl, wsdlMethod, wsdlMethodParameter
+            wsdlMethodParameter=wsdlMethodParameter
         )
         if error is False:
             valueyKey = '_value_1'

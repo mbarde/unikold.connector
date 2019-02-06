@@ -12,10 +12,8 @@ class ILSFSearchQuery(ILSFQuery):
 class LSFSearchQuery(LSFQuery):
 
     # store search results as list of python objects
-    def getSOAPResponse(self, wsdlUrl, wsdlMethod, wsdlMethodParameter):
-        (data, error) = super(LSFSearchQuery, self).getSOAPResponse(
-            wsdlUrl, wsdlMethod, wsdlMethodParameter
-        )
+    def getSOAPResponse(self):
+        (data, error) = super(LSFSearchQuery, self).getSOAPResponse()
         if error is False:
             searchResults = []
             lsfResponse = self.getLSFResponse()
