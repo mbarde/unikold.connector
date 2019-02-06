@@ -42,12 +42,6 @@ class ISOAPQuery(model.Schema):
         default=timedelta(hours=48)
     )
 
-    timeout = schema.Int(
-        title=_(u'Timeout'),
-        required=False,
-        default=10
-    )
-
 
 @implementer(ISOAPQuery)
 class SOAPQuery(Item):
@@ -76,14 +70,11 @@ class SOAPQuery(Item):
             self.soap_error = str(err)
         return False
 
-    def getSOAPResponse(self, wsdlUrl=None, wsdlMethod=None,
-                        wsdlMethodParameter=None, timeout=None):
+    def getSOAPResponse(self, wsdlUrl=None, wsdlMethod=None, wsdlMethodParameter=None):
         if wsdlUrl is None:
             wsdlUrl = self.wsdl_url
         if wsdlMethod is None:
             wsdlMethod = self.wsdl_method
         if wsdlMethodParameter is None:
             wsdlMethodParameter = self.wsdl_method_parameter
-        if timeout is None:
-            timeout = self.timeout
-        return getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter, timeout)
+        return getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter)

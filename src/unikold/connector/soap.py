@@ -15,7 +15,6 @@ class SOAPConnector():
         self.soapRequest = soapRequest
         self.soapRequestNormalized = idnormalizer.normalize(soapRequest)
         self.queryLifetime = timedelta(hours=queryLifetimeInHours)
-
         self.initSOAPQueriesFolder()
 
     def get(self, forceUpdate=False):

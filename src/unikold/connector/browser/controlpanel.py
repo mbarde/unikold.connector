@@ -20,6 +20,12 @@ class IUniKoLdConnectorControlPanelView(Interface):
         required=True,
     )
 
+    soap_timeout = schema.Int(
+        title=_(u'Default timeout for SOAP requests (in seconds)'),
+        required=False,
+        default=10
+    )
+
 
 class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     schema = IUniKoLdConnectorControlPanelView
