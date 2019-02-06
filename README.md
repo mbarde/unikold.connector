@@ -10,7 +10,7 @@ Features
 --------
 
 - SOAP-Requests are cached (lifetime can be specified)
-- Live-View to test your SOAP-Requests: `soap_test`
+- Live-View to test your SOAP-Requests: `test_soap`
 
 
 Installation
