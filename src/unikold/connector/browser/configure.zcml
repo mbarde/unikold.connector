@@ -25,7 +25,7 @@
       layer="unikold.connector.interfaces.IUnikoldConnectorLayer"
       class=".views.SOAPTestView"
       template="templates/soap_test_view.pt"
-      permission="zope2.View"
+      permission="cmf.ManagePortal"
       />
 
   <!-- SOAP object view -->
