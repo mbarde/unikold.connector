@@ -8,7 +8,7 @@ def getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter):
     error = False
 
     try:
-        transport = Transport(timeout=10)
+        transport = Transport(timeout=10)  # 10 sec.
         client = Client(wsdlUrl, transport=transport)
         data = getattr(client.service, wsdlMethod)(wsdlMethodParameter)
     except Exception as exc:
