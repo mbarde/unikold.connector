@@ -51,13 +51,13 @@ class UnikoldConnectorLayer(PloneSandboxLayer):
 
         path = '/'.join(folder.getPhysicalPath())
         api.portal.set_registry_record('unikold_connector.soap_queries_folder', unicode(path))
+        api.portal.set_registry_record('unikold_connector.soap_timeout', 10)
 
     def setUpLSFControlpanel(self, portal):
-        registry = portal.portal_registry
-        registry.records['unikold_connector_lsf.lsf_wsdl_url']._set_value(lsf_wsdl_url)
-        registry.records['unikold_connector_lsf.lsf_wsdl_search_url']._set_value(lsf_wsdl_search_url)  # noqa: E501
-        registry.records['unikold_connector_lsf.lsf_auth_username']._set_value(lsf_auth_username)
-        registry.records['unikold_connector_lsf.lsf_auth_password']._set_value(lsf_auth_password)
+        api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_url', lsf_wsdl_url)
+        api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_search_url', lsf_wsdl_search_url)  # noqa: E501
+        api.portal.set_registry_record('unikold_connector_lsf.lsf_auth_username', lsf_auth_username)  # noqa: E501
+        api.portal.set_registry_record('unikold_connector_lsf.lsf_auth_password', lsf_auth_password)  # noqa: E501
 
 
 UNIKOLD_CONNECTOR_FIXTURE = UnikoldConnectorLayer()

@@ -17,9 +17,11 @@ def getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter):
         client = Client(wsdlUrl, transport=transport)
         data = getattr(client.service, wsdlMethod)(wsdlMethodParameter)
     except Exception as exc:
-        error = str(exc) + '\n\nRaw answer:\n' + data
+        error = str(exc) + '\n\nRaw answer:\n' + str(data)
     finally:
-        if data == 'False':
-            error = 'Invalid SOAP response: ' + str(data)
+        if data == 'False' or data is False:
+            if error is False:
+                error = 'Invalid SOAP response: ' + str(data)
             data = False
-        return (data, error)
+
+    return (data, error)

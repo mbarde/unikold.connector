@@ -15,6 +15,7 @@ class SOAPConnector():
         self.soapRequest = soapRequest
         self.soapRequestNormalized = idnormalizer.normalize(soapRequest)
         self.queryLifetime = timedelta(hours=queryLifetimeInHours)
+        self.query = False
         self.initSOAPQueriesFolder()
 
     def get(self, forceUpdate=False):
@@ -60,15 +61,24 @@ class SOAPConnector():
                 container=urlFolder)
         return methodFolder
 
+    # return folder containing the query object
+    def getQueryFolder(self):
+        return self.getMethodFolder()
+
     def getQuery(self, additionalQueryData=False):
         if self.soapQueriesFolder is None:
             return None
+        if self.query:
+            return self.query
 
-        methodFolder = self.getMethodFolder()
-        query = getattr(methodFolder, self.soapRequestNormalized, None)
+        queryFolder = self.getQueryFolder()
+        query = getattr(queryFolder, self.soapRequestNormalized, None)
         if query is None or query.portal_type != self.query_portal_type:
-            query = self.createQuery(self.soapRequestNormalized, self.soapRequestNormalized,
-                                     methodFolder, additionalQueryData)
+            query = self.createQuery(self.soapRequestNormalized,
+                                     self.soapRequestNormalized,
+                                     queryFolder, additionalQueryData)
+
+        self.query = query
         return query
 
     def createQuery(self, id, title, container, additionalQueryData=False):

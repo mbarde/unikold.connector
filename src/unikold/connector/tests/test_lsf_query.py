@@ -7,11 +7,11 @@ from plone.dexterity.interfaces import IDexterityFTI
 from unikold.connector.content.lsf_query import ILSFQuery
 from unikold.connector.lsf import LSFConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING
-from unikold.connector.tests.config import lsf_auth_test_conditions_0
-from unikold.connector.tests.config import lsf_auth_test_conditions_1
+from unikold.connector.tests.config import lsf_auth_test_conditions
 from unikold.connector.tests.config import lsf_auth_test_object_type
 from unikold.connector.tests.config import lsf_test_conditions
 from unikold.connector.tests.config import lsf_test_object_type
+from unikold.connector.tests.config import lsf_wsdl_url
 from zope.component import createObject
 from zope.component import queryUtility
 
@@ -114,12 +114,37 @@ class LSFQueryIntegrationTest(unittest.TestCase):
         self.assertTrue(modifiedBefore < query.modified())
 
     def test_lsf_query_connector_with_auth(self):
-        lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions_0, 0, False)
+        lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions, 0, False)
         data = lsfConnector.get()
         self.assertTrue('no user rights' in etree.tostring(data))
         self.assertTrue(len(data) == 0)
 
-        lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions_1, 0, True)
+        api.content.delete(lsfConnector.getQuery())
+
+        lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions, 0, True)
         data = lsfConnector.get()
         self.assertTrue('no user rights' not in etree.tostring(data))
         self.assertTrue(len(data) > 0)
+
+    def test_lsf_query_connector_fail_params(self):
+        lsfConnector = LSFConnector(
+            'anotexistingtype', lsf_test_conditions, 24, False)
+
+        data = lsfConnector.get()
+        self.assertEqual(data.tag, 'xml-syntax-error')
+        query = lsfConnector.getQuery()
+        self.assertEqual(query.soap_error, 'error in soap-request')
+
+    def test_lsf_query_connector_fail_url(self):
+        api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_url',
+                                       u'http://127.0.0.1?WSDL')
+
+        lsfConnector = LSFConnector(
+            lsf_test_object_type, lsf_test_conditions, 24, False)
+
+        data = lsfConnector.get()
+        self.assertEqual(data.tag, 'xml-syntax-error')
+        query = lsfConnector.getQuery()
+        self.assertTrue('Max retries exceeded' in query.soap_error)
+
+        api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_url', lsf_wsdl_url)

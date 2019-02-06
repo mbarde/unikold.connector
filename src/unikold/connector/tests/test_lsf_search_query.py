@@ -8,6 +8,7 @@ from unikold.connector.content.lsf_search_query import ILSFSearchQuery  # NOQA E
 from unikold.connector.lsf import LSFSearchConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING  # noqa
 from unikold.connector.tests.config import lsf_search_test_method_parameter
+from unikold.connector.tests.config import lsf_wsdl_search_url
 from zope.component import createObject
 from zope.component import queryUtility
 
@@ -109,3 +110,27 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         modifiedBefore = query.modified()
         lsfSearchConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
+
+    def test_lsf_search_query_connector_fail_params(self):
+        lsfSearchConnector = LSFSearchConnector(
+            'uselessparameter', 24)
+
+        data = lsfSearchConnector.get()
+        self.assertEqual(data, [])
+        query = lsfSearchConnector.getQuery()
+        self.assertTrue('java.lang.NullPointerException' in query.soap_error)
+
+    def test_lsf_search_query_connector_fail_url(self):
+        api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_search_url',
+                                       u'http://127.0.0.1?WSDL')
+
+        lsfSearchConnector = LSFSearchConnector(
+            lsf_search_test_method_parameter, 24)
+
+        data = lsfSearchConnector.get()
+        self.assertEqual(data, [])
+        query = lsfSearchConnector.getQuery()
+        self.assertTrue('Max retries exceeded' in query.soap_error)
+
+        api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_search_url',
+                                       lsf_wsdl_search_url)

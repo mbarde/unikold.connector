@@ -57,7 +57,10 @@ class SOAPQuery(Item):
             if now > modified + self.lifetime:
                 self.updateData()
 
-        return self.soap_response
+        res = getattr(self, 'soap_response', None)
+        if res is None:
+            res = ''
+        return res
 
     def updateData(self):
         (data, err) = self.getSOAPResponse()

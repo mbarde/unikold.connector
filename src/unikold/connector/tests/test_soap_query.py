@@ -103,12 +103,29 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         soapConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
 
-    def test_soap_query_connector_fail(self):
+    def test_soap_query_connector_fail_params(self):
+        notExistingMethod = 'notexistingmethod'
         soapConnector = SOAPConnector(
-            '127.0.0.1',
+            soap_test_url,
+            notExistingMethod,
+            '',
+            24
+        )
+
+        data = soapConnector.get()
+        self.assertEqual(data, '')
+        query = soapConnector.getQuery()
+        self.assertTrue(notExistingMethod in query.soap_error)
+
+    def test_soap_query_connector_fail_url(self):
+        soapConnector = SOAPConnector(
+            'http://127.0.0.1?WSDL',
             soap_test_method,
             soap_test_method_parameter,
             24
         )
+
         data = soapConnector.get()
-        self.assertEqual(data, 'False')
+        self.assertEqual(data, '')
+        query = soapConnector.getQuery()
+        self.assertTrue('Max retries exceeded' in query.soap_error)

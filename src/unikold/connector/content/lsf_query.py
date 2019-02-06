@@ -35,13 +35,18 @@ class LSFQuery(SOAPQuery):
 
             if username is not None and password is not None:
                 # add <user-auth> element for LSF authentication
-                root = etree.fromstring(self.wsdl_method_parameter)
-                userAuth = etree.SubElement(root, 'user-auth')
-                elUser = etree.SubElement(userAuth, 'username')
-                elUser.text = username
-                elPW = etree.SubElement(userAuth, 'password')
-                elPW.text = password
-                wsdlMethodParameter = etree.tostring(root)
+                try:
+                    root = etree.fromstring(self.wsdl_method_parameter)
+                    userAuth = etree.SubElement(root, 'user-auth')
+                    elUser = etree.SubElement(userAuth, 'username')
+                    elUser.text = username
+                    elPW = etree.SubElement(userAuth, 'password')
+                    elPW.text = password
+                    wsdlMethodParameter = etree.tostring(root)
+                except (etree.XMLSyntaxError, ValueError):
+                    # if self.wsdl_method_parameter are not valid XML we can
+                    # not add authentication - request will fail anyway
+                    pass
 
         # responses from LSF have a certain structure
         # here we remove useless stuff and store LSF response additionally

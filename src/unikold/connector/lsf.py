@@ -39,7 +39,7 @@ class LSFConnector(SOAPConnector):
         SOAPConnector.__init__(self, wsdlUrl, wsdlMethod,
                                soapRequest, queryLifetimeInHours)
 
-    def getObjectTypeFolder(self):
+    def getQueryFolder(self):
         methodFolder = self.getMethodFolder()
         objectTypeFolder = getattr(methodFolder, self.objectTypeNormalized, None)
         if objectTypeFolder is None:
@@ -49,17 +49,6 @@ class LSFConnector(SOAPConnector):
                 id=self.objectTypeNormalized,
                 container=methodFolder)
         return objectTypeFolder
-
-    def getQuery(self, additionalQueryData=False):
-        if self.soapQueriesFolder is None:
-            return None
-
-        objectTypeFolder = self.getObjectTypeFolder()
-        query = getattr(objectTypeFolder, self.conditionsNormalized, None)
-        if query is None or query.portal_type != self.query_portal_type:
-            query = self.createQuery(self.conditionsNormalized, self.conditionsNormalized,
-                                     objectTypeFolder, additionalQueryData)
-        return query
 
     # return LSF result as lxml.etree object
     def get(self, forceUpdate=False):
