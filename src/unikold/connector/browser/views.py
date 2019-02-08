@@ -33,7 +33,7 @@ class SOAPTestView(BrowserView):
                 parameters = self.inputParametersToList(parametersAsText)
                 soapStr = self.buildSOAPRequest(method, parameters, withAuth)
 
-            self.soapRequestAsString = soapStr
+            self.soapRequestAsString = self.coverPasswordInRequestStr(soapStr)
             (data, err) = getSOAPResponse(wsdlUrl, wsdlMethod, soapStr)
             if err:
                 self.soapError = err
@@ -87,6 +87,18 @@ class SOAPTestView(BrowserView):
             if len(splitted) == 2:
                 result.append((splitted[0], splitted[1]))
         return result
+
+    def coverPasswordInRequestStr(self, requestStr):
+        startTag = '<password>'
+        endTag = '</password>'
+
+        if startTag not in requestStr or endTag not in requestStr:
+            return requestStr
+
+        idx0 = requestStr.index(startTag)
+        idx1 = requestStr.index(endTag)
+        pw = requestStr[idx0+10:idx1]
+        return requestStr.replace(pw, '****')
 
 
 class SOAPQueryView(DefaultView):

@@ -22,11 +22,11 @@
 
       <label for="wsdlUrl">WSDL Url</label>
       <input type="text" name="wsdlUrl" id="wsdlUrl"
-             tal:attributes="value python: view.request.form.get('wsdlUrl', 'https://klips.uni-koblenz.de/qisserver/services/dbinterface?WSDL')"/>
+             tal:attributes="value python: view.request.form.get('wsdlUrl', '')"/>
 
       <label for="wsdlMethod">WSDL Methode</label>
       <input type="text" name="wsdlMethod" id="wsdlMethod"
-             tal:attributes="value python: view.request.form.get('wsdlMethod', 'getDataXML')"/>
+             tal:attributes="value python: view.request.form.get('wsdlMethod', '')"/>
 
       <label for="method">Methode</label>
       <input type="text" name="method" id="method" placeholder="alleSemester"
@@ -35,7 +35,7 @@
       <input type="checkbox" name="useAuthentication" id="useAuthentication"
              tal:attributes="checked python: view.request.form.get('useAuthentication', False)"/>
       <label for="useAuthentication">Mit Authentifizierung</label>
-      <span>Nutzername und Passwort müssen im LSF-Controlpanel gesetzt werden</span>
+      <span>Nutzername und Passwort müssen im LSF-Controlpanel gesetzt worden sein</span>
       <br/>
       <label for="parameters">Parameter</label><br/>
       <span>Pro Zeile ein Parameter in dem Format: <pre>name:wert</pre></span>
