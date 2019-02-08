@@ -16,66 +16,66 @@ msgstr ""
 
 #: ../browser/templates/soap_test_view.pt:67
 msgid "Answer"
-msgstr ""
+msgstr "Antwort"
 
 #: ../browser/controlpanel.py:100
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: ../browser/controlpanel.py:103
 msgid "Changes canceled."
-msgstr ""
+msgstr "Änderungen verworfen."
 
 #: ../browser/controlpanel.py:59
 msgid "Changes saved."
-msgstr ""
+msgstr "Änderungen gespeichert."
 
 #: ../browser/controlpanel.py:91
 msgid "Count queries"
-msgstr ""
+msgstr "Zähle Queries"
 
 #: ../browser/templates/soap_test_view.pt:38
 #: ../content/lsf_query.py:15
 msgid "Credentials have to be set in the controlpanel"
-msgstr ""
+msgstr "Zugangsdaten müssen im Controlpanel gesetzt werden"
 
 #: ../browser/controlpanel.py:24
 msgid "Default timeout for SOAP requests (in seconds)"
-msgstr ""
+msgstr "Timeout für SOAP-Anfragen (in Sekunden)"
 
 #: ../profiles/default/types/LSFQuery.xml
 #: ../profiles/default/types/LSFSearchQuery.xml
 #: ../profiles/default/types/SOAPQueriesFolder.xml
 msgid "Edit"
-msgstr ""
+msgstr "Bearbeiten"
 
 #: ../browser/templates/soap_test_view.pt:62
 msgid "Error"
-msgstr ""
+msgstr "Fehler"
 
 #: ../browser/controlpanel.py:87
 msgid "Error updating ${errorCount} queries (see logs for more information)"
-msgstr ""
+msgstr "Fehler beim Aktualisieren von ${errorCount} Anfragen (siehe Logs für mehr Information)"
 
 #: ../profiles/default/types/SOAPQueriesFolder.xml
 msgid "Folder containing SOAP queries"
-msgstr ""
+msgstr "Ordner, der die SOAP-Anfragen beinhaltet"
 
 #: ../browser/controlpanel.py:19
 msgid "Folder where SOAP queries are stored and cached. Must be the path to an existing SOAPQueriesFolder."
-msgstr ""
+msgstr "In diesem Ordner werden die SOAP-Anfragen gespeichert. Muss der Pfad zu einem exsitierenden Ordner des Types SOAPQueriesFolder sein."
 
 #: ../browser/controlpanel_lsf.py:26
 msgid "Has to be specified in order to be able to use the authentication feature"
-msgstr ""
+msgstr "Muss gesetzt werden, damit die Authentifizierung genutzt werden kann."
 
 #: ../browser/templates/soap_test_view.pt:46
 msgid "If the SOAP request is entered manually here, the entries for the method and parameters are ignored."
-msgstr ""
+msgstr "Wird hier der SOAP Request per Hand eingetragen, werden die Eingaben für Methode und Parameter ignoriert."
 
 #: ../configure.zcml:29
 msgid "Installs the unikold.connector add-on."
-msgstr ""
+msgstr "Installiert das unikold.connector add-on."
 
 #: ../browser/controlpanel.py:46
 msgid "Item at this location is not a SOAPQueriesFolder!"
@@ -83,11 +83,11 @@ msgstr ""
 
 #: ../browser/controlpanel_lsf.py:13
 msgid "LSF WSDL URL"
-msgstr ""
+msgstr "LSF WSDL URL"
 
 #: ../browser/templates/soap_test_view.pt:19
 msgid "LSF request"
-msgstr ""
+msgstr "LSF Request"
 
 #: ../content/lsf_query.py:20
 msgid "LSF response"
@@ -116,11 +116,11 @@ msgstr ""
 #: ../browser/templates/soap_query_view.pt:67
 #: ../browser/templates/soap_test_view.pt:52
 msgid "Loading"
-msgstr ""
+msgstr "Lade"
 
 #: ../browser/templates/soap_test_view.pt:41
 msgid "One parameter per line in following format:"
-msgstr ""
+msgstr "Ein Parameter pro Zeile in folgendem Format:"
 
 #: ../content/soap_query.py:25
 msgid "Parameter for WSDL Method"
@@ -128,15 +128,15 @@ msgstr ""
 
 #: ../browser/templates/soap_test_view.pt:40
 msgid "Parameters"
-msgstr ""
+msgstr "Parameter"
 
 #: ../browser/controlpanel_lsf.py:31
 msgid "Password for LSF authentication"
-msgstr ""
+msgstr "Passwort für die LSF Authentifizierung"
 
 #: ../browser/templates/soap_test_view.pt:56
 msgid "Result"
-msgstr ""
+msgstr "Ergebnis"
 
 #: ../content/soap_query.py:35
 msgid "SOAP Error"
@@ -148,7 +148,7 @@ msgstr ""
 
 #: ../browser/templates/soap_test_view.pt:45
 msgid "SOAP request"
-msgstr ""
+msgstr "SOAP Anfrage"
 
 #: ../browser/controlpanel.py:18
 msgid "SOAP-Queries folder"
@@ -180,7 +180,7 @@ msgstr ""
 
 #: ../browser/templates/soap_test_view.pt:20
 msgid "The answer is processed accordingly and is therefore easier to read."
-msgstr ""
+msgstr "Antwort wird entsprechend nachbereitet und damit besser lesbar."
 
 #: ../browser/controlpanel.py:96
 msgid "There are ${successCount} queries"
@@ -212,7 +212,7 @@ msgstr ""
 
 #: ../browser/templates/soap_test_view.pt:37
 msgid "Use authentication"
-msgstr ""
+msgstr "Nutze Authentifizierung"
 
 #: ../browser/controlpanel_lsf.py:25
 msgid "Username for LSF authentication"
@@ -231,19 +231,19 @@ msgstr ""
 #: ../browser/templates/soap_test_view.pt:23
 #: ../content/soap_query.py:15
 msgid "WSDL URL"
-msgstr ""
+msgstr "WSDL URL"
 
 #: ../browser/templates/soap_test_view.pt:27
 msgid "WSDL method"
-msgstr ""
+msgstr "WSDL Methode"
 
 #: ../browser/templates/soap_test_view.pt:31
 msgid "WSDL method parameter"
-msgstr ""
+msgstr "Parameter für WSDL Methode"
 
 #: ../browser/templates/soap_test_view.pt:41
 msgid "name:value"
-msgstr ""
+msgstr "name:wert"
 
 #: ../configure.zcml:29
 msgid "unikold.connector"

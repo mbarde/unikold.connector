@@ -1,0 +1,257 @@
+# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+# SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2019-02-08 09:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: unikold.connector\n"
+
+#: ../browser/templates/soap_test_view.pt:67
+msgid "Answer"
+msgstr ""
+
+#: ../browser/controlpanel.py:100
+msgid "Cancel"
+msgstr ""
+
+#: ../browser/controlpanel.py:103
+msgid "Changes canceled."
+msgstr ""
+
+#: ../browser/controlpanel.py:59
+msgid "Changes saved."
+msgstr ""
+
+#: ../browser/controlpanel.py:91
+msgid "Count queries"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:38
+#: ../content/lsf_query.py:15
+msgid "Credentials have to be set in the controlpanel"
+msgstr ""
+
+#: ../browser/controlpanel.py:24
+msgid "Default timeout for SOAP requests (in seconds)"
+msgstr ""
+
+#: ../profiles/default/types/LSFQuery.xml
+#: ../profiles/default/types/LSFSearchQuery.xml
+#: ../profiles/default/types/SOAPQueriesFolder.xml
+msgid "Edit"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:62
+msgid "Error"
+msgstr ""
+
+#: ../browser/controlpanel.py:87
+msgid "Error updating ${errorCount} queries (see logs for more information)"
+msgstr ""
+
+#: ../profiles/default/types/SOAPQueriesFolder.xml
+msgid "Folder containing SOAP queries"
+msgstr ""
+
+#: ../browser/controlpanel.py:19
+msgid "Folder where SOAP queries are stored and cached. Must be the path to an existing SOAPQueriesFolder."
+msgstr ""
+
+#: ../browser/controlpanel_lsf.py:26
+msgid "Has to be specified in order to be able to use the authentication feature"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:46
+msgid "If the SOAP request is entered manually here, the entries for the method and parameters are ignored."
+msgstr ""
+
+#: ../configure.zcml:29
+msgid "Installs the unikold.connector add-on."
+msgstr ""
+
+#: ../browser/controlpanel.py:46
+msgid "Item at this location is not a SOAPQueriesFolder!"
+msgstr ""
+
+#: ../browser/controlpanel_lsf.py:13
+msgid "LSF WSDL URL"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:19
+msgid "LSF request"
+msgstr ""
+
+#: ../content/lsf_query.py:20
+msgid "LSF response"
+msgstr ""
+
+#: ../content/lsf_query.py:21
+msgid "LSF response extracted from the SOAP response"
+msgstr ""
+
+#: ../browser/controlpanel_lsf.py:19
+msgid "LSF-search WSDL URL"
+msgstr ""
+
+#: ../profiles/default/types/LSFQuery.xml
+msgid "LSFQuery"
+msgstr ""
+
+#: ../profiles/default/types/LSFSearchQuery.xml
+msgid "LSFSearchQuery"
+msgstr ""
+
+#: ../content/soap_query.py:40
+msgid "Lifetime"
+msgstr ""
+
+#: ../browser/templates/soap_query_view.pt:67
+#: ../browser/templates/soap_test_view.pt:52
+msgid "Loading"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:41
+msgid "One parameter per line in following format:"
+msgstr ""
+
+#: ../content/soap_query.py:25
+msgid "Parameter for WSDL Method"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:40
+msgid "Parameters"
+msgstr ""
+
+#: ../browser/controlpanel_lsf.py:31
+msgid "Password for LSF authentication"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:56
+msgid "Result"
+msgstr ""
+
+#: ../content/soap_query.py:35
+msgid "SOAP Error"
+msgstr ""
+
+#: ../content/soap_query.py:30
+msgid "SOAP Response"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:45
+msgid "SOAP request"
+msgstr ""
+
+#: ../browser/controlpanel.py:18
+msgid "SOAP-Queries folder"
+msgstr ""
+
+#: ../profiles/default/types/SOAPQueriesFolder.xml
+msgid "SOAPQueriesFolder"
+msgstr ""
+
+#: ../browser/controlpanel.py:48
+msgid "SOAPQueriesFolder does not exist at this location!"
+msgstr ""
+
+#: ../profiles/default/types/SOAPQuery.xml
+msgid "SOAPQuery"
+msgstr ""
+
+#: ../browser/templates/update_all_view.pt:10
+msgid "Sample View"
+msgstr ""
+
+#: ../browser/controlpanel.py:35
+msgid "Save"
+msgstr ""
+
+#: ../browser/controlpanel.py:82
+msgid "Successfully updated ${successCount} queries"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:20
+msgid "The answer is processed accordingly and is therefore easier to read."
+msgstr ""
+
+#: ../browser/controlpanel.py:96
+msgid "There are ${successCount} queries"
+msgstr ""
+
+#: ../browser/controlpanel_lsf.py:14
+msgid "URL of the WSDL file of the LSF endpoint"
+msgstr ""
+
+#: ../browser/controlpanel_lsf.py:20
+msgid "URL of the WSDL file of the LSF search endpoint"
+msgstr ""
+
+#: ../configure.zcml:38
+msgid "Uninstalls the unikold.connector add-on."
+msgstr ""
+
+#: ../browser/templates/soap_query_view.pt:58
+msgid "Update"
+msgstr ""
+
+#: ../browser/controlpanel.py:63
+msgid "Update all queries"
+msgstr ""
+
+#: ../content/lsf_query.py:14
+msgid "Use LSF authentication"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:37
+msgid "Use authentication"
+msgstr ""
+
+#: ../browser/controlpanel_lsf.py:25
+msgid "Username for LSF authentication"
+msgstr ""
+
+#: ../profiles/default/types/LSFQuery.xml
+#: ../profiles/default/types/LSFSearchQuery.xml
+#: ../profiles/default/types/SOAPQueriesFolder.xml
+msgid "View"
+msgstr ""
+
+#: ../content/soap_query.py:20
+msgid "WSDL Method"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:23
+#: ../content/soap_query.py:15
+msgid "WSDL URL"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:27
+msgid "WSDL method"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:31
+msgid "WSDL method parameter"
+msgstr ""
+
+#: ../browser/templates/soap_test_view.pt:41
+msgid "name:value"
+msgstr ""
+
+#: ../configure.zcml:29
+msgid "unikold.connector"
+msgstr ""
+
+#: ../configure.zcml:38
+msgid "unikold.connector (uninstall)"
+msgstr ""

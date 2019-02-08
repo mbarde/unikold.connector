@@ -16,55 +16,55 @@
 
       <input type="checkbox" name="isLSFRequest" id="isLSFRequest"
             tal:attributes="checked python: view.request.form.get('isLSFRequest', False)"/>
-      <label for="isLSFRequest">LSF Request</label>
-      <span>Antwort wird entsprechend nachbereitet und damit besser lesbar.</span>
+      <label for="isLSFRequest" i18n:translate="">LSF request</label>
+      <span i18n:translate="">The answer is processed accordingly and is therefore easier to read.</span>
       <br/>
 
-      <label for="wsdlUrl">WSDL Url</label>
+      <label for="wsdlUrl" i18n:translate="">WSDL URL</label>
       <input type="text" name="wsdlUrl" id="wsdlUrl"
              tal:attributes="value python: view.request.form.get('wsdlUrl', '')"/>
 
-      <label for="wsdlMethod">WSDL Methode</label>
+      <label for="wsdlMethod" i18n:translate="">WSDL method</label>
       <input type="text" name="wsdlMethod" id="wsdlMethod"
              tal:attributes="value python: view.request.form.get('wsdlMethod', '')"/>
 
-      <label for="method">Methode</label>
+      <label for="method" i18n:translate="">WSDL method parameter</label>
       <input type="text" name="method" id="method" placeholder="alleSemester"
              tal:attributes="value python: view.request.form.get('method', '')"/>
 
       <input type="checkbox" name="useAuthentication" id="useAuthentication"
              tal:attributes="checked python: view.request.form.get('useAuthentication', False)"/>
-      <label for="useAuthentication">Mit Authentifizierung</label>
-      <span>Nutzername und Passwort müssen im LSF-Controlpanel gesetzt worden sein</span>
+      <label for="useAuthentication" i18n:translate="">Use authentication</label>
+      <span i18n:translate="">Credentials have to be set in the controlpanel</span>
       <br/>
-      <label for="parameters">Parameter</label><br/>
-      <span>Pro Zeile ein Parameter in dem Format: <pre>name:wert</pre></span>
+      <label for="parameters" i18n:translate="">Parameters</label><br/>
+      <span i18n:translate="">One parameter per line in following format:</span> <pre i18n:translate="">name:value</pre>
       <textarea name="parameters" id="parameters" rows="10"
                 tal:content="python: view.request.form.get('parameters', '')"></textarea>
 
-      <label for="soapRequest">SOAP Request</label><br/>
-      <span>Wird hier der SOAP Request per Hand eingetragen, werden die Eingaben für Methode und Parameter ignoriert.</span>
+      <label for="soapRequest" i18n:translate="">SOAP request</label><br/>
+      <span i18n:translate="">If the SOAP request is entered manually here, the entries for the method and parameters are ignored.</span>
       <textarea name="soapRequest" id="soapRequest" rows="10"
                 tal:content="python: view.request.form.get('soapRequest', '')"></textarea>
       <br/>
 
       <input type="submit" id="btn-submit" class="btn btn-primary" value="Abschicken">
-      <span id="submit-loading" style="display:none">Lade ...</span>
+      <span id="submit-loading" style="display:none"><span i18n:translate="">Loading</span> ...</span>
     </form>
 
     <div id="soap-result" tal:condition="view/soapRequestAsString">
-      <h3>Ergebnis</h3>
+      <h3 i18n:translate="">Result</h3>
 
-      <label>SOAP-Request</label>
+      <label i18n:translate="">SOAP request</label>
       <pre tal:content="view/soapRequestAsString"></pre>
 
       <tal:soap-error condition="view/soapError">
-      <label>Fehler</label>
+      <label i18n:translate="">Error</label>
       <pre tal:content="view/soapError"></pre>
       </tal:soap-error>
 
       <tal:soap-result condition="view/soapResult">
-      <label>Antwort</label>
+      <label i18n:translate="">Answer</label>
       <pre tal:content="view/soapResult"></pre>
       </tal:soap-result>
     </div>
