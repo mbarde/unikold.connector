@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from AccessControl.unauthorized import Unauthorized
 from datetime import timedelta
 from plone import api
 from plone.i18n.normalizer import idnormalizer
@@ -37,7 +38,7 @@ class SOAPConnector():
                 obj = portal.restrictedTraverse(str(soapQueriesPath))
                 if obj.portal_type == 'SOAPQueriesFolder':
                     self.soapQueriesFolder = obj
-            except KeyError:
+            except (KeyError, Unauthorized):
                 pass
 
     def getUrlFolder(self):
