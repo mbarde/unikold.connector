@@ -50,7 +50,7 @@
     <!--<element value="plone.app.versioningbehavior.behaviors.IVersionable" />-->
     <!--<element value="plone.app.contenttypes.behaviors.tableofcontents.ITableOfContents"/>-->
     <!--<element value="plone.app.contenttypes.behaviors.richtext.IRichText"/>-->
-    <element value="unikold.connector.content.soap_queries_folder.ISOAPQueriesFolder"/>
+    <!--<element value="unikold.connector.content.soap_queries_folder.ISOAPQueriesFolder"/>-->
   </property>
 
   <!-- View information -->
