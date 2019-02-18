@@ -66,6 +66,10 @@ class SOAPConnector():
     def getQueryFolder(self):
         return self.getMethodFolder()
 
+    # return ID of query
+    def getQueryID(self):
+        return self.soapRequestNormalized
+
     def getQuery(self, additionalQueryData=False):
         if self.soapQueriesFolder is None:
             return None
@@ -73,10 +77,10 @@ class SOAPConnector():
             return self.query
 
         queryFolder = self.getQueryFolder()
-        query = getattr(queryFolder, self.soapRequestNormalized, None)
+        queryID = self.getQueryID()
+        query = getattr(queryFolder, queryID, None)
         if query is None or query.portal_type != self.query_portal_type:
-            query = self.createQuery(self.soapRequestNormalized,
-                                     self.soapRequestNormalized,
+            query = self.createQuery(queryID, queryID,
                                      queryFolder, additionalQueryData)
 
         self.query = query

@@ -50,6 +50,9 @@ class LSFConnector(SOAPConnector):
                 container=methodFolder)
         return objectTypeFolder
 
+    def getQueryID(self):
+        return self.conditionsNormalized
+
     # return LSF result as lxml.etree object
     def get(self, forceUpdate=False):
         if self.soapQueriesFolder is None:
