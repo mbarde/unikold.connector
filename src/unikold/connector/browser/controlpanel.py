@@ -8,6 +8,7 @@ from unikold.connector.content.soap_query import ISOAPQuery
 from z3c.form import button
 from zope import schema
 from zope.interface import Interface
+from zope.publisher.browser import BrowserView
 
 import logging
 
@@ -110,3 +111,32 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
 
 UniKoLdConnectorControlPanelView = layout.wrap_form(
     UniKoLdConnectorControlPanelForm, ControlPanelFormWrapper)
+
+
+class Tasks(BrowserView):
+
+    # can be used as async task as described in Readme
+    def updateAllQueries(self):
+        logging.info('[Connector] Start updating all queries ...')
+        catalog = api.portal.get_tool('portal_catalog')
+        brains = catalog(object_provides=ISOAPQuery.__identifier__)
+
+        brainCount = len(brains)
+        logging.info('[Connector] Found {0} queries to update ...'.format(str(brainCount)))
+
+        updateSuccessCounter = 0
+        updateErrorCounter = 0
+        for brain in brains:
+            obj = brain.getObject()
+            if obj.updateData() is not False:
+                updateSuccessCounter += 1
+            else:
+                logging.error(
+                    '[Connector] Could not update: {0} ({1})'.format(obj.id, str(obj))
+                )
+                updateErrorCounter += 1
+
+        logging.info(
+            '[Connector] Updated successfully {0} of {1} queries!'
+            .format(str(updateSuccessCounter), str(brainCount))
+        )

@@ -62,4 +62,14 @@
       permission="cmf.ManagePortal"
       />
 
+  <!-- method for asyncronous task to update all queries -->
+  <browser:page
+      name="unikold.connector.update"
+      for="*"
+      layer="unikold.connector.interfaces.IUnikoldConnectorLayer"
+      class=".controlpanel.Tasks"
+      attribute="updateAllQueries"
+      permission="cmf.ManagePortal"
+      />
+
 </configure>

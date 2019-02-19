@@ -61,6 +61,28 @@ response = client.service.IsValidISBN13('9783492700764')
 ```
 
 
+Automate updating of queries
+--------
+
+Use Zope clock server to call `unikold.connector.update` (user must have permission `cmf.ManagePortal`):
+
+```
+[client2]
+zope-conf-additional =
+    <clock-server>
+       method /SiteName/unikold.connector.update
+       period 2880
+       user username
+       password *****
+       host hostname.com
+    </clock-server>
+```
+
+Parameters explained in detail here: https://docs.plone.org/develop/plone/misc/asyncronoustasks.html#clock-server
+
+Updating big amounts of queries can take a while so its advisable to run the task on a dedicated client.
+
+
 Testing
 ------------
 
