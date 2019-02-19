@@ -2,11 +2,13 @@
 from plone import api
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
+from plone.protect.interfaces import IDisableCSRFProtection
 from plone.z3cform import layout
 from unikold.connector import _
 from unikold.connector.content.soap_query import ISOAPQuery
 from z3c.form import button
 from zope import schema
+from zope.interface import alsoProvides
 from zope.interface import Interface
 from zope.publisher.browser import BrowserView
 
@@ -117,6 +119,10 @@ class Tasks(BrowserView):
 
     # can be used as async task as described in Readme
     def updateAllQueries(self):
+        # make sure CSRF protection does not strike when request is called
+        # via Zope clock server
+        alsoProvides(self.request, IDisableCSRFProtection)
+
         logging.info('[Connector] Start updating all queries ...')
         catalog = api.portal.get_tool('portal_catalog')
         brains = catalog(object_provides=ISOAPQuery.__identifier__)

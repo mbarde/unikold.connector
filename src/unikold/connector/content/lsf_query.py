@@ -13,13 +13,13 @@ class ILSFQuery(ISOAPQuery):
     use_authentication = schema.Bool(
         title=_(u'Use LSF authentication'),
         description=_(u'Credentials have to be set in the controlpanel'),
-        required=True
+        required=False
     )
 
     lsf_response = schema.Text(
         title=_(u'LSF response'),
         description=_(u'LSF response extracted from the SOAP response'),
-        required=True
+        required=False
     )
 
 
