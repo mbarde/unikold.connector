@@ -33,7 +33,7 @@ setup(
     author='Matthias Barde',
     author_email='mbarde@uni-koblenz.de',
     url='https://github.com/mbarde/unikold.connector',
-    download_url='https://github.com/mbarde/unikold.connector/archive/v1.0a1.tar.gz',
+    download_url='https://github.com/mbarde/unikold.connector/archive/v1.0a2.tar.gz',
     license='GPL version 2',
     packages=find_packages('src', exclude=['ez_setup']),
     namespace_packages=['unikold'],
