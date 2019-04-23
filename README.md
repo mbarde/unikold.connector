@@ -1,7 +1,7 @@
 unikold.connector
 =================
 
-Plone-Addon for making persistent SOAP-Requests using a fast and modern Python SOAP client: [zeep](https://pypi.org/project/zeep/).
+Plone-Addon for making persistent SOAP requests using a fast and modern Python SOAP client: [zeep](https://pypi.org/project/zeep/).
 
 Requests are automatically stored as `SOAPQuery` objects which allows caching with variable lifetime of the responses.
 
@@ -9,17 +9,17 @@ Requests are automatically stored as `SOAPQuery` objects which allows caching wi
 Features
 --------
 
-- SOAP-Requests are cached (lifetime can be specified)
-- Live-View to test your SOAP-Requests: `test_soap`
-
+- SOAP requests are cached (lifetime can be specified)
+- Live-View to test your SOAP requests: `test_soap`: [https://raw.githubusercontent.com/mbarde/unikold.connector/master/docs/connector.gif](https://raw.githubusercontent.com/mbarde/unikold.connector/master/docs/connector.gif)
+- Specific queries (`LSFQuery`, `LSFSearchQuery`) to easily connect to products of [HIS eG](https://www.his.de) via their SOAP API (`dbinterface`)
 
 Installation
 --------
 1. Add `unikold.connector` to your buildout
 2. Install via `prefs_install_products_form`
-3. Create `SOAPQueriesFolder`
+3. Create a `SOAPQueriesFolder`
 * For security reasons `SOAPQueriesFolder` are not globally addable by default - to be able to add it you need to allow adding this content type at the desired location temporarily
-* At this folder all queries will be stored
+* In this folder all queries will be stored
 * Maybe you also want to exclude it from navigation
 4. Set path to this folder in `@@unikold-connector-controlpanel`
 5. If you want to make use of LSF-Queries you also have to define settings in `@@unikold-connector-lsf-controlpanel`
@@ -28,7 +28,7 @@ Installation
 Examples
 --------
 
-After installing this addon you can make SOAP-Requests like this:
+After installing this addon you can make SOAP requests like this:
 
 ```python
 from unikold.connector.soap import SOAPConnector
@@ -43,7 +43,7 @@ response = soapConnector.get()
 
 If the request already exists and its lifetime did not expire `soapConnector` simply returns the stored response.
 If the request exists but is outdated it will be updated before returning the response.
-If the request does not yet exist a new object will be created. Its path will be `{SOAP-Queries-Folder}.{WSDL-URL}.{Methodname}.{Parameter}` (where `{SOAP-Queries-Folder}` has to be specified in the controlpanel of this addon - otherwise a folder will be created at your sites' root).
+If the request does not yet exist, a new object will be created. Its path will be `{SOAP-Queries-Folder}.{WSDL-URL}.{Methodname}.{Parameter}` (where `{SOAP-Queries-Folder}` has to be specified in the controlpanel of this addon - otherwise a folder will be created at your sites' root).
 
 To get the corresponding query object:
 

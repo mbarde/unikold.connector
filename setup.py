@@ -14,9 +14,10 @@ long_description = '\n\n'.join([
 
 setup(
     name='unikold.connector',
-    version='1.0a1',
+    version='1.0a2',
     description="An add-on for Plone",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Environment :: Web Environment",
