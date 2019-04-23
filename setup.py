@@ -14,8 +14,8 @@ long_description = '\n\n'.join([
 
 setup(
     name='unikold.connector',
-    version='1.0a2',
-    description="An add-on for Plone",
+    version='1.0a3',
+    description="Plone addon for making persistent SOAP requests",
     long_description=long_description,
     long_description_content_type='text/markdown',
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -33,7 +33,7 @@ setup(
     author='Matthias Barde',
     author_email='mbarde@uni-koblenz.de',
     url='https://github.com/mbarde/unikold.connector',
-    download_url='https://github.com/mbarde/unikold.connector/archive/v1.0a2.tar.gz',
+    download_url='https://github.com/mbarde/unikold.connector/archive/v1.0a3.tar.gz',
     license='GPL version 2',
     packages=find_packages('src', exclude=['ez_setup']),
     namespace_packages=['unikold'],
