@@ -66,18 +66,21 @@ class XMLQuery(Item):
         return False
 
     def getRawResponse(self):
+        data = self.raw_response
         try:
             response = urllib2.urlopen(self.url)
             data = response.read()
             err = False
         except urllib2.URLError as e:
             err = e.reason
+        except ValueError as e:
+            err = e
         return (data, err)
 
     def getXMLResponse(self):
-        if hasattr(self, 'lsf_response'):
+        if hasattr(self, 'raw_response'):
             try:
-                tree = etree.fromstring(self.lsf_response)
+                tree = etree.fromstring(self.raw_response)
             except (etree.XMLSyntaxError, ValueError):
                 tree = etree.Element('xml-syntax-error')
             return tree

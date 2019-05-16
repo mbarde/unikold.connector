@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
 from unikold.connector.content.xml_query import IXMLQuery  # NOQA E501
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING  # noqa
 from plone import api
@@ -57,7 +58,26 @@ class XMLQueryIntegrationTest(unittest.TestCase):
             container=folder,
             type='XMLQuery',
             id='xml_query',
+            **{
+                'url': 'https://www.w3schools.com/xml/note.xml'
+            }
         )
+
+        data = obj.getData()
+        self.assertTrue(len(data) > 0)
+        self.assertEqual(data, obj.raw_response)
+        self.assertFalse(obj.raw_error)
+
+        xml = obj.getXMLResponse()
+        self.assertTrue(type(xml) is etree._Element)
+        self.assertTrue(len(xml) > 0)
+
+        obj.url = 'definitelyNotAnUrl'
+        obj.getData(True)  # force an update
+        expectedError = 'unknown url type: {0}'.format(obj.url)
+        self.assertEqual(obj.raw_error, expectedError)
+        # since update failed stored response should not be updated
+        self.assertEqual(obj.raw_response, data)
 
         self.assertTrue(
             IXMLQuery.providedBy(obj),
