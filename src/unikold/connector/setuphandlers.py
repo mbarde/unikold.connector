@@ -28,6 +28,7 @@ def post_install(context):
     makeTypeSearchable(portal, 'SOAPQuery', searchable=False)
     makeTypeSearchable(portal, 'LSFQuery', searchable=False)
     makeTypeSearchable(portal, 'LSFSearchQuery', searchable=False)
+    makeTypeSearchable(portal, 'XMLQuery', searchable=False)
     makeTypeSearchable(portal, 'SOAPQueriesFolder', searchable=False)
 
 

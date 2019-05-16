@@ -6,6 +6,8 @@ from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.dexterity.interfaces import IDexterityFTI
+from unikold.connector.tests.config import xml_test_url
+from unikold.connector.xml import XMLConnector
 from zope.component import createObject
 from zope.component import queryUtility
 
@@ -59,7 +61,7 @@ class XMLQueryIntegrationTest(unittest.TestCase):
             type='XMLQuery',
             id='xml_query',
             **{
-                'url': 'https://www.w3schools.com/xml/note.xml'
+                'url': xml_test_url
             }
         )
 
@@ -93,3 +95,36 @@ class XMLQueryIntegrationTest(unittest.TestCase):
             fti.global_allow,
             u'{0} is globally addable!'.format(fti.id)
         )
+
+    def test_excluded_from_search(self):
+        types_not_searched = api.portal.get_registry_record('plone.types_not_searched')
+        self.assertTrue('XMLQuery' in types_not_searched)
+
+    def test_xml_query_connector(self):
+        xmlConnector = XMLConnector(
+            xml_test_url,
+            24
+        )
+
+        query = xmlConnector.getQuery()
+        self.assertEqual(query.raw_response, None)
+
+        xml = query.getXMLResponse()
+        self.assertTrue(type(xml) is etree._Element)
+        self.assertTrue(len(xml) == 0)
+
+        data = xmlConnector.get()
+        self.assertTrue(len(data) > 0)
+
+        xml = query.getXMLResponse()
+        self.assertTrue(type(xml) is etree._Element)
+        self.assertTrue(len(xml) > 0)
+
+        self.assertTrue(query.modified() > query.created())
+
+        modifiedBefore = query.modified()
+        xmlConnector.get()
+        self.assertEqual(modifiedBefore, query.modified())
+
+        xmlConnector.get(True)  # force update
+        self.assertTrue(modifiedBefore < query.modified())
