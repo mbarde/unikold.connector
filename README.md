@@ -95,7 +95,9 @@ soap_test_url = u'http://webservices.daehosting.com/services/isbnservice.wso?WSD
 soap_test_method = u'IsValidISBN13'
 soap_test_method_parameter = u'9783492700764'
 
-# config data needed for LSF tests
+xml_test_url = u'https://www.w3schools.com/xml/note.xml
+
+# config data required for LSF tests
 lsf_wsdl_url = u''  # URL to LSF WSDL file containing getDataXML method
 lsf_test_object_type = u''  # LSF object type
 lsf_test_conditions = []  # a list of tuples, i.e. [('prename', 'Peter')]
