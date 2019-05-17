@@ -37,6 +37,15 @@
       permission="cmf.ManagePortal"
       />
 
+  <!-- XML query view (recycles SOAPQueryView class) -->
+  <browser:page
+      name="view"
+      for="unikold.connector.content.xml_query.IXMLQuery"
+      class=".views.SOAPQueryView"
+      template="templates/xml_query_view.pt"
+      permission="cmf.ManagePortal"
+      />
+
   <!-- Controlpanel for connector settings -->
   <browser:page
       name="unikold-connector-controlpanel"
