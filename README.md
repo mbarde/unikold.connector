@@ -12,6 +12,7 @@ Features
 - SOAP requests are cached (lifetime can be specified)
 - Live-View to test your SOAP requests: `test_soap`: [https://raw.githubusercontent.com/mbarde/unikold.connector/master/docs/connector.gif](https://raw.githubusercontent.com/mbarde/unikold.connector/master/docs/connector.gif)
 - Specific queries (`LSFQuery`, `LSFSearchQuery`) to easily connect to products of [HIS eG](https://www.his.de) via their SOAP API (`dbinterface`)
+- Plain XML requests
 
 Installation
 --------
@@ -60,6 +61,17 @@ client = Client(url)
 response = client.service.IsValidISBN13('9783492700764')
 ```
 
+Make a XML request (which will be cached 24 hours):
+
+```python
+from unikold.connector.xml import XMLConnector
+xmlConnector = XMLConnector(
+    'https://www.w3schools.com/xml/note.xml',
+    24
+)
+rawData = xmlConnector.get()
+xmlData = xmlConnector.getXMLResponse()
+```
 
 Automate updating of queries
 --------
