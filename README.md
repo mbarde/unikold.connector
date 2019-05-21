@@ -69,8 +69,9 @@ xmlConnector = XMLConnector(
     'https://www.w3schools.com/xml/note.xml',
     24
 )
-rawData = xmlConnector.get()
-xmlData = xmlConnector.getXMLResponse()
+xmlData = xmlConnector.get()
+# xmlData is a lxml.etree object:
+print(etree.tostring(xmlData))
 ```
 
 Automate updating of queries

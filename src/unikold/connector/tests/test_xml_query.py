@@ -114,6 +114,7 @@ class XMLQueryIntegrationTest(unittest.TestCase):
         self.assertTrue(len(xml) == 0)
 
         data = xmlConnector.get()
+        self.assertTrue(type(xml) is etree._Element)
         self.assertTrue(len(data) > 0)
 
         xml = query.getXMLResponse()

@@ -24,7 +24,8 @@ class XMLConnector():
             return None
 
         query = self.getQuery()
-        return query.getData(forceUpdate)
+        query.getData(forceUpdate)  # make sure response is updated if neccessary
+        return query.getXMLResponse()
 
     def initSOAPQueriesFolder(self):
         self.soapQueriesFolder = None
