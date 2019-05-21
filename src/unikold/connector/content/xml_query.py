@@ -18,6 +18,14 @@ class IXMLQuery(model.Schema):
         required=True
     )
 
+    query_params = schema.List(
+        title=_(u'Query parameters'),
+        value_type=schema.TextLine(
+            title=_(u'Parameter')
+        ),
+        required=False
+    )
+
     raw_response = schema.Text(
         title=_(u'Raw Response'),
         required=False
@@ -68,7 +76,10 @@ class XMLQuery(Item):
     def getRawResponse(self):
         data = self.raw_response
         try:
-            response = urllib2.urlopen(self.url)
+            queryStr = ''
+            if self.query_params is not None:
+                queryStr = '?' + '&'.join(self.query_params)
+            response = urllib2.urlopen(self.url + queryStr)
             data = response.read()
             err = False
         except urllib2.URLError as e:

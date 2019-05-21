@@ -67,7 +67,8 @@ Make a XML request (which will be cached 24 hours):
 from unikold.connector.xml import XMLConnector
 xmlConnector = XMLConnector(
     'https://www.w3schools.com/xml/note.xml',
-    24
+    24,
+    ['prename=Peter', 'surname=Lustig'] # query parameters (optional)
 )
 xmlData = xmlConnector.get()
 # xmlData is a lxml.etree object:

@@ -6,6 +6,7 @@ from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.dexterity.interfaces import IDexterityFTI
+from plone.i18n.normalizer import idnormalizer
 from unikold.connector.tests.config import xml_test_url
 from unikold.connector.xml import XMLConnector
 from zope.component import createObject
@@ -129,3 +130,24 @@ class XMLQueryIntegrationTest(unittest.TestCase):
 
         xmlConnector.get(True)  # force update
         self.assertTrue(modifiedBefore < query.modified())
+
+    def test_xml_query_connector_with_params(self):
+        params = ['param1=test', 'hello=world']
+        xmlConnector = XMLConnector(
+            xml_test_url,
+            24,
+            params
+        )
+        xml = xmlConnector.get()
+        self.assertTrue(type(xml) is etree._Element)
+        self.assertTrue(len(xml) > 0)
+
+        queryPath = xmlConnector.getQuery().getPhysicalPath()[3:]
+        expectedPath = (xmlConnector.xmlFolderName,
+                        idnormalizer.normalize(xml_test_url))
+        for param in sorted(params):
+            folderName = idnormalizer.normalize(param)
+            expectedPath += (folderName,)
+        expectedPath += (xmlConnector.getQueryID(),)
+
+        self.assertEqual(queryPath, expectedPath)

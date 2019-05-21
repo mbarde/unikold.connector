@@ -12,8 +12,9 @@ class XMLConnector():
     # the root SOAPQueriesFolder:
     xmlFolderName = 'xml'
 
-    def __init__(self, url, queryLifetimeInHours):
+    def __init__(self, url, queryLifetimeInHours, queryParams=[]):
         self.url = url
+        self.queryParams = sorted(queryParams)
         self.urlNormalized = idnormalizer.normalize(url)
         self.queryLifetime = timedelta(hours=queryLifetimeInHours)
         self.query = False
@@ -52,13 +53,40 @@ class XMLConnector():
                 container=self.soapQueriesFolder)
         return xmlFolder
 
+    def getURLFolder(self):
+        xmlFolder = self.getXMLFolder()
+        urlFolder = getattr(xmlFolder, self.urlNormalized, None)
+        if urlFolder is None:
+            urlFolder = api.content.create(
+                type='SOAPQueriesFolder',
+                title=self.urlNormalized,
+                id=self.urlNormalized,
+                container=xmlFolder)
+        return urlFolder
+
     # return folder containing the query object
     def getQueryFolder(self):
-        return self.getXMLFolder()
+        urlFolder = self.getURLFolder()
+        if len(self.queryParams) == 0:
+            return urlFolder
+
+        curFolder = urlFolder
+        for param in self.queryParams:
+            paramFolderName = idnormalizer.normalize(param)
+            paramFolder = getattr(curFolder, paramFolderName, None)
+            if paramFolder is None:
+                paramFolder = api.content.create(
+                    type='SOAPQueriesFolder',
+                    title=paramFolderName,
+                    id=paramFolderName,
+                    container=curFolder)
+            curFolder = paramFolder
+
+        return curFolder
 
     # return ID of query
     def getQueryID(self):
-        return self.urlNormalized
+        return 'xmlquery'
 
     def getQuery(self, additionalQueryData=False):
         if self.soapQueriesFolder is None:
@@ -83,6 +111,8 @@ class XMLConnector():
         }
         if additionalQueryData:
             data.update(additionalQueryData)
+        if len(self.queryParams) > 0:
+            data['query_params'] = self.queryParams
         query = api.content.create(
             type=self.query_portal_type,
             title=title,
