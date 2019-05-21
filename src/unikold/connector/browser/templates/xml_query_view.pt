@@ -20,12 +20,18 @@
 
         <div tal:repeat="widgetName view/widgets"
              tal:condition="view/canUpdateFromView">
-          <tal:widget define="widget python: view.w.get(widgetName)"
-                      tal:condition="python: widgetName != 'raw_response'">
+          <tal:widget tal:define="widget python: view.w.get(widgetName)"
+                      tal:condition="python: widgetName != 'raw_response' and 'password' not in widgetName">
             <label tal:content="widget/label"/>
             <div tal:content="structure widget/render" />
             <br/>
           </tal:widget>
+          <tal:pw-widget tal:define="widget python: view.w.get(widgetName)" 
+                         tal:condition="python: 'password' in widgetName">
+            <label tal:content="widget/label"/>
+            <div>****</div>
+            <br/>
+          </tal:pw-widget>
         </div>
 
         <tal:soap-response condition="context/raw_response">

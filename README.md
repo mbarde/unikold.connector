@@ -12,7 +12,7 @@ Features
 - SOAP requests are cached (lifetime can be specified)
 - Live-View to test your SOAP requests: `test_soap`: [https://raw.githubusercontent.com/mbarde/unikold.connector/master/docs/connector.gif](https://raw.githubusercontent.com/mbarde/unikold.connector/master/docs/connector.gif)
 - Specific queries (`LSFQuery`, `LSFSearchQuery`) to easily connect to products of [HIS eG](https://www.his.de) via their SOAP API (`dbinterface`)
-- Plain XML requests
+- Plain XML requests (also supports basic authentication)
 
 Installation
 --------
@@ -68,7 +68,8 @@ from unikold.connector.xml import XMLConnector
 xmlConnector = XMLConnector(
     'https://www.w3schools.com/xml/note.xml',
     24,
-    ['prename=Peter', 'surname=Lustig'] # query parameters (optional)
+    queryParams=['prename=Peter', 'surname=Lustig'],  # query parameters (optional)
+    basicAuthCredentials=('username', 'password')  # credentials for basic authentication (optional)
 )
 xmlData = xmlConnector.get()
 # xmlData is a lxml.etree object:
@@ -110,6 +111,11 @@ soap_test_method = u'IsValidISBN13'
 soap_test_method_parameter = u'9783492700764'
 
 xml_test_url = u'https://www.w3schools.com/xml/note.xml
+
+# config data required for XML tests with basic authentication
+xml_basic_auth_url = u''
+xml_basic_auth_username = u''
+xml_basic_auth_password = u''
 
 # config data required for LSF tests
 lsf_wsdl_url = u''  # URL to LSF WSDL file containing getDataXML method

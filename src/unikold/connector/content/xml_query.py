@@ -8,6 +8,7 @@ from unikold.connector import _
 from zope import schema
 from zope.interface import implementer
 
+import base64
 import urllib2
 
 
@@ -40,6 +41,16 @@ class IXMLQuery(model.Schema):
         title=_(u'Lifetime'),
         required=True,
         default=timedelta(hours=48)
+    )
+
+    basic_auth_username = schema.TextLine(
+        title=_(u'Username for basic access authentication'),
+        required=False
+    )
+
+    basic_auth_password = schema.Password(
+        title=_(u'Password for basic access authentication'),
+        required=False
     )
 
 
@@ -79,9 +90,26 @@ class XMLQuery(Item):
             queryStr = ''
             if self.query_params is not None:
                 queryStr = '?' + '&'.join(self.query_params)
-            response = urllib2.urlopen(self.url + queryStr)
-            data = response.read()
-            err = False
+
+            if self.basic_auth_username is not None and \
+               self.basic_auth_password is not None:
+                # if credentials for basic authentication are set,
+                # include necessary headers to perform authentication
+                username = self.basic_auth_username
+                password = self.basic_auth_password
+                request = urllib2.Request(self.url + queryStr)
+                base64string = base64.b64encode('%s:%s' % (username, password))
+                request.add_header("Authorization", "Basic %s" % base64string)
+
+                opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
+                data = opener.open(request).read()
+                err = False
+            else:
+                # otherwise perform simple request
+                response = urllib2.urlopen(self.url + queryStr)
+                data = response.read()
+                err = False
+
         except urllib2.URLError as e:
             err = e.reason
         except ValueError as e:
