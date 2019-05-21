@@ -98,8 +98,8 @@ class XMLQuery(Item):
                 username = self.basic_auth_username
                 password = self.basic_auth_password
                 request = urllib2.Request(self.url + queryStr)
-                base64string = base64.b64encode('%s:%s' % (username, password))
-                request.add_header("Authorization", "Basic %s" % base64string)
+                base64string = base64.b64encode('{0}:{1}'.format(username, password))
+                request.add_header('Authorization', 'Basic {0}'.format(base64string))
 
                 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
                 data = opener.open(request).read()
