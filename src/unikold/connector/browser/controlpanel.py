@@ -72,6 +72,8 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
         updateError = []
         for brain in brains:
             obj = brain.getObject()
+            if obj.exclude_from_auto_update:
+                continue
             if obj.updateData() is not False:
                 updateSuccess.append(obj)
             else:
@@ -135,6 +137,8 @@ class Tasks(BrowserView):
         updateErrorCounter = 0
         for brain in brains:
             obj = brain.getObject()
+            if obj.exclude_from_auto_update:
+                continue
             if obj.updateData() is not False:
                 updateSuccessCounter += 1
             else:

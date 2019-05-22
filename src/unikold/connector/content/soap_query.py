@@ -43,6 +43,12 @@ class ISOAPQuery(model.Schema):
         default=timedelta(hours=48)
     )
 
+    exclude_from_auto_update = schema.Bool(
+        title=_(u'Exclude from automated updates'),
+        required=False,
+        default=False
+    )
+
 
 @implementer(ISOAPQuery, IUniKoLdQuery)
 class SOAPQuery(Item):

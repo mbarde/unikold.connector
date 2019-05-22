@@ -11,7 +11,9 @@ class IUnikoldConnectorLayer(IDefaultBrowserLayer):
 
 class IUniKoLdQuery(Interface):
     """Interface all query types of this addon have to implement"""
+
     lifetime = Attribute('lifetime')
+    exclude_from_auto_update = Attribute('exclude_from_auto_update')
 
     def updateData():
         """ run query to update data """
