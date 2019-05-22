@@ -4,6 +4,7 @@ from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.dexterity.interfaces import IDexterityFTI
+from plone.i18n.normalizer import idnormalizer
 from unikold.connector.content.lsf_search_query import ILSFSearchQuery  # NOQA E501
 from unikold.connector.lsf import LSFSearchConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING  # noqa
@@ -110,6 +111,21 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         modifiedBefore = query.modified()
         lsfSearchConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
+
+        queryPath = list(lsfSearchConnector.getQuery().getPhysicalPath()[2:])
+
+        expectedPath = [lsfSearchConnector.soapQueriesFolder.id]
+        wsdlUrl = api.portal.get_registry_record('unikold_connector_lsf.lsf_wsdl_search_url')
+        for part in wsdlUrl.split('/'):
+            if len(part) == 0:
+                continue
+            expectedPath.append(idnormalizer.normalize(part))
+
+        wsdlMethod = 'search'
+        expectedPath.append(idnormalizer.normalize(wsdlMethod))
+        expectedPath.append(idnormalizer.normalize(lsf_search_test_method_parameter))
+
+        self.assertEqual(queryPath, expectedPath)
 
     def test_lsf_search_query_connector_fail_params(self):
         lsfSearchConnector = LSFSearchConnector(
