@@ -4,6 +4,7 @@ from datetime import timedelta
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from unikold.connector import _
+from unikold.connector.interfaces import IUniKoLdQuery
 from unikold.connector.utils import getSOAPResponse
 from zope import schema
 from zope.interface import implementer
@@ -43,7 +44,7 @@ class ISOAPQuery(model.Schema):
     )
 
 
-@implementer(ISOAPQuery)
+@implementer(ISOAPQuery, IUniKoLdQuery)
 class SOAPQuery(Item):
 
     def getData(self, forceUpdate=False):

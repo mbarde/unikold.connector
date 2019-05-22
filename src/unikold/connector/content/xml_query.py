@@ -5,6 +5,7 @@ from lxml import etree
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from unikold.connector import _
+from unikold.connector.interfaces import IUniKoLdQuery
 from zope import schema
 from zope.interface import implementer
 
@@ -54,7 +55,7 @@ class IXMLQuery(model.Schema):
     )
 
 
-@implementer(IXMLQuery)
+@implementer(IXMLQuery, IUniKoLdQuery)
 class XMLQuery(Item):
 
     def getData(self, forceUpdate=False):
@@ -87,9 +88,7 @@ class XMLQuery(Item):
     def getRawResponse(self):
         data = self.raw_response
         try:
-            queryStr = ''
-            if self.query_params is not None:
-                queryStr = '?' + urllib2.quote('&'.join(self.query_params))
+            queryStr = self.buildQueryStr()
 
             if self.basic_auth_username is not None and \
                self.basic_auth_password is not None:
@@ -124,3 +123,21 @@ class XMLQuery(Item):
                 tree = etree.Element('xml-syntax-error')
             return tree
         return etree.Element('empty')
+
+    def buildQueryStr(self):
+        if self.query_params is None:
+            return ''
+
+        queryParts = []
+        for param in self.query_params:
+            parts = param.split('=')
+            if len(parts) != 2:
+                # query parameters have to be formatted like: `key=value`
+                continue
+            queryParts.append(
+                '{0}={1}'.format(urllib2.quote(parts[0]), urllib2.quote(parts[1]))
+            )
+
+        if len(queryParts) > 0:
+            return '?' + '&'.join(queryParts)
+        return ''

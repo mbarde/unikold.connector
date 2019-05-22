@@ -5,7 +5,7 @@ from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.protect.interfaces import IDisableCSRFProtection
 from plone.z3cform import layout
 from unikold.connector import _
-from unikold.connector.content.soap_query import ISOAPQuery
+from unikold.connector.interfaces import IUniKoLdQuery
 from z3c.form import button
 from zope import schema
 from zope.interface import alsoProvides
@@ -66,7 +66,7 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     @button.buttonAndHandler(_(u'Update all queries'))
     def handleUpdateAll(self, action):
         catalog = api.portal.get_tool('portal_catalog')
-        brains = catalog(object_provides=ISOAPQuery.__identifier__)
+        brains = catalog(object_provides=IUniKoLdQuery.__identifier__)
 
         updateSuccess = []
         updateError = []
@@ -76,7 +76,8 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
                 updateSuccess.append(obj)
             else:
                 logging.error(
-                    '[Connector] Could not update: {0} ({1})'.format(obj.id, str(obj))
+                    '[Connector] Could not update: {0} ({1})'.format(
+                        obj.id, '/'.join(obj.getPhysicalPath()))
                 )
                 updateError.append(obj)
 
@@ -94,7 +95,7 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     @button.buttonAndHandler(_(u'Count queries'))
     def handleCount(self, action):
         catalog = api.portal.get_tool('portal_catalog')
-        brains = catalog(object_provides=ISOAPQuery.__identifier__)
+        brains = catalog(object_provides=IUniKoLdQuery.__identifier__)
         api.portal.show_message(
             message=_(u'There are ${successCount} queries',
                       mapping={u'successCount': len(brains)}),
@@ -125,7 +126,7 @@ class Tasks(BrowserView):
 
         logging.info('[Connector] Start updating all queries ...')
         catalog = api.portal.get_tool('portal_catalog')
-        brains = catalog(object_provides=ISOAPQuery.__identifier__)
+        brains = catalog(object_provides=IUniKoLdQuery.__identifier__)
 
         brainCount = len(brains)
         logging.info('[Connector] Found {0} queries to update ...'.format(str(brainCount)))
@@ -138,7 +139,8 @@ class Tasks(BrowserView):
                 updateSuccessCounter += 1
             else:
                 logging.error(
-                    '[Connector] Could not update: {0} ({1})'.format(obj.id, str(obj))
+                    '[Connector] Could not update: {0} ({1})'.format(
+                        obj.id, '/'.join(obj.getPhysicalPath()))
                 )
                 updateErrorCounter += 1
 
