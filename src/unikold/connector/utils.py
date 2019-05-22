@@ -37,6 +37,16 @@ def createNestedFolders(container, folderNames):
         if len(folderName) == 0:
             continue
         normalizedName = idnormalizer.normalize(folderName)
+
+        # make sure first char is not a '_'
+        # (for some reason idnormalizer does not check that)
+        if len(normalizedName) == 0:
+            continue
+        while '_' == normalizedName[0]:
+            normalizedName = normalizedName[1:]
+        if len(normalizedName) == 0:
+            continue
+
         curFolder = curContainer.get(normalizedName, None)
         if curFolder is None:
             curFolder = api.content.create(
