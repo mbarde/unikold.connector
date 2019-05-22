@@ -89,7 +89,7 @@ class XMLQuery(Item):
         try:
             queryStr = ''
             if self.query_params is not None:
-                queryStr = '?' + '&'.join(self.query_params)
+                queryStr = '?' + urllib2.quote('&'.join(self.query_params))
 
             if self.basic_auth_username is not None and \
                self.basic_auth_password is not None:

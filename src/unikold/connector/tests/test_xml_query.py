@@ -135,7 +135,7 @@ class XMLQueryIntegrationTest(unittest.TestCase):
         self.assertTrue(modifiedBefore < query.modified())
 
     def test_xml_query_connector_with_params(self):
-        params = ['param1=test', 'hello=world']
+        params = ['hello=world', 'möth=lämp']
         xmlConnector = XMLConnector(
             xml_test_url,
             24,
