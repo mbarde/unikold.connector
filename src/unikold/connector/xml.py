@@ -66,7 +66,7 @@ class XMLConnector():
 
         queryFolder = self.getQueryFolder()
         queryID = self.getQueryID()
-        query = getattr(queryFolder, queryID, None)
+        query = queryFolder.get(queryID, None)
         if query is None or query.portal_type != self.query_portal_type:
             query = self.createQuery(queryID, queryID,
                                      queryFolder, additionalQueryData)

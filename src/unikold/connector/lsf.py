@@ -41,7 +41,7 @@ class LSFConnector(SOAPConnector):
 
     def getQueryFolder(self):
         methodFolder = self.getMethodFolder()
-        objectTypeFolder = getattr(methodFolder, self.objectTypeNormalized, None)
+        objectTypeFolder = methodFolder.get(self.objectTypeNormalized, None)
         if objectTypeFolder is None:
             objectTypeFolder = api.content.create(
                 type='SOAPQueriesFolder',
