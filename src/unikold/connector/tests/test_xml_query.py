@@ -141,17 +141,21 @@ class XMLQueryIntegrationTest(unittest.TestCase):
             24,
             params
         )
+
         xml = xmlConnector.get()
         self.assertTrue(type(xml) is etree._Element)
         self.assertTrue(len(xml) > 0)
 
-        queryPath = xmlConnector.getQuery().getPhysicalPath()[3:]
-        expectedPath = (xmlConnector.xmlFolderName,
-                        idnormalizer.normalize(xml_test_url))
+        queryPath = list(xmlConnector.getQuery().getPhysicalPath()[3:])
+
+        expectedPath = [xmlConnector.xmlFolderName]
+        for part in xml_test_url.split('/'):
+            if len(part) == 0:
+                continue
+            expectedPath.append(idnormalizer.normalize(part))
         for param in sorted(params):
-            folderName = idnormalizer.normalize(param)
-            expectedPath += (folderName,)
-        expectedPath += (xmlConnector.getQueryID(),)
+            expectedPath.append(idnormalizer.normalize(param))
+        expectedPath.append(xmlConnector.getQueryID())
 
         self.assertEqual(queryPath, expectedPath)
 

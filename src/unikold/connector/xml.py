@@ -3,6 +3,7 @@ from AccessControl.unauthorized import Unauthorized
 from datetime import timedelta
 from plone import api
 from plone.i18n.normalizer import idnormalizer
+from unikold.connector.utils import createNestedFolders
 
 
 class XMLConnector():
@@ -57,35 +58,15 @@ class XMLConnector():
                 container=self.soapQueriesFolder)
         return xmlFolder
 
-    def getURLFolder(self):
-        xmlFolder = self.getXMLFolder()
-        urlFolder = getattr(xmlFolder, self.urlNormalized, None)
-        if urlFolder is None:
-            urlFolder = api.content.create(
-                type='SOAPQueriesFolder',
-                title=self.urlNormalized,
-                id=self.urlNormalized,
-                container=xmlFolder)
-        return urlFolder
-
     # return folder containing the query object
     def getQueryFolder(self):
-        urlFolder = self.getURLFolder()
+        xmlFolder = self.getXMLFolder()
+        parts = self.url.split('/')
+        curFolder = createNestedFolders(xmlFolder, parts)
         if len(self.queryParams) == 0:
-            return urlFolder
+            return curFolder
 
-        curFolder = urlFolder
-        for param in self.queryParams:
-            paramFolderName = idnormalizer.normalize(param)
-            paramFolder = getattr(curFolder, paramFolderName, None)
-            if paramFolder is None:
-                paramFolder = api.content.create(
-                    type='SOAPQueriesFolder',
-                    title=paramFolderName,
-                    id=paramFolderName,
-                    container=curFolder)
-            curFolder = paramFolder
-
+        curFolder = createNestedFolders(curFolder, self.queryParams)
         return curFolder
 
     # return ID of query

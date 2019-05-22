@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from plone import api
+from plone.i18n.normalizer import idnormalizer
 from zeep import Client
 from zeep.transports import Transport
 
@@ -25,3 +26,23 @@ def getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter):
             data = False
 
     return (data, error)
+
+
+# create nested folder structure within `root`
+# provided by array `folderNames`
+# (does nothing of strcuture already exists)
+def createNestedFolders(container, folderNames):
+    curContainer = container
+    for folderName in folderNames:
+        if len(folderName) == 0:
+            continue
+        normalizedName = idnormalizer.normalize(folderName)
+        curFolder = curContainer.get(normalizedName, None)
+        if curFolder is None:
+            curFolder = api.content.create(
+                type='SOAPQueriesFolder',
+                title=normalizedName,
+                id=normalizedName,
+                container=curContainer)
+        curContainer = curFolder
+    return curContainer
