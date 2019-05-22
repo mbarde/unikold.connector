@@ -26,7 +26,8 @@ class LSFConnector(SOAPConnector):
     '''
     query_portal_type = 'LSFQuery'
 
-    def __init__(self, objectType, conditions, queryLifetimeInHours, useAuthentication=True):
+    def __init__(self, objectType, conditions, queryLifetimeInHours,
+                 useAuthentication=True, excludeFromAutoUpdate=False):
         self.useAuthentication = useAuthentication
         self.objectType = objectType
         self.objectTypeNormalized = idnormalizer.normalize(objectType)
@@ -37,7 +38,8 @@ class LSFConnector(SOAPConnector):
         wsdlMethod = 'getDataXML'
         soapRequest = self.buildLSFSOAPRequest(objectType, conditions)
         SOAPConnector.__init__(self, wsdlUrl, wsdlMethod,
-                               soapRequest, queryLifetimeInHours)
+                               soapRequest, queryLifetimeInHours,
+                               excludeFromAutoUpdate)
 
     def getQueryFolder(self):
         methodFolder = self.getMethodFolder()
@@ -89,12 +91,14 @@ class LSFConnector(SOAPConnector):
 class LSFSearchConnector(SOAPConnector):
     query_portal_type = 'LSFSearchQuery'
 
-    def __init__(self, soapRequest, queryLifetimeInHours, useAuthentication=True):
+    def __init__(self, soapRequest, queryLifetimeInHours,
+                 useAuthentication=True, excludeFromAutoUpdate=False):
         self.useAuthentication = useAuthentication
         wsdlUrl = api.portal.get_registry_record('unikold_connector_lsf.lsf_wsdl_search_url')
         wsdlMethod = 'search'
         SOAPConnector.__init__(self, wsdlUrl, wsdlMethod,
-                               soapRequest, queryLifetimeInHours)
+                               soapRequest, queryLifetimeInHours,
+                               excludeFromAutoUpdate)
 
     # search query connector should return pre-parsed python list
     # of search results instead of plain SOAP response

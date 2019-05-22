@@ -10,13 +10,15 @@ class XMLConnector():
     query_portal_type = 'XMLQuery'
 
     def __init__(self, url, queryLifetimeInHours,
-                 queryParams=[], basicAuthCredentials=(False, False)):
+                 queryParams=[], basicAuthCredentials=(False, False),
+                 excludeFromAutoUpdate=False):
         self.url = url
         self.queryParams = sorted(queryParams)
         self.urlNormalized = idnormalizer.normalize(url)
         self.queryLifetime = timedelta(hours=queryLifetimeInHours)
         self.query = False
         self.basicAuthCredentials = False
+        self.excludeFromAutoUpdate = excludeFromAutoUpdate
         if basicAuthCredentials[0] and basicAuthCredentials[1]:
             self.basicAuthCredentials = basicAuthCredentials
         self.initSOAPQueriesFolder()
@@ -77,7 +79,8 @@ class XMLConnector():
     def createQuery(self, id, title, container, additionalQueryData=False):
         data = {
             'url': self.url,
-            'lifetime': self.queryLifetime
+            'lifetime': self.queryLifetime,
+            'exclude_from_auto_update': self.excludeFromAutoUpdate
         }
         if additionalQueryData:
             data.update(additionalQueryData)

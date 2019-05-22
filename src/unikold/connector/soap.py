@@ -9,7 +9,8 @@ from unikold.connector.utils import createNestedFolders
 class SOAPConnector():
     query_portal_type = 'SOAPQuery'
 
-    def __init__(self, wsdlUrl, wsdlMethod, soapRequest, queryLifetimeInHours):
+    def __init__(self, wsdlUrl, wsdlMethod,
+                 soapRequest, queryLifetimeInHours, excludeFromAutoUpdate=False):
         self.wsdlUrl = wsdlUrl
         self.wsdlUrlNormalized = idnormalizer.normalize(wsdlUrl)
         self.wsdlMethod = wsdlMethod
@@ -17,6 +18,7 @@ class SOAPConnector():
         self.soapRequest = soapRequest
         self.soapRequestNormalized = idnormalizer.normalize(soapRequest)
         self.queryLifetime = timedelta(hours=queryLifetimeInHours)
+        self.excludeFromAutoUpdate = excludeFromAutoUpdate
         self.query = False
         self.initSOAPQueriesFolder()
 
@@ -76,7 +78,8 @@ class SOAPConnector():
             'wsdl_url': self.wsdlUrl,
             'wsdl_method': self.wsdlMethod,
             'wsdl_method_parameter': self.soapRequest,
-            'lifetime': self.queryLifetime
+            'lifetime': self.queryLifetime,
+            'exclude_from_auto_update': self.excludeFromAutoUpdate
         }
         if additionalQueryData:
             data.update(additionalQueryData)
