@@ -3,6 +3,7 @@ from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.dexterity.interfaces import IDexterityFTI
+from plone.i18n.normalizer import idnormalizer
 from unikold.connector.content.soap_query import ISOAPQuery
 from unikold.connector.soap import SOAPConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING
@@ -102,6 +103,18 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         modifiedBefore = query.modified()
         soapConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
+
+        queryPath = list(soapConnector.getQuery().getPhysicalPath()[2:])
+
+        expectedPath = [soapConnector.soapQueriesFolder.id]
+        for part in soap_test_url.split('/'):
+            if len(part) == 0:
+                continue
+            expectedPath.append(idnormalizer.normalize(part))
+        expectedPath.append(idnormalizer.normalize(soap_test_method))
+        expectedPath.append(idnormalizer.normalize(soap_test_method_parameter))
+
+        self.assertEqual(queryPath, expectedPath)
 
     def test_soap_query_connector_fail_params(self):
         notExistingMethod = 'notexistingmethod'

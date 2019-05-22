@@ -148,7 +148,7 @@ class XMLQueryIntegrationTest(unittest.TestCase):
 
         queryPath = list(xmlConnector.getQuery().getPhysicalPath()[3:])
 
-        expectedPath = [xmlConnector.xmlFolderName]
+        expectedPath = []
         for part in xml_test_url.split('/'):
             if len(part) == 0:
                 continue

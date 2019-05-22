@@ -9,10 +9,6 @@ from unikold.connector.utils import createNestedFolders
 class XMLConnector():
     query_portal_type = 'XMLQuery'
 
-    # XML queries are stored in separate folder within
-    # the root SOAPQueriesFolder:
-    xmlFolderName = 'xml'
-
     def __init__(self, url, queryLifetimeInHours,
                  queryParams=[], basicAuthCredentials=(False, False)):
         self.url = url
@@ -48,21 +44,10 @@ class XMLConnector():
             except (KeyError, Unauthorized):
                 pass
 
-    def getXMLFolder(self):
-        xmlFolder = getattr(self.soapQueriesFolder, self.xmlFolderName, None)
-        if xmlFolder is None:
-            xmlFolder = api.content.create(
-                type='SOAPQueriesFolder',
-                title=self.xmlFolderName,
-                id=self.xmlFolderName,
-                container=self.soapQueriesFolder)
-        return xmlFolder
-
     # return folder containing the query object
     def getQueryFolder(self):
-        xmlFolder = self.getXMLFolder()
         parts = self.url.split('/')
-        curFolder = createNestedFolders(xmlFolder, parts)
+        curFolder = createNestedFolders(self.soapQueriesFolder, parts)
         if len(self.queryParams) == 0:
             return curFolder
 

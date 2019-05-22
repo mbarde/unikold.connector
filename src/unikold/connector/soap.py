@@ -3,6 +3,7 @@ from AccessControl.unauthorized import Unauthorized
 from datetime import timedelta
 from plone import api
 from plone.i18n.normalizer import idnormalizer
+from unikold.connector.utils import createNestedFolders
 
 
 class SOAPConnector():
@@ -41,26 +42,10 @@ class SOAPConnector():
             except (KeyError, Unauthorized):
                 pass
 
-    def getUrlFolder(self):
-        urlFolder = getattr(self.soapQueriesFolder, self.wsdlUrlNormalized, None)
-        if urlFolder is None:
-            urlFolder = api.content.create(
-                type='SOAPQueriesFolder',
-                title=self.wsdlUrlNormalized,
-                id=self.wsdlUrlNormalized,
-                container=self.soapQueriesFolder)
-        return urlFolder
-
     def getMethodFolder(self):
-        urlFolder = self.getUrlFolder()
-        methodFolder = getattr(urlFolder, self.wsdlMethodNormalized, None)
-        if methodFolder is None:
-            methodFolder = api.content.create(
-                type='SOAPQueriesFolder',
-                title=self.wsdlMethodNormalized,
-                id=self.wsdlMethodNormalized,
-                container=urlFolder)
-        return methodFolder
+        parts = self.wsdlUrl.split('/')
+        parts.append(self.wsdlMethodNormalized)
+        return createNestedFolders(self.soapQueriesFolder, parts)
 
     # return folder containing the query object
     def getQueryFolder(self):

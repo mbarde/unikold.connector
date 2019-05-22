@@ -4,6 +4,7 @@ from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.dexterity.interfaces import IDexterityFTI
+from plone.i18n.normalizer import idnormalizer
 from unikold.connector.content.lsf_query import ILSFQuery
 from unikold.connector.lsf import LSFConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING
@@ -112,6 +113,22 @@ class LSFQueryIntegrationTest(unittest.TestCase):
 
         lsfConnector.get(True)  # force update
         self.assertTrue(modifiedBefore < query.modified())
+
+        queryPath = list(lsfConnector.getQuery().getPhysicalPath()[2:])
+
+        expectedPath = [lsfConnector.soapQueriesFolder.id]
+        wsdlUrl = api.portal.get_registry_record('unikold_connector_lsf.lsf_wsdl_url')
+        for part in wsdlUrl.split('/'):
+            if len(part) == 0:
+                continue
+            expectedPath.append(idnormalizer.normalize(part))
+
+        wsdlMethod = 'getDataXML'
+        expectedPath.append(idnormalizer.normalize(wsdlMethod))
+        expectedPath.append(idnormalizer.normalize(lsf_test_object_type))
+        expectedPath.append(idnormalizer.normalize(lsf_test_conditions))
+
+        self.assertEqual(queryPath, expectedPath)
 
     def test_lsf_query_connector_with_auth(self):
         lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions, 0, False)
