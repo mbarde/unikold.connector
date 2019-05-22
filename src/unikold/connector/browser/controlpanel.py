@@ -69,10 +69,12 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
         brains = catalog(object_provides=IUniKoLdQuery.__identifier__)
 
         updateSuccess = []
+        updateIgnored = []
         updateError = []
         for brain in brains:
             obj = brain.getObject()
             if obj.exclude_from_auto_update:
+                updateIgnored.append(obj)
                 continue
             if obj.updateData() is not False:
                 updateSuccess.append(obj)
@@ -88,6 +90,11 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
                 message=_(u'Successfully updated ${successCount} queries',
                           mapping={u'successCount': len(updateSuccess)}),
                 request=self.request, type='info')
+        if len(updateIgnored) > 0:
+            api.portal.show_message(
+                message=_(u'Ignored ${ingoredCount} queries (are excluded from automated updates)',
+                          mapping={u'ingoredCount': len(updateIgnored)}),
+                request=self.request, type='warning')
         if len(updateError) > 0:
             api.portal.show_message(
                 message=_(u'Error updating ${errorCount} queries (see logs for more information)',
