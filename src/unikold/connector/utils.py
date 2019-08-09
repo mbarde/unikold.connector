@@ -44,6 +44,8 @@ def createNestedFolders(container, folderNames):
             continue
         while '_' == normalizedName[0]:
             normalizedName = normalizedName[1:]
+            if len(normalizedName) == 0:
+                break
         if len(normalizedName) == 0:
             continue
 

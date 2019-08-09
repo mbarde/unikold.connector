@@ -16,7 +16,7 @@ except ImportError:
     from plone.dexterity.utils import portalTypeToSchemaName  # noqa: F401
 
 
-class SOAPQueryIntegrationTest(unittest.TestCase):
+class ConnectorUtilsTest(unittest.TestCase):
 
     layer = UNIKOLD_CONNECTOR_INTEGRATION_TESTING
 
@@ -30,11 +30,17 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         container = self.portal.restrictedTraverse(str(folderPath))
 
         folderNames = ['https://', 'www.plone.org', '?key=value', 'stuff_',
-                       '-dash-', '&%spec#+*', 'umläütöß']
+                       ' ', '_____', '-dash-', '', '&%spec#+*', 'umläütöß']
         createNestedFolders(container, folderNames)
+
+        # those folder names resolve to empty ids which means we expect
+        # those will be skipped on nested folder creation
+        nonExisting = [' ', '_____', '']
 
         currentFolder = container
         for folderName in folderNames:
+            if folderName in nonExisting:
+                continue
             folderId = idnormalizer.normalize(folderName)
             currentFolder = currentFolder.get(folderId, None)
-            self.assertTrue(currentFolder is not None)
+            self.assertNotEqual(currentFolder, None)
