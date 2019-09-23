@@ -90,6 +90,14 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
         results = obj.getResults()
         self.assertEqual(results[0][0], u'pickle loads error')
 
+        # empty results:
+        obj.filter = u'hello=world'
+        data = obj.getData(forceUpdate=True)
+        self.assertEqual(pickle.loads(data), [])
+        self.assertEqual(data, obj.raw_response)
+        self.assertFalse(obj.raw_error)
+        self.assertEqual(obj.getResults(), [])
+
     def test_ct_ldap_search_query_fail(self):
         folderPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
         folder = self.portal.restrictedTraverse(str(folderPath))
