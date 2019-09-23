@@ -3,7 +3,9 @@ from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
 from plone.dexterity.interfaces import IDexterityFTI
+from plone.i18n.normalizer import idnormalizer
 from unikold.connector.content.ldap_search_query import ILDAPSearchQuery  # NOQA E501
+from unikold.connector.ldap import LDAPSearchConnector
 from unikold.connector.testing import UNIKOLD_CONNECTOR_INTEGRATION_TESTING  # noqa
 from unikold.connector.tests.config import ldap_search_password
 from unikold.connector.tests.config import ldap_search_username
@@ -134,3 +136,46 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
     def test_excluded_from_search(self):
         types_not_searched = api.portal.get_registry_record('plone.types_not_searched')
         self.assertTrue('LDAPSearchQuery' in types_not_searched)
+
+    def test_ldap_search_connecotr(self):
+        searchFilter = 'mail=mbarde@uni-koblenz.de'
+        ldapConnector = LDAPSearchConnector(
+            ldap_server_address, ldap_server_port, ldap_server_base_dn,
+            searchFilter, ldap_search_username, ldap_search_password,
+            1
+        )
+
+        query = ldapConnector.getQuery()
+        self.assertEqual(query.raw_response, None)
+
+        queryResults = query.getResults()
+        self.assertTrue(len(queryResults) > 0)
+        self.assertEqual(str(type(queryResults)), '<type \'list\'>')
+
+        connectorResults = ldapConnector.get()
+        self.assertEqual(queryResults, connectorResults)
+
+        self.assertTrue(query.modified() > query.created())
+
+        modifiedBefore = query.modified()
+        ldapConnector.get()
+        self.assertEqual(modifiedBefore, query.modified())
+
+        ldapConnector.get(forceUpdate=True)
+        self.assertTrue(modifiedBefore < query.modified())
+
+        # ensure correct path is created by connector to store query:
+        containerPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
+        parts = containerPath.split('/')
+        parts += ldap_server_address.split('/')
+        parts += ldap_server_base_dn.split(',')
+        parts += searchFilter.split('=')
+
+        expectedPath = []
+        for part in parts:
+            if len(part) == 0:
+                continue
+            expectedPath.append(idnormalizer.normalize(part))
+
+        queryPath = list(query.getPhysicalPath())[1:]
+        self.assertEqual(queryPath, expectedPath)
