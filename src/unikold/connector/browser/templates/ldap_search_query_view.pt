@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      tal:define="authenticator context/@@authenticator;
+                  authToken authenticator/token;"
+      i18n:domain="unikold.connector">
+<body>
+
+<metal:main fill-slot="main">
+    <tal:main-macro metal:define-macro="main">
+        <div tal:replace="structure provider:plone.abovecontenttitle" />
+        <div tal:replace="structure provider:plone.belowcontenttitle" />
+        <p class="documentDescription" tal:content="context/description" />
+        <div tal:replace="structure provider:plone.abovecontentbody" />
+
+        <h1 class="documentFirstHeading" tal:content="context/Title"/>
+
+        <div tal:repeat="widgetName view/widgets"
+             tal:condition="view/canUpdateFromView">
+          <tal:widget tal:define="widget python: view.w.get(widgetName)"
+                      tal:condition="python: widgetName != 'raw_response' and 'password' not in widgetName">
+            <label tal:content="widget/label"/>
+            <div tal:content="structure widget/render" />
+            <br/>
+          </tal:widget>
+          <tal:pw-widget tal:define="widget python: view.w.get(widgetName)"
+                         tal:condition="python: 'password' in widgetName">
+            <label tal:content="widget/label"/>
+            <div>****</div>
+            <br/>
+          </tal:pw-widget>
+        </div>
+
+        <tal:response condition="context/raw_response">
+          <label i18n:translate="">Results</label>
+          <table class="listing">
+            <tr tal:repeat="resultTuple context/getResults">
+              <td tal:content="python: resultTuple[0]"></td>
+              <td tal:content="python: resultTuple[1]"></td>
+            </tr>
+          </table>
+
+
+          <label i18n:translate="">Raw response</label>
+          <pre style="max-height: 300px" tal:content="context/raw_response"/>
+        </tal:response>
+
+        <form tal:condition="view/canUpdateFromView"
+              tal:attributes="action python: context.absolute_url() + '?_authenticator=' + authToken"
+              method="POST">
+          <input type="hidden" id="update-request" name="update-request" value="1"/>
+          <button id="btn-update-request"
+                  type="submit" class="standalone">
+             <i class="fa fa-refresh"></i>
+             <span i18n:translate="">Update</span>
+          </button>
+        </form>
+
+        <span>Last update:
+          <span tal:content="view/getModifiedLocalized"></span>
+        </span>
+
+        <span id="soap-loading" style="display:none">
+          <span i18n:translate="">Loading</span> ...
+        </span>
+
+        <script>
+          $(document).ready(function() {
+            $('#btn-update-request').click(function() {
+              $('#btn-update-request').addClass('disabled');
+              $('#btn-update-request i.fa-refresh').addClass('fa-spin');
+            });
+          })
+        </script>
+
+    </tal:main-macro>
+</metal:main>
+</body>
+</html>

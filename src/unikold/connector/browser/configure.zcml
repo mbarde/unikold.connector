@@ -46,6 +46,15 @@
       permission="cmf.ManagePortal"
       />
 
+  <!-- LDAP search query view (recycles SOAPQueryView class) -->
+  <browser:page
+      name="view"
+      for="unikold.connector.content.ldap_search_query.ILDAPSearchQuery"
+      class=".views.SOAPQueryView"
+      template="templates/ldap_search_query_view.pt"
+      permission="cmf.ManagePortal"
+      />
+
   <!-- Controlpanel for connector settings -->
   <browser:page
       name="unikold-connector-controlpanel"
