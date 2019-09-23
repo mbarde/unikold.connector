@@ -101,6 +101,7 @@ class LDAPSearchQuery(Item):
         data = self.raw_response
         err = False
 
+        ldapClient = False
         try:
             ''' see http://www.grotan.com/ldap/python-ldap-samples.html '''
             ldapClient = ldap.initialize('{0}:{1}'.format(self.address, self.port))
@@ -118,7 +119,8 @@ class LDAPSearchQuery(Item):
             err = str(e)
         finally:
             try:
-                ldapClient.unbind_s()
+                if ldapClient is not False:
+                    ldapClient.unbind_s()
             except AttributeError:
                 # client was not bound, so all o.k.
                 pass
@@ -128,7 +130,10 @@ class LDAPSearchQuery(Item):
     def getResults(self):
         raw_response = getattr(self, 'raw_response', None)
         if raw_response is not None:
-            return pickle.loads(self.raw_response)
+            try:
+                return pickle.loads(self.raw_response)
+            except Exception as e:
+                return [(u'pickle loads error', str(e))]
         return []
 
     def getResultsWithoutDNs(self):

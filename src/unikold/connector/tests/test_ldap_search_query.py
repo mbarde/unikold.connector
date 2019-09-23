@@ -86,6 +86,35 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
         results = obj.getResultsWithoutDNs()
         self.assertEqual(len(results), 1)
 
+        obj.raw_response = u'faulty string'
+        results = obj.getResults()
+        self.assertEqual(results[0][0], u'pickle loads error')
+
+    def test_ct_ldap_search_query_fail(self):
+        folderPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
+        folder = self.portal.restrictedTraverse(str(folderPath))
+        setRoles(self.portal, TEST_USER_ID, ['Authenticated'])
+
+        obj = api.content.create(
+            container=folder,
+            type='LDAPSearchQuery',
+            id='ldap_search_query',
+            **{
+                'address': 'not-existing-address',
+                'port': ldap_server_port,
+                'username': ldap_search_username,
+                'password': ldap_search_password,
+                'base_dn': ldap_server_base_dn,
+                'filter': 'mail=mbarde@uni-koblenz.de'
+            }
+        )
+
+        data = obj.getData()
+        self.assertEqual(len(data), 0)
+        self.assertTrue(len(obj.raw_error) > 0)
+        self.assertEqual(obj.raw_response, None)
+        self.assertEqual(obj.getResults(), [])
+
     def test_ct_ldap_search_query_globally_not_addable(self):
         setRoles(self.portal, TEST_USER_ID, ['Contributor'])
         fti = queryUtility(IDexterityFTI, name='LDAPSearchQuery')
