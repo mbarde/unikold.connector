@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from AccessControl.unauthorized import Unauthorized
 from datetime import timedelta
 from plone import api
 from plone.i18n.normalizer import idnormalizer
 from unikold.connector.utils import createNestedFolders
+from unikold.connector.utils import initSOAPQueriesFolder
 
 
 class XMLConnector():
@@ -21,7 +21,7 @@ class XMLConnector():
         self.excludeFromAutoUpdate = excludeFromAutoUpdate
         if basicAuthCredentials[0] and basicAuthCredentials[1]:
             self.basicAuthCredentials = basicAuthCredentials
-        self.initSOAPQueriesFolder()
+        self.soapQueriesFolder = initSOAPQueriesFolder()
 
     def get(self, forceUpdate=False):
         if self.soapQueriesFolder is None:
@@ -30,21 +30,6 @@ class XMLConnector():
         query = self.getQuery()
         query.getData(forceUpdate)  # make sure response is updated if neccessary
         return query.getXMLResponse()
-
-    def initSOAPQueriesFolder(self):
-        self.soapQueriesFolder = None
-
-        # intentionally no try and except blocks here since we can not use the
-        # SOAPConnector if we cant get the folder where queries are stored and cached
-        soapQueriesPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
-        if soapQueriesPath is not None and len(soapQueriesPath) > 0:
-            portal = api.portal.get()
-            try:
-                obj = portal.restrictedTraverse(str(soapQueriesPath))
-                if obj.portal_type == 'SOAPQueriesFolder':
-                    self.soapQueriesFolder = obj
-            except (KeyError, Unauthorized):
-                pass
 
     # return folder containing the query object
     def getQueryFolder(self):

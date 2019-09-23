@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from AccessControl.unauthorized import Unauthorized
 from plone import api
 from plone.i18n.normalizer import idnormalizer
 from zeep import Client
@@ -58,3 +59,21 @@ def createNestedFolders(container, folderNames):
                 container=curContainer)
         curContainer = curFolder
     return curContainer
+
+
+def initSOAPQueriesFolder():
+    soapQueriesFolder = None
+
+    # intentionally no try and except blocks here since we can not use the
+    # SOAPConnector if we cant get the folder where queries are stored and cached
+    soapQueriesPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
+    if soapQueriesPath is not None and len(soapQueriesPath) > 0:
+        portal = api.portal.get()
+        try:
+            obj = portal.restrictedTraverse(str(soapQueriesPath))
+            if obj.portal_type == 'SOAPQueriesFolder':
+                soapQueriesFolder = obj
+        except (KeyError, Unauthorized):
+            pass
+
+    return soapQueriesFolder
