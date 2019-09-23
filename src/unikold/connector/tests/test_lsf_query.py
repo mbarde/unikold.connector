@@ -162,6 +162,6 @@ class LSFQueryIntegrationTest(unittest.TestCase):
         data = lsfConnector.get()
         self.assertEqual(data.tag, 'xml-syntax-error')
         query = lsfConnector.getQuery()
-        self.assertTrue('Max retries exceeded' in query.soap_error)
+        self.assertTrue('There is no default service defined' in query.soap_error)
 
         api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_url', lsf_wsdl_url)

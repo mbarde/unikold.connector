@@ -141,4 +141,4 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         data = soapConnector.get()
         self.assertEqual(data, '')
         query = soapConnector.getQuery()
-        self.assertTrue('Max retries exceeded' in query.soap_error)
+        self.assertTrue('There is no default service defined' in query.soap_error)
