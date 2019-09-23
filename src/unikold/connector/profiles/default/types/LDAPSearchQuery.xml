@@ -1,39 +1,30 @@
 <?xml version="1.0"?>
 <object xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    name="SOAPQueriesFolder"
+    name="LDAPSearchQuery"
     meta_type="Dexterity FTI"
     i18n:domain="unikold.connector">
 
   <!-- Basic properties -->
   <property
       i18n:translate=""
-      name="title">SOAPQueriesFolder</property>
+      name="title">LDAPSearchQuery</property>
   <property
       i18n:translate=""
-      name="description">Folder containing SOAP queries</property>
+      name="description"></property>
 
   <property name="allow_discussion">False</property>
-  <property name="factory">SOAPQueriesFolder</property>
+  <property name="factory">LDAPSearchQuery</property>
   <property name="icon_expr"></property>
   <property name="link_target"></property>
 
   <!-- Hierarchy control -->
   <property name="global_allow">False</property>
-  <property name="filter_content_types">True</property>
-  <property name="allowed_content_types">
-    <element value="XMLQuery" />
-    <element value="SOAPQuery" />
-    <element value="LSFQuery" />
-    <element value="LSFSearchQuery" />
-    <element value="LDAPSearchQuery" />
-    <element value="SOAPQueriesFolder" />
-  </property>
   <!-- Schema, class and security -->
-  <property name="add_permission">unikold.connector.AddSOAPQueriesFolder</property>
-  <property name="klass">plone.dexterity.content.Container</property>
-  <property name="model_file">unikold.connector.content:soap_queries_folder.xml</property>
+  <property name="add_permission">unikold.connector.AddSOAPQuery</property>
+  <property name="klass">unikold.connector.content.ldap_search_query.LDAPSearchQuery</property>
+  <property name="model_file"></property>
   <property name="model_source"></property>
-  <property name="schema"></property>
+  <property name="schema">unikold.connector.content.ldap_search_query.ILDAPSearchQuery</property>
 
   <!-- Enabled behaviors -->
   <property name="behaviors" purge="false">
@@ -55,7 +46,7 @@
   </property>
 
   <!-- View information -->
-  <property name="add_view_expr">string:${folder_url}/++add++SOAPQueriesFolder</property>
+  <property name="add_view_expr">string:${folder_url}/++add++LDAPSearchQuery</property>
   <property name="default_view">view</property>
   <property name="default_view_fallback">False</property>
   <property name="immediate_view">view</property>

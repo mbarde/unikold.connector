@@ -48,6 +48,7 @@ setup(
         'setuptools',
         'z3c.jbot',
         'zeep',
+        'python-ldap',
     ],
     extras_require={
         'test': [

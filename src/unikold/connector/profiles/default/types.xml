@@ -6,4 +6,5 @@
   <object meta_type="Dexterity FTI" name="LSFSearchQuery"/>
   <object meta_type="Dexterity FTI" name="SOAPQueriesFolder"/>
   <object meta_type="Dexterity FTI" name="XMLQuery"/>
+  <object meta_type="Dexterity FTI" name="LDAPSearchQuery"/>
 </object>

@@ -30,6 +30,7 @@ def post_install(context):
     makeTypeSearchable(portal, 'LSFSearchQuery', searchable=False)
     makeTypeSearchable(portal, 'XMLQuery', searchable=False)
     makeTypeSearchable(portal, 'SOAPQueriesFolder', searchable=False)
+    makeTypeSearchable(portal, 'LDAPSearchQuery', searchable=False)
 
 
 def uninstall(context):
