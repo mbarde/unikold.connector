@@ -11,26 +11,31 @@ class IUniKoLdConnectorLDAPControlPanelView(Interface):
 
     ldap_default_address = schema.TextLine(
         title=_(u'Default LDAP server address'),
+        default=u'',
         required=True,
     )
 
     ldap_default_port = schema.Int(
         title=_(u'Default LDAP server port'),
+        default=389,
         required=True,
     )
 
     ldap_default_username = schema.TextLine(
         title=_(u'Default LDAP username'),
+        default=u'',
         required=True,
     )
 
     ldap_default_password = schema.Password(
         title=_(u'Default LDAP password'),
+        default=u'',
         required=True,
     )
 
     ldap_default_base_dn = schema.TextLine(
         title=_(u'Default base DN'),
+        default=u'',
         required=True,
     )
 
