@@ -9,11 +9,10 @@ from unikold.connector.utils import initSOAPQueriesFolder
 class LDAPSearchConnector():
     query_portal_type = 'LDAPSearchQuery'
 
-    def __init__(self, address, port, baseDN, searchFilter,
-                 username, password,
-                 queryLifetimeInHours, excludeFromAutoUpdate=False):
-        self.address = address
-        self.addressNormalized = idnormalizer.normalize(address)
+    def __init__(self, address=None, port=None,
+                 baseDN=None, searchFilter=None,
+                 username=None, password=None,
+                 queryLifetimeInHours=24, excludeFromAutoUpdate=False):
         self.queryLifetime = timedelta(hours=queryLifetimeInHours)
         self.query = False
         self.queryData = {
@@ -31,6 +30,16 @@ class LDAPSearchConnector():
         self.excludeFromAutoUpdate = excludeFromAutoUpdate
         self.soapQueriesFolder = initSOAPQueriesFolder()
 
+    def getAddress(self):
+        if self.queryData['address'] is not None:
+            return self.queryData['address']
+        return api.portal.get_registry_record('unikold_connector_ldap.ldap_default_address')
+
+    def getBaseDN(self):
+        if self.queryData['base_dn'] is not None:
+            return self.queryData['base_dn']
+        return api.portal.get_registry_record('unikold_connector_ldap.ldap_default_base_dn')
+
     def get(self, forceUpdate=False):
         if self.soapQueriesFolder is None:
             return None
@@ -41,8 +50,8 @@ class LDAPSearchConnector():
 
     # return folder containing the query object
     def getQueryFolder(self):
-        parts = self.address.split('/')
-        parts += self.queryData['base_dn'].split(',')
+        parts = self.getAddress().split('/')
+        parts += self.getBaseDN().split(',')
         parts.append(self.searchFilterKey)
         return createNestedFolders(self.soapQueriesFolder, parts)
 

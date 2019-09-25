@@ -148,11 +148,17 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
         query = ldapConnector.getQuery()
         self.assertEqual(query.raw_response, None)
 
+        address = query.address
+        self.assertEqual(address, ldap_server_address)
+
+        queryResults = query.getResults()
+        self.assertEqual(len(queryResults), 0)
+
+        connectorResults = ldapConnector.get()
+
         queryResults = query.getResults()
         self.assertTrue(len(queryResults) > 0)
         self.assertEqual(str(type(queryResults)), '<type \'list\'>')
-
-        connectorResults = ldapConnector.get()
         self.assertEqual(queryResults, connectorResults)
 
         self.assertTrue(query.modified() > query.created())
@@ -179,3 +185,49 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
 
         queryPath = list(query.getPhysicalPath())[1:]
         self.assertEqual(queryPath, expectedPath)
+
+    def test_ct_ldap_search_query_defaults(self):
+        searchFilter = 'mail=mbarde@uni-koblenz.de'
+        ldapConnector = LDAPSearchConnector(searchFilter=searchFilter)
+
+        results = ldapConnector.get()
+        self.assertTrue(len(results) > 0)
+        self.assertEqual(str(type(results)), '<type \'list\'>')
+
+        query = ldapConnector.getQuery()
+        address = query.address
+        self.assertEqual(address, None)
+
+        # ensure correct path is created by connector to store query:
+        containerPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
+        parts = containerPath.split('/')
+        parts += ldap_server_address.split('/')
+        parts += ldap_server_base_dn.split(',')
+        parts += searchFilter.split('=')
+
+        expectedPath = []
+        for part in parts:
+            if len(part) == 0:
+                continue
+            expectedPath.append(idnormalizer.normalize(part))
+
+        queryPath = list(query.getPhysicalPath())[1:]
+        self.assertEqual(queryPath, expectedPath)
+
+        ldapConnector = LDAPSearchConnector(searchFilter=searchFilter, address='')
+        results = ldapConnector.get()
+        self.assertTrue(len(results) > 0)
+        self.assertEqual(str(type(results)), '<type \'list\'>')
+
+    def test_ct_ldap_search_query_overwrite_defaults(self):
+        searchFilter = 'mail=mbarde@uni-koblenz.de'
+        ldapConnector = LDAPSearchConnector(
+            address='notexisting', searchFilter=searchFilter)
+
+        data = ldapConnector.get()
+        self.assertEqual(len(data), 0)
+
+        query = ldapConnector.getQuery()
+        self.assertTrue(len(query.raw_error) > 0)
+        self.assertEqual(query.raw_response, None)
+        self.assertEqual(query.getResults(), [])

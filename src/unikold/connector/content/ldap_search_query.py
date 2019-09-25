@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from DateTime import DateTime
 from datetime import timedelta
+from plone import api
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from unikold.connector import _
@@ -16,27 +17,27 @@ class ILDAPSearchQuery(model.Schema):
 
     address = schema.TextLine(
         title=_(u'LDAP server address'),
-        required=True
+        required=False
     )
 
     port = schema.Int(
         title=_(u'LDAP server port'),
-        required=True
+        required=False
     )
 
     username = schema.TextLine(
         title=_(u'Username'),
-        required=True
+        required=False
     )
 
     password = schema.Password(
         title=_(u'Password'),
-        required=True
+        required=False
     )
 
     base_dn = schema.TextLine(
         title=_(u'Base DN'),
-        required=True
+        required=False
     )
 
     filter = schema.TextLine(
@@ -103,14 +104,20 @@ class LDAPSearchQuery(Item):
 
         ldapClient = False
         try:
+            address = self.getOptionalAttr('address')
+            port = self.getOptionalAttr('port')
+            username = self.getOptionalAttr('username')
+            password = self.getOptionalAttr('password')
+            base_dn = self.getOptionalAttr('base_dn')
+
             ''' see http://www.grotan.com/ldap/python-ldap-samples.html '''
-            ldapClient = ldap.initialize('{0}:{1}'.format(self.address, self.port))
-            ldapClient.simple_bind_s(self.username, self.password)
+            ldapClient = ldap.initialize('{0}:{1}'.format(address, port))
+            ldapClient.simple_bind_s(username, password)
             ldapClient.protocol_version = ldap.VERSION3
             searchScope = ldap.SCOPE_SUBTREE
 
             ldap_result_id = ldapClient.search(
-                self.base_dn, searchScope, self.filter, None)
+                base_dn, searchScope, self.filter, None)
             result_type, result_data = ldapClient.result(ldap_result_id, 0)
             ldapClient.unbind_s()
 
@@ -142,3 +149,21 @@ class LDAPSearchQuery(Item):
         for (dn, result) in resultsWithDNs:
             results.append(result)
         return results
+
+    # returns value of attribute of self
+    # if self does not has this attribute defined,
+    # return default set in controlpanel
+    def getOptionalAttr(self, attrName):
+        if attrName not in ['address', 'port', 'username', 'password', 'base_dn']:
+            return None
+
+        val = getattr(self, attrName, None)
+        if val is not None:
+            if isinstance(val, str):
+                if len(val) > 0:
+                    return val
+            else:
+                return val
+
+        regDefaultStr = 'unikold_connector_ldap.ldap_default_{0}'.format(attrName)
+        return api.portal.get_registry_record(regDefaultStr)

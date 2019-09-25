@@ -8,6 +8,11 @@ from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.testing import z2
+from unikold.connector.tests.config import ldap_search_password
+from unikold.connector.tests.config import ldap_search_username
+from unikold.connector.tests.config import ldap_server_address
+from unikold.connector.tests.config import ldap_server_base_dn
+from unikold.connector.tests.config import ldap_server_port
 from unikold.connector.tests.config import lsf_auth_password
 from unikold.connector.tests.config import lsf_auth_username
 from unikold.connector.tests.config import lsf_wsdl_search_url
@@ -31,7 +36,8 @@ class UnikoldConnectorLayer(PloneSandboxLayer):
         applyProfile(portal, 'unikold.connector:default')
 
         self.setUpDataFolder(portal)
-        self.setUpLSFControlpanel(portal)
+        self.setUpLSFControlpanel()
+        self.setUpLDAPControlpanel()
 
     def setUpDataFolder(self, portal):
         dataFolderName = 'soap-data'
@@ -53,11 +59,18 @@ class UnikoldConnectorLayer(PloneSandboxLayer):
         api.portal.set_registry_record('unikold_connector.soap_queries_folder', unicode(path))
         api.portal.set_registry_record('unikold_connector.soap_timeout', 10)
 
-    def setUpLSFControlpanel(self, portal):
+    def setUpLSFControlpanel(self):
         api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_url', lsf_wsdl_url)
         api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_search_url', lsf_wsdl_search_url)  # noqa: E501
         api.portal.set_registry_record('unikold_connector_lsf.lsf_auth_username', lsf_auth_username)  # noqa: E501
         api.portal.set_registry_record('unikold_connector_lsf.lsf_auth_password', lsf_auth_password)  # noqa: E501
+
+    def setUpLDAPControlpanel(self):
+        api.portal.set_registry_record('unikold_connector_ldap.ldap_default_address', ldap_server_address)  # noqa: E501
+        api.portal.set_registry_record('unikold_connector_ldap.ldap_default_port', ldap_server_port)  # noqa: E501
+        api.portal.set_registry_record('unikold_connector_ldap.ldap_default_username', ldap_search_username)  # noqa: E501
+        api.portal.set_registry_record('unikold_connector_ldap.ldap_default_password', ldap_search_password)  # noqa: E501
+        api.portal.set_registry_record('unikold_connector_ldap.ldap_default_base_dn', ldap_server_base_dn)  # noqa: E501
 
 
 UNIKOLD_CONNECTOR_FIXTURE = UnikoldConnectorLayer()

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-lsf_search_test_method_parameter
+# -*- coding: utf-8 -*-
 from lxml import etree
 from plone import api
 from plone.app.testing import setRoles

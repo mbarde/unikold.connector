@@ -13,6 +13,7 @@ Features
 - Live-View to test your SOAP requests: `test_soap`: [https://raw.githubusercontent.com/mbarde/unikold.connector/master/docs/connector.gif](https://raw.githubusercontent.com/mbarde/unikold.connector/master/docs/connector.gif)
 - Specific queries (`LSFQuery`, `LSFSearchQuery`) to easily connect to products of [HIS eG](https://www.his.de) via their SOAP API (`dbinterface`)
 - Plain XML requests (also supports basic authentication)
+- LDAP search queries
 
 Installation
 --------

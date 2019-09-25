@@ -71,6 +71,14 @@
       permission="cmf.ManagePortal"
       />
 
+  <!-- Controlpanel for LDAP settings -->
+  <browser:page
+      name="unikold-connector-ldap-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel_ldap.UniKoLdConnectorLDAPControlPanelView"
+      permission="cmf.ManagePortal"
+      />
+
   <!-- Custom edit form since only admins should be allowed to edit queries
        via forms. -->
   <browser:page
