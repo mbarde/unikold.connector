@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from DateTime import DateTime
 from lxml import etree
 from plone import api
 from plone.app.testing import setRoles
@@ -92,20 +93,33 @@ class LSFQueryIntegrationTest(unittest.TestCase):
 
         query = lsfConnector.getQuery()
         self.assertEqual(query.soap_response, None)
+        self.assertEqual(query.last_access_date, None)
         self.assertTrue(query, 'use_authentication')
 
         lsfResponse = query.getLSFResponse()
         self.assertTrue(type(lsfResponse) is etree._Element)
         self.assertTrue(len(lsfResponse) == 0)
+        self.assertEqual(
+            query.last_access_date.strftime('%d.%m.%Y'),
+            DateTime().asdatetime().strftime('%d.%m.%Y'),
+        )
 
+        lastAccessBefore = query.last_access_date
         data = lsfConnector.get()
         self.assertTrue(len(data) > 0)
+        self.assertTrue(lastAccessBefore < query.last_access_date)
 
         lsfResponse = query.getLSFResponse()
         self.assertTrue(type(lsfResponse) is etree._Element)
         self.assertTrue(len(lsfResponse) > 0)
 
         self.assertTrue(query.modified() > query.created())
+
+        modifiedBefore = query.modified()
+        lastAccessBefore = query.last_access_date
+        query.updateData()
+        self.assertEqual(lastAccessBefore, query.last_access_date)
+        self.assertTrue(modifiedBefore < query.modified())
 
         modifiedBefore = query.modified()
         lsfConnector.get()

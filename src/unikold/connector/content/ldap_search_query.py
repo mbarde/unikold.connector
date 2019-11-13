@@ -67,11 +67,22 @@ class ILDAPSearchQuery(model.Schema):
         default=False
     )
 
+    last_access_date = schema.Datetime(
+        title=_(u'Last access date'),
+        required=False
+    )
+
 
 @implementer(ILDAPSearchQuery, IUniKoLdQuery)
 class LDAPSearchQuery(Item):
 
+    def updateLastAccess(self):
+        now = DateTime().asdatetime()
+        self.last_access_date = now
+
     def getData(self, forceUpdate=False):
+        self.updateLastAccess()
+
         # update data if there has not been a response yet ...
         if forceUpdate or self.raw_response is None:
             self.updateData()
@@ -135,6 +146,8 @@ class LDAPSearchQuery(Item):
         return (data, err)
 
     def getResults(self):
+        self.updateLastAccess()
+
         raw_response = getattr(self, 'raw_response', None)
         if raw_response is not None:
             try:
@@ -144,6 +157,8 @@ class LDAPSearchQuery(Item):
         return []
 
     def getResultsWithoutDNs(self):
+        self.updateLastAccess()
+
         results = []
         resultsWithDNs = self.getResults()
         for (dn, result) in resultsWithDNs:

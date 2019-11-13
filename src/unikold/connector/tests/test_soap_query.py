@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from DateTime import DateTime
 from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
@@ -92,10 +93,22 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         )
 
         query = soapConnector.getQuery()
+
+        self.assertEqual(query.last_access_date, None)
         self.assertEqual(query.soap_response, None)
 
         data = soapConnector.get()
         self.assertEqual(data, 'True')
+        self.assertEqual(
+            query.last_access_date.strftime('%d.%m.%Y'),
+            DateTime().asdatetime().strftime('%d.%m.%Y'),
+        )
+
+        modifiedBefore = query.modified()
+        lastAccessBefore = query.last_access_date
+        query.updateData()
+        self.assertEqual(lastAccessBefore, query.last_access_date)
+        self.assertTrue(modifiedBefore < query.modified())
 
         self.assertEqual(query.soap_response, 'True')
         self.assertTrue(query.modified() > query.created())

@@ -49,11 +49,22 @@ class ISOAPQuery(model.Schema):
         default=False
     )
 
+    last_access_date = schema.Datetime(
+        title=_(u'Last access date'),
+        required=False
+    )
+
 
 @implementer(ISOAPQuery, IUniKoLdQuery)
 class SOAPQuery(Item):
 
+    def updateLastAccess(self):
+        now = DateTime().asdatetime()
+        self.last_access_date = now
+
     def getData(self, forceUpdate=False):
+        self.updateLastAccess()
+
         # update data if there has not been a response yet ...
         if forceUpdate or self.soap_response is None:
             self.updateData()

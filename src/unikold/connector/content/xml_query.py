@@ -60,11 +60,22 @@ class IXMLQuery(model.Schema):
         default=False
     )
 
+    last_access_date = schema.Datetime(
+        title=_(u'Last access date'),
+        required=False
+    )
+
 
 @implementer(IXMLQuery, IUniKoLdQuery)
 class XMLQuery(Item):
 
+    def updateLastAccess(self):
+        now = DateTime().asdatetime()
+        self.last_access_date = now
+
     def getData(self, forceUpdate=False):
+        self.updateLastAccess()
+
         # update data if there has not been a response yet ...
         if forceUpdate or self.raw_response is None:
             self.updateData()
@@ -122,6 +133,8 @@ class XMLQuery(Item):
         return (data, err)
 
     def getXMLResponse(self):
+        self.updateLastAccess()
+
         if hasattr(self, 'raw_response'):
             try:
                 tree = etree.fromstring(self.raw_response)

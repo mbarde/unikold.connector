@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from DateTime import DateTime
 from lxml import etree
 from plone import api
 from plone.app.testing import setRoles
@@ -89,15 +90,25 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
 
         query = lsfSearchConnector.getQuery()
         self.assertEqual(query.soap_response, None)
+        self.assertEqual(query.last_access_date, None)
         self.assertFalse(hasattr(query, 'search_results'))
 
         lsfResponse = query.getLSFResponse()
         self.assertTrue(type(lsfResponse) is etree._Element)
         self.assertTrue(len(lsfResponse) == 0)
+        self.assertEqual(
+            query.last_access_date.strftime('%d.%m.%Y'),
+            DateTime().asdatetime().strftime('%d.%m.%Y'),
+        )
 
+        searchResults = query.getSearchResults()
+        self.assertEqual(searchResults, [])
+
+        lastAccessBefore = query.last_access_date
         data = lsfSearchConnector.get()
         self.assertTrue(len(data) > 0)
         self.assertTrue(type(data[0]) is dict)
+        self.assertTrue(lastAccessBefore < query.last_access_date)
 
         lsfResponse = query.getLSFResponse()
         self.assertTrue(type(lsfResponse) is etree._Element)
@@ -106,7 +117,22 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         self.assertTrue(hasattr(query, 'search_results'))
         self.assertTrue(type(query.search_results) is list)
 
+        searchResults = query.getSearchResults()
+        self.assertTrue(type(searchResults) is list)
+        self.assertEqual(len(searchResults), 1)
+        self.assertTrue(type(searchResults[0]) is dict)
+
         self.assertTrue(query.modified() > query.created())
+
+        modifiedBefore = query.modified()
+        lastAccessBefore = query.last_access_date
+        query.updateData()
+        self.assertEqual(lastAccessBefore, query.last_access_date)
+        self.assertEqual(
+            query.last_access_date.strftime('%d.%m.%Y'),
+            lastAccessBefore.strftime('%d.%m.%Y'),
+        )
+        self.assertTrue(modifiedBefore < query.modified())
 
         modifiedBefore = query.modified()
         lsfSearchConnector.get()

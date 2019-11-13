@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from DateTime import DateTime
 from lxml import etree
 from plone import api
 from plone.app.testing import setRoles
@@ -68,11 +69,21 @@ class XMLQueryIntegrationTest(unittest.TestCase):
                 'url': xml_test_url
             }
         )
-
+        self.assertEqual(obj.last_access_date, None)
         data = obj.getData()
+        self.assertEqual(
+            obj.last_access_date.strftime('%d.%m.%Y'),
+            DateTime().asdatetime().strftime('%d.%m.%Y'),
+        )
         self.assertTrue(len(data) > 0)
         self.assertEqual(data, obj.raw_response)
         self.assertFalse(obj.raw_error)
+
+        modifiedBefore = obj.modified()
+        lastAccessBefore = obj.last_access_date
+        obj.updateData()
+        self.assertEqual(lastAccessBefore, obj.last_access_date)
+        self.assertTrue(modifiedBefore < obj.modified())
 
         xml = obj.getXMLResponse()
         self.assertTrue(type(xml) is etree._Element)

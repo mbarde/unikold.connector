@@ -16,7 +16,7 @@ class LSFSearchQuery(LSFQuery):
         (data, error) = super(LSFSearchQuery, self).getSOAPResponse()
         if error is False:
             searchResults = []
-            lsfResponse = self.getLSFResponse()
+            lsfResponse = self.getLSFResponse(doNotUpdateLastAccess=True)
             for obj in lsfResponse.iter('object'):
                 result = {}
                 for attr in obj.iter('attribute'):
@@ -28,6 +28,8 @@ class LSFSearchQuery(LSFQuery):
         return (data, error)
 
     def getSearchResults(self):
+        self.updateLastAccess()
+
         if hasattr(self, 'search_results'):
             return self.search_results
         else:
