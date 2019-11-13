@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from DateTime import DateTime
+from datetime import datetime
 from datetime import timedelta
 from lxml import etree
 from plone.dexterity.content import Item
@@ -70,8 +71,7 @@ class IXMLQuery(model.Schema):
 class XMLQuery(Item):
 
     def updateLastAccess(self):
-        now = DateTime().asdatetime()
-        self.last_access_date = now
+        self.last_access_date = datetime.now()
 
     def getData(self, forceUpdate=False):
         self.updateLastAccess()
