@@ -2,15 +2,12 @@
 from DateTime import DateTime
 from datetime import datetime
 from datetime import timedelta
-from plone import api
 from plone.dexterity.content import Item
-from plone.protect.interfaces import IDisableCSRFProtection
 from plone.supermodel import model
 from unikold.connector import _
 from unikold.connector.interfaces import IUniKoLdQuery
 from unikold.connector.utils import getSOAPResponse
 from zope import schema
-from zope.interface import alsoProvides
 from zope.interface import implementer
 
 
@@ -63,15 +60,7 @@ class ISOAPQuery(model.Schema):
 class SOAPQuery(Item):
 
     def updateLastAccess(self):
-        now = datetime.now()
-        if self.last_access_date is not None:
-            delta = now - self.last_access_date
-            updateInterval = api.portal.get_registry_record('unikold_connector.update_last_access_interval')  # noqa: E501
-            if delta.seconds < updateInterval:
-                # only update when interval specified in controlpanel has exceeded
-                return
-        alsoProvides(self.REQUEST, IDisableCSRFProtection)
-        self.last_access_date = now
+        self.last_access_date = datetime.now()
 
     def getData(self, forceUpdate=False):
         self.updateLastAccess()

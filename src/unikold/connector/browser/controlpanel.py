@@ -29,13 +29,6 @@ class IUniKoLdConnectorControlPanelView(Interface):
         default=10
     )
 
-    update_last_access_interval = schema.Int(
-        title=_(u'Granularity of last access tracking of queries (in seconds)'),
-        description=_(u'All queries have a field to store the timestamp of the last access. This field is only updated if the time span specified here has elapsed since the last access. Be aware that low values here can lead to a massive boost of database writing operations, since the last access fields will be updated more often.'),  # noqa: E501
-        required=False,
-        default=3600
-    )
-
 
 class UniKoLdConnectorControlPanelForm(RegistryEditForm):
     schema = IUniKoLdConnectorControlPanelView
