@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from DateTime import DateTime
 from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
@@ -75,36 +74,19 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
                 'filter': 'mail=mbarde@uni-koblenz.de'
             }
         )
-        self.assertEqual(obj.last_access_date, None)
         self.assertEqual(obj.getResults(), [])
-        self.assertEqual(
-            obj.last_access_date.strftime('%d.%m.%Y'),
-            DateTime().asdatetime().strftime('%d.%m.%Y'),
-        )
 
-        lastAccessBefore = obj.last_access_date
         data = obj.getData()
         self.assertTrue(len(data) > 0)
         self.assertEqual(data, obj.raw_response)
         self.assertFalse(obj.raw_error)
-        self.assertTrue(lastAccessBefore < obj.last_access_date)
 
-        lastAccessBefore = obj.last_access_date
         resultsWithDNs = obj.getResults()
         self.assertEqual(len(resultsWithDNs), 1)
         self.assertEqual(resultsWithDNs, pickle.loads(obj.raw_response))
-        self.assertTrue(lastAccessBefore < obj.last_access_date)
 
-        lastAccessBefore = obj.last_access_date
         results = obj.getResultsWithoutDNs()
         self.assertEqual(len(results), 1)
-        self.assertTrue(lastAccessBefore < obj.last_access_date)
-
-        modifiedBefore = obj.modified()
-        lastAccessBefore = obj.last_access_date
-        obj.updateData()
-        self.assertEqual(lastAccessBefore, obj.last_access_date)
-        self.assertTrue(modifiedBefore < obj.modified())
 
         obj.raw_response = u'faulty string'
         results = obj.getResults()
@@ -155,7 +137,7 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
         types_not_searched = api.portal.get_registry_record('plone.types_not_searched')
         self.assertTrue('LDAPSearchQuery' in types_not_searched)
 
-    def test_ldap_search_connector(self):
+    def test_ldap_search_connecotr(self):
         searchFilter = 'mail=mbarde@uni-koblenz.de'
         ldapConnector = LDAPSearchConnector(
             ldap_server_address, ldap_server_port, ldap_server_base_dn,
@@ -182,10 +164,8 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
         self.assertTrue(query.modified() > query.created())
 
         modifiedBefore = query.modified()
-        lastAccessBefore = query.last_access_date
         ldapConnector.get()
         self.assertEqual(modifiedBefore, query.modified())
-        self.assertTrue(lastAccessBefore < query.last_access_date)
 
         ldapConnector.get(forceUpdate=True)
         self.assertTrue(modifiedBefore < query.modified())

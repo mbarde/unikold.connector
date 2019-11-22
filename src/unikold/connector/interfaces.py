@@ -14,7 +14,6 @@ class IUniKoLdQuery(Interface):
 
     lifetime = Attribute('lifetime')
     exclude_from_auto_update = Attribute('exclude_from_auto_update')
-    last_access_date = Attribute('last_access_date')
 
     def updateData():
         """ run query to update data """
