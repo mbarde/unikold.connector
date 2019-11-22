@@ -6,7 +6,7 @@ from unikold.connector.utils import createNestedFolders
 from unikold.connector.utils import initSOAPQueriesFolder
 
 
-class SOAPConnector():
+class SOAPConnector(object):
     query_portal_type = 'SOAPQuery'
 
     def __init__(self, wsdlUrl, wsdlMethod,

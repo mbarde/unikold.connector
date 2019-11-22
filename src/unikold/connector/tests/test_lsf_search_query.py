@@ -146,7 +146,7 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         data = lsfSearchConnector.get()
         self.assertEqual(data, [])
         query = lsfSearchConnector.getQuery()
-        self.assertTrue('There is no default service defined' in query.soap_error)
+        self.assertTrue('Invalid XML content received' in query.soap_error)
 
         api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_search_url',
                                        lsf_wsdl_search_url)

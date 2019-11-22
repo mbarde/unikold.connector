@@ -141,4 +141,4 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         data = soapConnector.get()
         self.assertEqual(data, '')
         query = soapConnector.getQuery()
-        self.assertTrue('There is no default service defined' in query.soap_error)
+        self.assertTrue('Invalid XML content received' in query.soap_error)

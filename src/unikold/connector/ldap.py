@@ -6,7 +6,7 @@ from unikold.connector.utils import createNestedFolders
 from unikold.connector.utils import initSOAPQueriesFolder
 
 
-class LDAPSearchConnector():
+class LDAPSearchConnector(object):
     query_portal_type = 'LDAPSearchQuery'
 
     def __init__(self, address=None, port=None,

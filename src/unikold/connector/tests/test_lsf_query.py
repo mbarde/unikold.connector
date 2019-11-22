@@ -88,11 +88,11 @@ class LSFQueryIntegrationTest(unittest.TestCase):
 
     def test_lsf_query_connector(self):
         lsfConnector = LSFConnector(
-            lsf_test_object_type, lsf_test_conditions, 24, False)
+            lsf_test_object_type, lsf_test_conditions, 24)
 
         query = lsfConnector.getQuery()
         self.assertEqual(query.soap_response, None)
-        self.assertTrue(query, 'use_authentication')
+        self.assertTrue(query.use_authentication)
 
         lsfResponse = query.getLSFResponse()
         self.assertTrue(type(lsfResponse) is etree._Element)
@@ -131,21 +131,25 @@ class LSFQueryIntegrationTest(unittest.TestCase):
         self.assertEqual(queryPath, expectedPath)
 
     def test_lsf_query_connector_with_auth(self):
-        lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions, 0, False)
+        lsfConnector = LSFConnector(
+            lsf_auth_test_object_type, lsf_auth_test_conditions, 0,
+            useAuthentication=False)
         data = lsfConnector.get()
         self.assertTrue('no user rights' in etree.tostring(data))
         self.assertTrue(len(data) == 0)
 
         api.content.delete(lsfConnector.getQuery())
 
-        lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions, 0, True)
+        lsfConnector = LSFConnector(
+            lsf_auth_test_object_type, lsf_auth_test_conditions, 0,
+            useAuthentication=True)
         data = lsfConnector.get()
         self.assertTrue('no user rights' not in etree.tostring(data))
         self.assertTrue(len(data) > 0)
 
     def test_lsf_query_connector_fail_params(self):
         lsfConnector = LSFConnector(
-            'anotexistingtype', lsf_test_conditions, 24, False)
+            'anotexistingtype', lsf_test_conditions, 24)
 
         data = lsfConnector.get()
         self.assertEqual(data.tag, 'xml-syntax-error')
@@ -157,11 +161,11 @@ class LSFQueryIntegrationTest(unittest.TestCase):
                                        u'http://127.0.0.1?WSDL')
 
         lsfConnector = LSFConnector(
-            lsf_test_object_type, lsf_test_conditions, 24, False)
+            lsf_test_object_type, lsf_test_conditions, 24)
 
         data = lsfConnector.get()
         self.assertEqual(data.tag, 'xml-syntax-error')
         query = lsfConnector.getQuery()
-        self.assertTrue('There is no default service defined' in query.soap_error)
+        self.assertTrue('Invalid XML content received' in query.soap_error)
 
         api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_url', lsf_wsdl_url)

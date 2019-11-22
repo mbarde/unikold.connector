@@ -60,9 +60,17 @@ class LSFConnector(SOAPConnector):
         if self.soapQueriesFolder is None:
             return None
 
-        query = self.getQuery({'use_authentication': self.useAuthentication})
+        query = self.getQuery()
         query.getData(forceUpdate)  # make sure response is updated if neccessary
         return query.getLSFResponse()
+
+    # extend method to ensure `use_authentication` property is set correctly
+    def createQuery(self, id, title, container, additionalQueryData=False):
+        if additionalQueryData is False:
+            additionalQueryData = {}
+        additionalQueryData['use_authentication'] = self.useAuthentication
+        return super(LSFConnector, self).createQuery(
+            id, title, container, additionalQueryData)
 
     def buildLSFSOAPRequest(self, objectType, conditions=[]):
         root = etree.Element('SOAPDataService')

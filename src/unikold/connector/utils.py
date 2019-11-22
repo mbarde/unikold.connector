@@ -25,7 +25,6 @@ def getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter):
             if error is False:
                 error = 'Invalid SOAP response: ' + str(data)
             data = False
-
     return (data, error)
 
 
