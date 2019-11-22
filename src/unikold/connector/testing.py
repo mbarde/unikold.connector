@@ -58,7 +58,6 @@ class UnikoldConnectorLayer(PloneSandboxLayer):
         path = '/'.join(folder.getPhysicalPath())
         api.portal.set_registry_record('unikold_connector.soap_queries_folder', unicode(path))
         api.portal.set_registry_record('unikold_connector.soap_timeout', 10)
-        api.portal.set_registry_record('unikold_connector.update_last_access_interval', 0)
 
     def setUpLSFControlpanel(self):
         api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_url', lsf_wsdl_url)

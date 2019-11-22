@@ -16,7 +16,6 @@ from unikold.connector.xml import XMLConnector
 from zope.component import createObject
 from zope.component import queryUtility
 
-import time
 import unittest
 
 
@@ -211,33 +210,3 @@ class XMLQueryIntegrationTest(unittest.TestCase):
         xml = xmlConnector.get()
         self.assertTrue(type(xml) is etree._Element)
         self.assertTrue(len(xml) > 0)
-
-    def test_xml_query_last_accessed_interval(self):
-        api.portal.set_registry_record('unikold_connector.update_last_access_interval', 1)
-
-        folderPath = api.portal.get_registry_record('unikold_connector.soap_queries_folder')
-        folder = self.portal.restrictedTraverse(str(folderPath))
-        setRoles(self.portal, TEST_USER_ID, ['Authenticated'])
-
-        obj = api.content.create(
-            container=folder,
-            type='XMLQuery',
-            id='xml_query',
-            **{
-                'url': xml_test_url
-            }
-        )
-        self.assertEqual(obj.last_access_date, None)
-        obj.getData()
-        self.assertEqual(
-            obj.last_access_date.strftime('%d.%m.%Y'),
-            DateTime().asdatetime().strftime('%d.%m.%Y'),
-        )
-
-        lastAccessBefore = obj.last_access_date
-        obj.getData()
-        self.assertEqual(lastAccessBefore, obj.last_access_date)
-
-        time.sleep(1)
-        obj.getData()
-        self.assertTrue(lastAccessBefore < obj.last_access_date)
