@@ -68,10 +68,7 @@ class LSFQuery(SOAPQuery):
 
         return (data, error)
 
-    def getLSFResponse(self, doNotUpdateLastAccess=False):
-        if doNotUpdateLastAccess is False:
-            self.updateLastAccess()
-
+    def getLSFResponse(self):
         if hasattr(self, 'lsf_response'):
             try:
                 tree = etree.fromstring(self.lsf_response)
