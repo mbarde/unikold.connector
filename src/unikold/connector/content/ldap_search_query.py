@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from DateTime import DateTime
-from datetime import datetime
 from datetime import timedelta
 from plone import api
 from plone.dexterity.content import Item
@@ -78,7 +77,8 @@ class ILDAPSearchQuery(model.Schema):
 class LDAPSearchQuery(Item):
 
     def updateLastAccess(self):
-        self.last_access_date = datetime.now()
+        now = DateTime().asdatetime()
+        self.last_access_date = now
 
     def getData(self, forceUpdate=False):
         self.updateLastAccess()

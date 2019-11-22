@@ -144,11 +144,6 @@ class LSFQueryIntegrationTest(unittest.TestCase):
 
         self.assertEqual(queryPath, expectedPath)
 
-    def test_lsf_query_connector_simple(self):
-        lsfConnector = LSFConnector(
-            lsf_test_object_type, lsf_test_conditions, 24, False)
-        lsfConnector.get()
-
     def test_lsf_query_connector_with_auth(self):
         lsfConnector = LSFConnector(lsf_auth_test_object_type, lsf_auth_test_conditions, 0, False)
         data = lsfConnector.get()
