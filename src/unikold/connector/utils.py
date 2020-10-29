@@ -17,7 +17,7 @@ def getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter):
     try:
         transport = Transport(timeout=timeout)
         client = Client(wsdlUrl, transport=transport)
-        data = getattr(client.service, wsdlMethod)(wsdlMethodParameter)
+        data = getattr(client.service, wsdlMethod)(wsdlMethodParameter.decode('UTF-8'))
     except Exception as exc:
         error = str(exc) + '\n\nRaw answer:\n' + str(data)
     finally:

@@ -47,7 +47,7 @@ setup(
         'Products.GenericSetup>=1.8.2',
         'setuptools',
         'z3c.jbot',
-        'zeep==3.4.0',
+        'zeep',
         'python-ldap',
     ],
     extras_require={

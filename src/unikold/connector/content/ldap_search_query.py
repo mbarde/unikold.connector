@@ -122,7 +122,7 @@ class LDAPSearchQuery(Item):
             ldapClient.unbind_s()
 
             data = result_data
-        except Exception, e:
+        except Exception as e:
             err = str(e)
         finally:
             try:

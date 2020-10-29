@@ -9,8 +9,11 @@ from unikold.connector.interfaces import IUniKoLdQuery
 from zope import schema
 from zope.interface import implementer
 
+
 import base64
-import urllib2
+import urllib.error
+import urllib.request
+import urllib.parse
 
 
 class IXMLQuery(model.Schema):
@@ -102,20 +105,20 @@ class XMLQuery(Item):
                 # include necessary headers to perform authentication
                 username = self.basic_auth_username
                 password = self.basic_auth_password
-                request = urllib2.Request(self.url + queryStr)
+                request = urllib.request.Request(self.url + queryStr)
                 base64string = base64.b64encode('{0}:{1}'.format(username, password))
                 request.add_header('Authorization', 'Basic {0}'.format(base64string))
 
-                opener = urllib2.build_opener(urllib2.HTTPCookieProcessor())
+                opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor())
                 data = opener.open(request).read()
                 err = False
             else:
                 # otherwise perform simple request
-                response = urllib2.urlopen(self.url + queryStr)
+                response = urllib.request.urlopen(self.url + queryStr)
                 data = response.read()
                 err = False
 
-        except urllib2.URLError as e:
+        except urllib.error.URLError as e:
             err = e.reason
         except ValueError as e:
             err = e
@@ -141,7 +144,7 @@ class XMLQuery(Item):
                 # query parameters have to be formatted like: `key=value`
                 continue
             queryParts.append(
-                '{0}={1}'.format(urllib2.quote(parts[0]), urllib2.quote(parts[1]))
+                '{0}={1}'.format(urllib.parse.quote(parts[0]), urllib.parse.quote(parts[1]))
             )
 
         if len(queryParts) > 0:
