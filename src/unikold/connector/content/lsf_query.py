@@ -59,8 +59,7 @@ class LSFQuery(SOAPQuery):
                 error = 'Invalid LSF SOAP response: ' + str(data)
                 return (data, error)
 
-            data = data['_value_1'].encode('utf-8')
-
+            data = data['_value_1']
             if 'error' in data:
                 error = data
             else:
