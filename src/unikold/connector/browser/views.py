@@ -33,7 +33,7 @@ class SOAPTestView(BrowserView):
                 parameters = self.inputParametersToList(parametersAsText)
                 soapStr = self.buildSOAPRequest(method, parameters, withAuth)
 
-            self.soapRequestAsString = self.coverPasswordInRequestStr(soapStr)
+            self.soapRequestAsString = self.coverPasswordInRequestStr(soapStr.decode('UTF-8'))
             (data, err) = getSOAPResponse(wsdlUrl, wsdlMethod, soapStr)
             if err:
                 self.soapError = err
@@ -43,7 +43,6 @@ class SOAPTestView(BrowserView):
                     if val is False:
                         self.soapError = str(data)
                     else:
-                        val = val.encode('utf-8')
                         if 'error' in val:
                             self.soapError = val
                         else:
