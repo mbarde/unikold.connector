@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+from datetime import timedelta
 from plone import api
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
@@ -13,6 +15,7 @@ from zope.interface import Interface
 from zope.publisher.browser import BrowserView
 
 import logging
+import pytz
 
 
 class IUniKoLdConnectorControlPanelView(Interface):
@@ -27,6 +30,13 @@ class IUniKoLdConnectorControlPanelView(Interface):
         title=_(u'Default timeout for SOAP requests (in seconds)'),
         required=False,
         default=10
+    )
+
+    lifetime_queries = schema.Int(
+        title=_(u'Lifetime of queries (in days)'),
+        description=_(u'Queries which have not been modified since X days will be removed (when calling `unikold.connector.cleanup`)'),  # noqa: E501
+        required=True,
+        default=365,
     )
 
 
@@ -159,3 +169,30 @@ class Tasks(BrowserView):
             '[Connector] Updated successfully {0} of {1} queries!'
             .format(str(updateSuccessCounter), str(brainCount))
         )
+
+    def removeStaleQueries(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        daysLifetime = api.portal.get_registry_record('unikold_connector.lifetime_queries')
+        now = datetime.now()
+        compareDate = now - timedelta(days=daysLifetime)
+        # make offset aware (not naive)
+        compareDate = pytz.UTC.localize(compareDate)
+
+        logging.info('[Connector] Looking for stale queries (last modifed {0} days ago)...'
+                     .format(daysLifetime))
+        catalog = api.portal.get_tool('portal_catalog')
+        brains = catalog(object_provides=IUniKoLdQuery.__identifier__)
+
+        toRemove = []
+        for brain in brains:
+            if brain.modified.asdatetime() <= compareDate:
+                toRemove.append(brain.getObject())
+
+        logging.info('[Connector] Found {0} stale queries. Removing ...'
+                     .format(str(len(toRemove))))
+
+        api.content.delete(objects=toRemove)
+
+        logging.info('[Connector] Successfully removed {0} stale queries.'
+                     .format(str(len(toRemove))))
