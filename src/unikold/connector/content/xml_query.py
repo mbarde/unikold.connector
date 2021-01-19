@@ -6,6 +6,7 @@ from plone.dexterity.content import Item
 from plone.supermodel import model
 from unikold.connector import _
 from unikold.connector.interfaces import IUniKoLdQuery
+from unikold.connector.utils_sentry import sentry_message
 from zope import schema
 from zope.interface import implementer
 
@@ -92,6 +93,8 @@ class XMLQuery(Item):
             return data
         else:
             self.raw_error = str(err)
+            sentry_message('Error in XML response of {0}: {1}'
+                           .format(self.absolute_url(), self.raw_error))
         return False
 
     def getRawResponse(self):

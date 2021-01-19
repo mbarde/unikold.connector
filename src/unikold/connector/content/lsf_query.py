@@ -4,6 +4,7 @@ from plone import api
 from unikold.connector import _
 from unikold.connector.content.soap_query import ISOAPQuery
 from unikold.connector.content.soap_query import SOAPQuery
+from unikold.connector.utils_sentry import sentry_message
 from zope import schema
 from zope.interface import implementer
 
@@ -62,8 +63,12 @@ class LSFQuery(SOAPQuery):
             data = data['_value_1']
             if 'error' in data:
                 error = data
+                sentry_message('Error in LSF SOAP response of {0}: {1}'
+                               .format(self.absolute_url(), error))
             else:
                 self.lsf_response = data
+        else:
+            sentry_message('Error in LSF SOAP response of {0}')
 
         return (data, error)
 
@@ -73,5 +78,7 @@ class LSFQuery(SOAPQuery):
                 tree = etree.fromstring(self.lsf_response)
             except (etree.XMLSyntaxError, ValueError):
                 tree = etree.Element('xml-syntax-error')
+                sentry_message('XML syntax error parsing lsf_response of {0}'
+                               .format(self.absolute_url()))
             return tree
         return etree.Element('empty')
