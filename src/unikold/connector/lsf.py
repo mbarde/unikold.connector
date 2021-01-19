@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from lxml import etree
 from plone import api
 from plone.i18n.normalizer import idnormalizer
 from unikold.connector.soap import SOAPConnector
+from unikold.connector.utils_lsf import buildLSFSOAPRequest
 
 
 class LSFConnector(SOAPConnector):
@@ -36,7 +36,7 @@ class LSFConnector(SOAPConnector):
 
         wsdlUrl = api.portal.get_registry_record('unikold_connector_lsf.lsf_wsdl_url')
         wsdlMethod = 'getDataXML'
-        soapRequest = self.buildLSFSOAPRequest(objectType, conditions)
+        soapRequest = buildLSFSOAPRequest(objectType, conditions)
         SOAPConnector.__init__(self, wsdlUrl, wsdlMethod,
                                soapRequest, queryLifetimeInHours,
                                excludeFromAutoUpdate)
@@ -71,22 +71,6 @@ class LSFConnector(SOAPConnector):
         additionalQueryData['use_authentication'] = self.useAuthentication
         return super(LSFConnector, self).createQuery(
             id, title, container, additionalQueryData)
-
-    def buildLSFSOAPRequest(self, objectType, conditions=[]):
-        root = etree.Element('SOAPDataService')
-        general = etree.SubElement(root, 'general')
-        object = etree.SubElement(general, 'object')
-        object.text = objectType
-
-        if len(conditions) > 0:
-            condition = etree.SubElement(root, 'condition')
-            for param in conditions:
-                key = param[0]
-                value = param[1]
-                el = etree.SubElement(condition, key)
-                el.text = value
-
-        return etree.tostring(root, pretty_print=True)
 
     def normalizeConditions(self, conditions):
         res = []
