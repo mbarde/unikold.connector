@@ -78,7 +78,7 @@ class LDAPSearchConnector(object):
     def createQuery(self, id, title, container, additionalQueryData=False):
         data = {
             'lifetime': self.queryLifetime,
-            'exclude_from_auto_update': self.excludeFromAutoUpdate
+            'exclude_from_auto_update': self.excludeFromAutoUpdate,
         }
         data.update(self.queryData)
         if additionalQueryData:

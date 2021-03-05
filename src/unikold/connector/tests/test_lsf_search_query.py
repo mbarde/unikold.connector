@@ -76,7 +76,7 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         fti = queryUtility(IDexterityFTI, name='LSFSearchQuery')
         self.assertFalse(
             fti.global_allow,
-            u'{0} is globally addable!'.format(fti.id)
+            u'{0} is globally addable!'.format(fti.id),
         )
 
     def test_excluded_from_search(self):
@@ -89,7 +89,7 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
 
         query = lsfSearchConnector.getQuery()
         self.assertEqual(query.soap_response, None)
-        self.assertFalse(hasattr(query, 'search_results'))
+        self.assertEqual(getattr(query, 'search_results', None), None)
 
         lsfResponse = query.getLSFResponse()
         self.assertTrue(type(lsfResponse) is etree._Element)
@@ -103,7 +103,7 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         self.assertTrue(type(lsfResponse) is etree._Element)
         self.assertTrue(len(lsfResponse) > 0)
 
-        self.assertTrue(hasattr(query, 'search_results'))
+        self.assertNotEqual(getattr(query, 'search_results', None), None)
         self.assertTrue(type(query.search_results) is list)
 
         self.assertTrue(query.modified() > query.created())
@@ -146,7 +146,7 @@ class LSFSearchQueryIntegrationTest(unittest.TestCase):
         data = lsfSearchConnector.get()
         self.assertEqual(data, [])
         query = lsfSearchConnector.getQuery()
-        self.assertTrue('Invalid XML content received' in query.soap_error)
+        self.assertTrue('There is no default service defined' in query.soap_error)
 
         api.portal.set_registry_record('unikold_connector_lsf.lsf_wsdl_search_url',
                                        lsf_wsdl_search_url)

@@ -97,7 +97,7 @@ class SOAPTestView(BrowserView):
 
         idx0 = requestStr.index(startTag)
         idx1 = requestStr.index(endTag)
-        pw = requestStr[idx0+10:idx1]
+        pw = requestStr[idx0 + 10:idx1]
         return requestStr.replace(pw, '****')
 
 
@@ -115,7 +115,7 @@ class SOAPQueryView(DefaultView):
 
     def canUpdateFromView(self):
         return api.user.get_permissions(obj=self.context) \
-               .get('Manage portal', False)
+            .get('Manage portal', False)
 
     def getModifiedLocalized(self):
         return api.portal.get_localized_time(self.context.modified(), long_format=True)

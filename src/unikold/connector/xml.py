@@ -65,7 +65,7 @@ class XMLConnector():
         data = {
             'url': self.url,
             'lifetime': self.queryLifetime,
-            'exclude_from_auto_update': self.excludeFromAutoUpdate
+            'exclude_from_auto_update': self.excludeFromAutoUpdate,
         }
         if additionalQueryData:
             data.update(additionalQueryData)

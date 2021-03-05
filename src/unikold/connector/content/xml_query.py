@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from DateTime import DateTime
 from datetime import timedelta
+from DateTime import DateTime
 from lxml import etree
 from plone.dexterity.content import Item
 from plone.supermodel import model
@@ -17,47 +17,47 @@ class IXMLQuery(model.Schema):
 
     url = schema.TextLine(
         title=_(u'URL'),
-        required=True
+        required=True,
     )
 
     query_params = schema.List(
         title=_(u'Query parameters'),
         value_type=schema.TextLine(
-            title=_(u'Parameter')
+            title=_(u'Parameter'),
         ),
-        required=False
+        required=False,
     )
 
     raw_response = schema.Text(
         title=_(u'Raw Response'),
-        required=False
+        required=False,
     )
 
     raw_error = schema.Text(
         title=_(u'Raw Error'),
-        required=False
+        required=False,
     )
 
     lifetime = schema.Timedelta(
         title=_(u'Lifetime'),
         required=True,
-        default=timedelta(hours=48)
+        default=timedelta(hours=48),
     )
 
     basic_auth_username = schema.TextLine(
         title=_(u'Username for basic access authentication'),
-        required=False
+        required=False,
     )
 
     basic_auth_password = schema.Password(
         title=_(u'Password for basic access authentication'),
-        required=False
+        required=False,
     )
 
     exclude_from_auto_update = schema.Bool(
         title=_(u'Exclude from automated updates'),
         required=False,
-        default=False
+        default=False,
     )
 
 
@@ -122,7 +122,7 @@ class XMLQuery(Item):
         return (data, err)
 
     def getXMLResponse(self):
-        if hasattr(self, 'raw_response'):
+        if getattr(self, 'raw_response', None) is not None:
             try:
                 tree = etree.fromstring(self.raw_response)
             except (etree.XMLSyntaxError, ValueError):
@@ -141,7 +141,7 @@ class XMLQuery(Item):
                 # query parameters have to be formatted like: `key=value`
                 continue
             queryParts.append(
-                '{0}={1}'.format(urllib2.quote(parts[0]), urllib2.quote(parts[1]))
+                '{0}={1}'.format(urllib2.quote(parts[0]), urllib2.quote(parts[1])),
             )
 
         if len(queryParts) > 0:

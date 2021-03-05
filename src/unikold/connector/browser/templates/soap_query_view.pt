@@ -28,7 +28,7 @@
         </div>
         <br/>
 
-        <tal:search-results condition="python: hasattr(context, 'search_results')">
+        <tal:search-results condition="python: getattr(context, 'search_results', None) is not None">
           <label>Search results as python list</label>
           <pre style="max-height: 300px">
             <tal:result repeat="result context/search_results">

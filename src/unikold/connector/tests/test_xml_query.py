@@ -65,8 +65,8 @@ class XMLQueryIntegrationTest(unittest.TestCase):
             type='XMLQuery',
             id='xml_query',
             **{
-                'url': xml_test_url
-            }
+                'url': xml_test_url,
+            }  # noqa: C815
         )
 
         data = obj.getData()
@@ -97,7 +97,7 @@ class XMLQueryIntegrationTest(unittest.TestCase):
         fti = queryUtility(IDexterityFTI, name='XMLQuery')
         self.assertFalse(
             fti.global_allow,
-            u'{0} is globally addable!'.format(fti.id)
+            u'{0} is globally addable!'.format(fti.id),
         )
 
     def test_excluded_from_search(self):
@@ -107,7 +107,7 @@ class XMLQueryIntegrationTest(unittest.TestCase):
     def test_xml_query_connector(self):
         xmlConnector = XMLConnector(
             xml_test_url,
-            24
+            24,
         )
 
         query = xmlConnector.getQuery()
@@ -139,7 +139,7 @@ class XMLQueryIntegrationTest(unittest.TestCase):
         xmlConnector = XMLConnector(
             xml_test_url,
             24,
-            params
+            params,
         )
 
         xml = xmlConnector.get()
@@ -178,8 +178,8 @@ class XMLQueryIntegrationTest(unittest.TestCase):
             **{
                 'url': xml_basic_auth_url,
                 'basic_auth_username': xml_basic_auth_username,
-                'basic_auth_password': xml_basic_auth_password
-            }
+                'basic_auth_password': xml_basic_auth_password,
+            }  # noqa: C815
         )
 
         data = obj.getData()
@@ -194,7 +194,7 @@ class XMLQueryIntegrationTest(unittest.TestCase):
     def test_xml_query_connector_with_auth(self):
         xmlConnector = XMLConnector(
             xml_basic_auth_url, 24,
-            basicAuthCredentials=(xml_basic_auth_username, xml_basic_auth_password)
+            basicAuthCredentials=(xml_basic_auth_username, xml_basic_auth_password),
         )
         xml = xmlConnector.get()
         self.assertTrue(type(xml) is etree._Element)

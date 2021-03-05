@@ -71,8 +71,8 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
                 'username': ldap_search_username,
                 'password': ldap_search_password,
                 'base_dn': ldap_server_base_dn,
-                'filter': 'mail=mbarde@uni-koblenz.de'
-            }
+                'filter': 'mail=mbarde@uni-koblenz.de',
+            }  # noqa: C815
         )
         self.assertEqual(obj.getResults(), [])
 
@@ -115,8 +115,8 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
                 'username': ldap_search_username,
                 'password': ldap_search_password,
                 'base_dn': ldap_server_base_dn,
-                'filter': 'mail=mbarde@uni-koblenz.de'
-            }
+                'filter': 'mail=mbarde@uni-koblenz.de',
+            }  # noqa: C815
         )
 
         data = obj.getData()
@@ -130,7 +130,7 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
         fti = queryUtility(IDexterityFTI, name='LDAPSearchQuery')
         self.assertFalse(
             fti.global_allow,
-            u'{0} is globally addable!'.format(fti.id)
+            u'{0} is globally addable!'.format(fti.id),
         )
 
     def test_excluded_from_search(self):
@@ -142,7 +142,7 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
         ldapConnector = LDAPSearchConnector(
             ldap_server_address, ldap_server_port, ldap_server_base_dn,
             searchFilter, ldap_search_username, ldap_search_password,
-            1
+            1,
         )
 
         query = ldapConnector.getQuery()
@@ -158,7 +158,7 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
 
         queryResults = query.getResults()
         self.assertTrue(len(queryResults) > 0)
-        self.assertEqual(str(type(queryResults)), '<type \'list\'>')
+        self.assertEqual(str(type(queryResults)), "<type 'list'>")
         self.assertEqual(queryResults, connectorResults)
 
         self.assertTrue(query.modified() > query.created())
@@ -192,7 +192,7 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
 
         results = ldapConnector.get()
         self.assertTrue(len(results) > 0)
-        self.assertEqual(str(type(results)), '<type \'list\'>')
+        self.assertEqual(str(type(results)), "<type 'list'>")
 
         query = ldapConnector.getQuery()
         address = query.address
@@ -217,7 +217,7 @@ class LDAPSearchQueryIntegrationTest(unittest.TestCase):
         ldapConnector = LDAPSearchConnector(searchFilter=searchFilter, address='')
         results = ldapConnector.get()
         self.assertTrue(len(results) > 0)
-        self.assertEqual(str(type(results)), '<type \'list\'>')
+        self.assertEqual(str(type(results)), "<type 'list'>")
 
     def test_ct_ldap_search_query_overwrite_defaults(self):
         searchFilter = 'mail=mbarde@uni-koblenz.de'

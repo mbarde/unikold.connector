@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from DateTime import DateTime
 from datetime import timedelta
+from DateTime import DateTime
 from plone import api
 from plone.dexterity.content import Item
 from plone.supermodel import model
@@ -17,54 +17,54 @@ class ILDAPSearchQuery(model.Schema):
 
     address = schema.TextLine(
         title=_(u'LDAP server address'),
-        required=False
+        required=False,
     )
 
     port = schema.Int(
         title=_(u'LDAP server port'),
-        required=False
+        required=False,
     )
 
     username = schema.TextLine(
         title=_(u'Username'),
-        required=False
+        required=False,
     )
 
     password = schema.Password(
         title=_(u'Password'),
-        required=False
+        required=False,
     )
 
     base_dn = schema.TextLine(
         title=_(u'Base DN'),
-        required=False
+        required=False,
     )
 
     filter = schema.TextLine(
         title=_(u'Filter'),
-        required=True
+        required=True,
     )
 
     raw_response = schema.Text(
         title=_(u'Raw Response'),
-        required=False
+        required=False,
     )
 
     raw_error = schema.Text(
         title=_(u'Raw Error'),
-        required=False
+        required=False,
     )
 
     lifetime = schema.Timedelta(
         title=_(u'Lifetime'),
         required=True,
-        default=timedelta(hours=48)
+        default=timedelta(hours=48),
     )
 
     exclude_from_auto_update = schema.Bool(
         title=_(u'Exclude from automated updates'),
         required=False,
-        default=False
+        default=False,
     )
 
 
@@ -110,7 +110,7 @@ class LDAPSearchQuery(Item):
             password = self.getOptionalAttr('password')
             base_dn = self.getOptionalAttr('base_dn')
 
-            ''' see http://www.grotan.com/ldap/python-ldap-samples.html '''
+            """ see http://www.grotan.com/ldap/python-ldap-samples.html """
             ldapClient = ldap.initialize('{0}:{1}'.format(address, port))
             ldapClient.simple_bind_s(username, password)
             ldapClient.protocol_version = ldap.VERSION3
@@ -122,7 +122,7 @@ class LDAPSearchQuery(Item):
             ldapClient.unbind_s()
 
             data = result_data
-        except Exception, e:
+        except Exception as e:
             err = str(e)
         finally:
             try:

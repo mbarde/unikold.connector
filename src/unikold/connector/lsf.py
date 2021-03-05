@@ -6,7 +6,7 @@ from unikold.connector.soap import SOAPConnector
 
 
 class LSFConnector(SOAPConnector):
-    '''
+    """
         A LSF `getDataXML` request always consists of an object and conditions,
         for example:
 
@@ -23,7 +23,7 @@ class LSFConnector(SOAPConnector):
 
         Here user just needs to specify those values and LSFConnector will create
         correct XML structure.
-    '''
+    """
     query_portal_type = 'LSFQuery'
 
     def __init__(self, objectType, conditions, queryLifetimeInHours,

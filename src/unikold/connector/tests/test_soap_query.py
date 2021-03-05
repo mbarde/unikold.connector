@@ -76,7 +76,7 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         fti = queryUtility(IDexterityFTI, name='SOAPQuery')
         self.assertFalse(
             fti.global_allow,
-            u'{0} is globally addable!'.format(fti.id)
+            u'{0} is globally addable!'.format(fti.id),
         )
 
     def test_excluded_from_search(self):
@@ -88,7 +88,7 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
             soap_test_url,
             soap_test_method,
             soap_test_method_parameter,
-            24
+            24,
         )
 
         query = soapConnector.getQuery()
@@ -122,7 +122,7 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
             soap_test_url,
             notExistingMethod,
             '',
-            24
+            24,
         )
 
         data = soapConnector.get()
@@ -135,10 +135,13 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
             'http://127.0.0.1?WSDL',
             soap_test_method,
             soap_test_method_parameter,
-            24
+            24,
         )
 
         data = soapConnector.get()
         self.assertEqual(data, '')
         query = soapConnector.getQuery()
-        self.assertTrue('Invalid XML content received' in query.soap_error)
+        self.assertIn(
+            'There is no default service defined',
+            query.soap_error,
+        )

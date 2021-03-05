@@ -13,13 +13,13 @@ class ILSFQuery(ISOAPQuery):
     use_authentication = schema.Bool(
         title=_(u'Use LSF authentication'),
         description=_(u'Credentials have to be set in the controlpanel'),
-        required=False
+        required=False,
     )
 
     lsf_response = schema.Text(
         title=_(u'LSF response'),
         description=_(u'LSF response extracted from the SOAP response'),
-        required=False
+        required=False,
     )
 
 
@@ -51,11 +51,11 @@ class LSFQuery(SOAPQuery):
         # responses from LSF have a certain structure
         # here we remove useless stuff and store LSF response additionally
         (data, error) = super(LSFQuery, self).getSOAPResponse(
-            wsdlMethodParameter=wsdlMethodParameter
+            wsdlMethodParameter=wsdlMethodParameter,
         )
         if error is False:
             valueyKey = '_value_1'
-            if not hasattr(data, valueyKey):
+            if getattr(data, valueyKey, None) is None:
                 error = 'Invalid LSF SOAP response: ' + str(data)
                 return (data, error)
 
@@ -69,7 +69,7 @@ class LSFQuery(SOAPQuery):
         return (data, error)
 
     def getLSFResponse(self):
-        if hasattr(self, 'lsf_response'):
+        if getattr(self, 'lsf_response', None) is not None:
             try:
                 tree = etree.fromstring(self.lsf_response)
             except (etree.XMLSyntaxError, ValueError):
