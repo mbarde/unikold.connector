@@ -75,7 +75,13 @@ class LSFConnector(SOAPConnector):
     def normalizeConditions(self, conditions):
         res = []
         for c in conditions:
-            res.append(c[0] + '-' + c[1])
+            key = c[0]
+            val = c[1]
+            if not isinstance(key, str):
+                key = key.decode()
+            if not isinstance(val, str):
+                val = val.decode()
+            res.append(key + '-' + val)
         result = '-'.join(res)
         return idnormalizer.normalize(result)
 
