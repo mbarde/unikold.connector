@@ -132,9 +132,9 @@ class XMLQuery(Item):
         return (data, err)
 
     def getXMLResponse(self):
-        if getattr(self, 'raw_response', None) is not None:
+        response = getattr(self, 'raw_response', None)
+        if response is not None:
             try:
-                response = self.raw_response
                 if not isinstance(response, bytes):
                     response = response.encode()
                 tree = etree.fromstring(response)

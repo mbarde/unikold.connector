@@ -73,9 +73,9 @@ class LSFQuery(SOAPQuery):
         return (data, error)
 
     def getLSFResponse(self):
-        if getattr(self, 'lsf_response', None) is not None:
+        response = getattr(self, 'lsf_response', None)
+        if response is not None:
             try:
-                response = self.lsf_response
                 if not isinstance(response, bytes):
                     response = response.encode()
                 tree = etree.fromstring(response)
