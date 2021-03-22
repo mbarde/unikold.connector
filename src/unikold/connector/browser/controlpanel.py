@@ -29,7 +29,7 @@ class IUniKoLdConnectorControlPanelView(Interface):
     soap_timeout = schema.Int(
         title=_(u'Default timeout for SOAP requests (in seconds)'),
         required=False,
-        default=10
+        default=10,
     )
 
     lifetime_queries = schema.Int(
@@ -91,7 +91,7 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
             else:
                 logging.error(
                     '[Connector] Could not update: {0} ({1})'.format(
-                        obj.id, '/'.join(obj.getPhysicalPath()))
+                        obj.id, '/'.join(obj.getPhysicalPath())),
                 )
                 updateError.append(obj)
 
@@ -127,7 +127,7 @@ class UniKoLdConnectorControlPanelForm(RegistryEditForm):
             request=self.request, type='info')
         self.request.response.redirect(u'{0}/{1}'.format(
             api.portal.get().absolute_url(),
-            self.control_panel_view
+            self.control_panel_view,
         ))
 
 
@@ -161,13 +161,13 @@ class Tasks(BrowserView):
             else:
                 logging.error(
                     '[Connector] Could not update: {0} ({1})'.format(
-                        obj.id, '/'.join(obj.getPhysicalPath()))
+                        obj.id, '/'.join(obj.getPhysicalPath())),
                 )
                 updateErrorCounter += 1
 
         logging.info(
             '[Connector] Updated successfully {0} of {1} queries!'
-            .format(str(updateSuccessCounter), str(brainCount))
+            .format(str(updateSuccessCounter), str(brainCount)),
         )
 
     def removeStaleQueries(self):

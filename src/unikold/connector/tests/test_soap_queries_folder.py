@@ -30,8 +30,12 @@ class SOAPQueriesFolderIntegrationTest(unittest.TestCase):
     def test_soap_queries_folder_schema(self):
         fti = queryUtility(IDexterityFTI, name='SOAPQueriesFolder')
         schema = fti.lookupSchema()
+        name = schema.getName()
+        self.assertTrue(name.startswith('plone_'))
+        self.assertTrue(name.endswith('_0_SOAPQueriesFolder'))
         schema_name = portalTypeToSchemaName('SOAPQueriesFolder')
-        self.assertEqual(schema_name, schema.getName())
+        self.assertTrue(schema_name.startswith('plone_'))
+        self.assertTrue(schema_name.endswith('_0_SOAPQueriesFolder'))
 
     def test_soap_queries_folder_fti(self):
         fti = queryUtility(IDexterityFTI, name='SOAPQueriesFolder')
@@ -58,7 +62,7 @@ class SOAPQueriesFolderIntegrationTest(unittest.TestCase):
         fti = queryUtility(IDexterityFTI, name='SOAPQueriesFolder')
         self.assertFalse(
             fti.global_allow,
-            u'{0} is globally addable!'.format(fti.id)
+            u'{0} is globally addable!'.format(fti.id),
         )
 
     def test_soap_queries_folder_filter_content_type_true(self):
@@ -70,7 +74,7 @@ class SOAPQueriesFolderIntegrationTest(unittest.TestCase):
             self.portal,
             'soap_queries_folder_id',
             title='SOAPQueriesFolder container',
-         )
+        )
         self.parent = self.portal[parent_id]
         with self.assertRaises(InvalidParameterError):
             api.content.create(

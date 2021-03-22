@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from DateTime import DateTime
 from datetime import timedelta
+from DateTime import DateTime
 from lxml import etree
 from plone.dexterity.content import Item
 from plone.supermodel import model
@@ -10,58 +10,57 @@ from unikold.connector.utils_sentry import sentry_message
 from zope import schema
 from zope.interface import implementer
 
-
 import base64
 import urllib.error
-import urllib.request
 import urllib.parse
+import urllib.request
 
 
 class IXMLQuery(model.Schema):
 
     url = schema.TextLine(
         title=_(u'URL'),
-        required=True
+        required=True,
     )
 
     query_params = schema.List(
         title=_(u'Query parameters'),
         value_type=schema.TextLine(
-            title=_(u'Parameter')
+            title=_(u'Parameter'),
         ),
-        required=False
+        required=False,
     )
 
     raw_response = schema.Text(
         title=_(u'Raw Response'),
-        required=False
+        required=False,
     )
 
     raw_error = schema.Text(
         title=_(u'Raw Error'),
-        required=False
+        required=False,
     )
 
     lifetime = schema.Timedelta(
         title=_(u'Lifetime'),
         required=True,
-        default=timedelta(hours=48)
+        default=timedelta(hours=48),
     )
 
     basic_auth_username = schema.TextLine(
         title=_(u'Username for basic access authentication'),
-        required=False
+        required=False,
     )
 
     basic_auth_password = schema.Password(
         title=_(u'Password for basic access authentication'),
-        required=False
+        required=False,
     )
 
     exclude_from_auto_update = schema.Bool(
         title=_(u'Exclude from automated updates'),
         required=False,
-        default=False
+        default=False,
     )
 
 
@@ -87,7 +86,7 @@ class XMLQuery(Item):
     def updateData(self):
         (data, err) = self.getRawResponse()
         if err is False:
-            self.raw_response = str(data)
+            self.raw_response = data
             self.raw_error = False
             self.setModificationDate(DateTime())
             return data
@@ -109,8 +108,13 @@ class XMLQuery(Item):
                 username = self.basic_auth_username
                 password = self.basic_auth_password
                 request = urllib.request.Request(self.url + queryStr)
-                base64string = base64.b64encode('{0}:{1}'.format(username, password))
-                request.add_header('Authorization', 'Basic {0}'.format(base64string))
+                base64string = base64.b64encode(
+                    '{0}:{1}'.format(username, password).encode('ascii'),
+                )
+                request.add_header(
+                    'Authorization',
+                    'Basic {0}'.format(base64string.decode('ascii')),
+                )
 
                 opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor())
                 data = opener.open(request).read()
@@ -128,11 +132,16 @@ class XMLQuery(Item):
         return (data, err)
 
     def getXMLResponse(self):
-        if hasattr(self, 'raw_response'):
+        if getattr(self, 'raw_response', None) is not None:
             try:
-                tree = etree.fromstring(self.raw_response)
+                response = self.raw_response
+                if not isinstance(response, bytes):
+                    response = response.encode()
+                tree = etree.fromstring(response)
             except (etree.XMLSyntaxError, ValueError):
                 tree = etree.Element('xml-syntax-error')
+                sentry_message('XML syntax error parsing raw_response of {0}'
+                               .format(self.absolute_url()))
             return tree
         return etree.Element('empty')
 
@@ -147,7 +156,7 @@ class XMLQuery(Item):
                 # query parameters have to be formatted like: `key=value`
                 continue
             queryParts.append(
-                '{0}={1}'.format(urllib.parse.quote(parts[0]), urllib.parse.quote(parts[1]))
+                '{0}={1}'.format(urllib.parse.quote(parts[0]), urllib.parse.quote(parts[1])),
             )
 
         if len(queryParts) > 0:

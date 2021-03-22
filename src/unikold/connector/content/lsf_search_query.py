@@ -28,7 +28,8 @@ class LSFSearchQuery(LSFQuery):
         return (data, error)
 
     def getSearchResults(self):
-        if hasattr(self, 'search_results'):
+        searchResults = getattr(self, 'search_results', None)
+        if searchResults is not None:
             return self.search_results
         else:
             return []

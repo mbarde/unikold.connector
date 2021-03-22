@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from DateTime import DateTime
 from datetime import timedelta
+from DateTime import DateTime
 from plone.dexterity.content import Item
 from plone.supermodel import model
 from unikold.connector import _
@@ -15,39 +15,39 @@ class ISOAPQuery(model.Schema):
 
     wsdl_url = schema.TextLine(
         title=_(u'WSDL URL'),
-        required=True
+        required=True,
     )
 
     wsdl_method = schema.TextLine(
         title=_(u'WSDL Method'),
-        required=True
+        required=True,
     )
 
     wsdl_method_parameter = schema.Text(
         title=_(u'Parameter for WSDL Method'),
-        required=True
+        required=True,
     )
 
     soap_response = schema.Text(
         title=_(u'SOAP Response'),
-        required=False
+        required=False,
     )
 
     soap_error = schema.Text(
         title=_(u'SOAP Error'),
-        required=False
+        required=False,
     )
 
     lifetime = schema.Timedelta(
         title=_(u'Lifetime'),
         required=True,
-        default=timedelta(hours=48)
+        default=timedelta(hours=48),
     )
 
     exclude_from_auto_update = schema.Bool(
         title=_(u'Exclude from automated updates'),
         required=False,
-        default=False
+        default=False,
     )
 
 

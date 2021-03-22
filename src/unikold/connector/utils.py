@@ -14,11 +14,14 @@ def getSOAPResponse(wsdlUrl, wsdlMethod, wsdlMethodParameter):
     if type(timeout) is not int:
         timeout = 10
 
+    if not isinstance(wsdlMethodParameter, str):
+        wsdlMethodParameter = wsdlMethodParameter.decode()
+
     try:
         transport = Transport(timeout=timeout)
         client = Client(wsdlUrl, transport=transport)
-        data = getattr(client.service, wsdlMethod)(wsdlMethodParameter.decode('UTF-8'))
-    except Exception as exc:
+        data = getattr(client.service, wsdlMethod)(wsdlMethodParameter)
+    except Exception as exc:  # noqa: B902
         error = str(exc) + '\n\nRaw answer:\n' + str(data)
     finally:
         if data == 'False' or data is False:

@@ -56,7 +56,7 @@ class UnikoldConnectorLayer(PloneSandboxLayer):
         fti.global_allow = False
 
         path = '/'.join(folder.getPhysicalPath())
-        api.portal.set_registry_record('unikold_connector.soap_queries_folder', unicode(path))
+        api.portal.set_registry_record('unikold_connector.soap_queries_folder', path)
         api.portal.set_registry_record('unikold_connector.soap_timeout', 10)
 
     def setUpLSFControlpanel(self):

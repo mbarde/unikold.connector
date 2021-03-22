@@ -64,7 +64,7 @@ class SOAPConnector(object):
             'wsdl_method': self.wsdlMethod,
             'wsdl_method_parameter': self.soapRequest,
             'lifetime': self.queryLifetime,
-            'exclude_from_auto_update': self.excludeFromAutoUpdate
+            'exclude_from_auto_update': self.excludeFromAutoUpdate,
         }
         if additionalQueryData:
             data.update(additionalQueryData)
