@@ -5,6 +5,7 @@
 *.py?
 *.swp
 # dirs
+build/
 bin/
 buildout-cache/
 develop-eggs/
