@@ -88,8 +88,8 @@ class SOAPTestView(BrowserView):
         return result
 
     def coverPasswordInRequestStr(self, requestStr):
-        startTag = '<password>'
-        endTag = '</password>'
+        startTag = b'<password>'
+        endTag = b'</password>'
 
         if startTag not in requestStr or endTag not in requestStr:
             return requestStr
@@ -97,7 +97,7 @@ class SOAPTestView(BrowserView):
         idx0 = requestStr.index(startTag)
         idx1 = requestStr.index(endTag)
         pw = requestStr[idx0 + 10:idx1]
-        return requestStr.replace(pw, '****')
+        return requestStr.replace(pw, b'****')
 
 
 class SOAPQueryView(DefaultView):
