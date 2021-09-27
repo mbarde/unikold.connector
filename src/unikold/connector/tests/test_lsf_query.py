@@ -171,7 +171,7 @@ class LSFQueryIntegrationTest(unittest.TestCase):
         self.assertEqual(data.tag, 'empty')
         query = lsfConnector.getQuery()
         self.assertIn(
-            'There is no default service defined',
+            '404 Client Error: Not Found',
             query.soap_error,
         )
 

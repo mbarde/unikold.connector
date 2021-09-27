@@ -141,4 +141,6 @@ class SOAPQueryIntegrationTest(unittest.TestCase):
         data = soapConnector.get()
         self.assertEqual(data, '')
         query = soapConnector.getQuery()
-        self.assertTrue('There is no default service defined' in query.soap_error)
+        self.assertIn(
+            '404 Client Error: Not Found',
+            query.soap_error)
