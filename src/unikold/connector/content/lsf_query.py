@@ -68,7 +68,8 @@ class LSFQuery(SOAPQuery):
             else:
                 self.lsf_response = data
         else:
-            sentry_message('Error in LSF SOAP response of {0}')
+            sentry_message('Error in LSF SOAP response of {0}'
+                           .format(self.absolute_url()))
 
         return (data, error)
 
