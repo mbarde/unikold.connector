@@ -1,3 +1,6 @@
--c constraints_plone52.txt
+-c constraints_plone60.txt
 setuptools
 zc.buildout
+i18ndude
+zope.testrunner
+
