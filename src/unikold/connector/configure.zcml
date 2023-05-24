@@ -3,6 +3,7 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:monkey="http://namespaces.plone.org/monkey"
     i18n_domain="unikold.connector">
 
   <i18n:registerTranslations directory="locales" />
@@ -84,5 +85,12 @@
      />
   </class>
 
+  <include package="collective.monkeypatcher" />
+  <monkey:patch
+    description="apply fix https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb"
+    class="zeep.xsd.types.complex.ComplexType"
+    original="render"
+    replacement=".patches.ComplexType_render"
+    />
 
 </configure>
