@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
+# (ignore this file to be able to keep original code as original
+#  as possible whilst working with own linter rules)
 from lxml import etree
 from zeep.xsd.const import NotSet, SkipValue, xsi_ns
 from zeep.xsd.elements import Element
