@@ -196,7 +196,7 @@ ldap_search_password = u''
 TypeError: string indices must be integers
 --------------
 
-Make sure this fix has been applied to zeep: https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb
+Find monkey patch for https://github.com/mvantellingen/python-zeep/pull/657/commits/a2b7ec0296bcb0ac47a5d15669dcb769447820eb in `patches.py`.
 
 
 License
